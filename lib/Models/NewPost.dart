@@ -1,7 +1,9 @@
 import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
 import 'package:enactusnca/Widgets/constants.dart';
+import 'package:enactusnca/services/database_methods.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Post {
@@ -13,9 +15,10 @@ class Post {
   final String mediaUrl;
   final String userProfileImg;
   final String timeStamp;
+
   //final dynamic likes;
-  Map likes;
-  int likeCount;
+  int likeCount = 0;
+  Map likesList;
 
   String _dateTime = formatDate(
     DateTime.now(),
@@ -31,35 +34,34 @@ class Post {
     this.mediaUrl,
     this.userProfileImg,
     this.timeStamp,
-    this.likes,
+    this.likesList,
     this.likeCount,
   });
 
-  int getLikeCount(likes) {
-    if (likes == null) {
-      return 0;
-    }
-    int count = 0;
-    likes.value.forEach((val) {
-      if (val == true) {
-        count += 1;
-      }
-    });
-  }
-
   Future addNewPost({String description, String mediaUrl}) async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    return await postCollection.document().setData({
+    final DocumentReference postCollection1 =
+        Firestore.instance.collection('Posts').document();
+    return postCollection1.setData({
       'ownerId': user.uid,
       'userName': user.displayName,
-      'name': user.email,
+      'likeCount': likeCount,
+      'postId': postCollection1.documentID,
+      'name': fullName(user.email),
       'description': description,
       'mediaUrl': mediaUrl,
       'timeStamp': _dateTime.toString(),
       'userProfileImg': user.photoUrl,
     });
   }
-
+  String fullName(String email) {
+    String fName;
+    DatabaseMethods().getUsersByUserEmail(email).then((val) {
+      fName = val.documents[0].data["name"];
+      print('new name = $fName');
+    });
+    return fName;
+  }
   List<Post> postsList(QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
       return Post(
@@ -71,8 +73,8 @@ class Post {
         userProfileImg: doc.data['userProfileImg'],
         mediaUrl: doc.data['mediaUrl'],
         timeStamp: doc.data['timeStamp'],
-        likes: doc['likes'],
-        likeCount: getLikeCount(this.likes),
+        likesList: doc['likes'],
+        // likeCount: getLikeCount(this.likesList),
       );
     }).toList();
   }

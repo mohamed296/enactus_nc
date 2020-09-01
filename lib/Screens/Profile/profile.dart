@@ -63,9 +63,7 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     ScreenUtil.init(context, height: 896, width: 414, allowFontScaling: true);
     return name == null
-        ? Center(
-            child: CircularProgressIndicator(),
-          )
+        ? Center(child: CircularProgressIndicator())
         : Scaffold(
             body: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -108,7 +106,6 @@ class _ProfileState extends State<Profile> {
                 SizedBox(height: kSpacingUnit.w * 2),
                 Text(
                   // post.timeStamp,
-                  //TODO:Set name
                   name != null ? name : 'something went wrong',
                   style: kTitleTextStyle,
                 ),

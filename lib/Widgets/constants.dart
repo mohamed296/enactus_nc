@@ -1,4 +1,5 @@
 import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,6 +26,7 @@ final CollectionReference userCollection =
 final CollectionReference postCollection =
     Firestore.instance.collection('Posts');
 
+// this is the post collection
 final CollectionReference commentsCollection =
     Firestore.instance.collection('comments');
 

@@ -1,12 +1,11 @@
 import 'dart:io';
+
 import 'package:enactusnca/models/NewPost.dart';
-import 'package:enactusnca/models/User.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 
 class AddNewPost extends StatefulWidget {
   static String id = 'AddNewPost';

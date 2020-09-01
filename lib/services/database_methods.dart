@@ -18,6 +18,20 @@ class DatabaseMethods {
     });
   }
 
+  changeLikeListArray({String postId, newArray}) {
+    Firestore.instance
+        .collection("Posts")
+        .document(postId)
+        .updateData(newArray);
+  }
+
+  postData({String postId}) async {
+    return await Firestore.instance
+        .collection("Posts")
+        .where('postId', isEqualTo: postId)
+        .getDocuments();
+  }
+
   getUsersByUserEmail(String email) async {
     return await Firestore.instance
         .collection("Users")
@@ -73,5 +87,12 @@ class DatabaseMethods {
 
   getUsers() async {
     return Firestore.instance.collection("Users").snapshots();
+  }
+
+  addPostLike({String email, String postId}) {
+    return Firestore.instance
+        .collection("posts")
+        .where("postId", isEqualTo: postId)
+        .snapshots();
   }
 }

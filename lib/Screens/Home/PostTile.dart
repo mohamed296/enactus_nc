@@ -1,9 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:enactusnca/AddNewPost/upload.dart';
 import 'package:enactusnca/Models/User.dart';
-import 'package:enactusnca/Post/CommentCard.dart';
-import 'package:enactusnca/Post/CommentsList.dart';
-import 'package:enactusnca/Post/OpenPost.dart';
 import 'package:enactusnca/Screens/Profile/profile.dart';
 import 'package:enactusnca/Settings/Settings.dart';
 import 'package:enactusnca/Widgets/PopUpMenu.dart';
@@ -11,7 +7,6 @@ import 'package:enactusnca/Widgets/constants.dart';
 import 'package:enactusnca/Widgets/post_image.dart';
 import 'package:enactusnca/models/NewPost.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 class PostTile extends StatefulWidget {
@@ -19,6 +14,7 @@ class PostTile extends StatefulWidget {
   final User user;
   final dynamic likes;
   int likeCount;
+
   PostTile({this.post, this.user, this.likes, this.likeCount});
 
   factory PostTile.fromDocument(DocumentSnapshot doc) {
@@ -26,22 +22,43 @@ class PostTile extends StatefulWidget {
       likes: doc['likes'],
     );
   }
-  int getLikeCount(likes) {
-    if (likes == null) {
-      return 0;
-    }
-    int count = 0;
-    likes.value.forEach((val) {
-      if (val == true) {
-        count += 1;
+
+  int count = 0;
+
+  editMap(array) {
+    int x = 0;
+    /*for (int i = 0; i < array.length; i++) {
+      if (array[i] == Constants.myEmail) {
+        //hnshel asmna
+        array.removeAt(i);
+      } else {
+        //hnzwd asmna
+        array.add(Constants.myEmail);
       }
-    });
+      DatabaseMethods()
+          .changeLikeListArray(newArray: array, postId: post.postId);
+      return array;
+      */ /*if (x >= 2) {
+        break;
+      } else {
+        likes.value.forEach((val) {
+          if (array[i] != null) {
+            count += 1;
+          }
+        });
+      }*/ /*
+    }*/
   }
+  //TODO:
+  /*getLikesCount() async {
+    DatabaseMethods().postData(postId: post.postId).then((val) {});
+    Map likes = editMap(array);
+  }*/
 
   @override
   _PostTileState createState() => _PostTileState(
         likes: this.likes,
-        likeCount: getLikeCount(this.likes),
+        likeCount: editMap(this.likes),
       );
 }
 
@@ -104,8 +121,9 @@ class _PostTileState extends State<PostTile> {
           );
         },
         child: Text(
-          widget.post.name,
-          // style: TextStyle(color: KMainColor),
+          // post.timeStamp,
+          name != null ? name : 'something went wrong',
+          style: kTitleTextStyle,
         ),
       ),
 
