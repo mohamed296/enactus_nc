@@ -70,4 +70,8 @@ class DatabaseMethods {
         .orderBy('lastTime', descending: true)
         .snapshots();
   }
+
+  getUsers() async {
+    return Firestore.instance.collection("Users").snapshots();
+  }
 }
