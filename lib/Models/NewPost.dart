@@ -54,6 +54,7 @@ class Post {
       'userProfileImg': user.photoUrl,
     });
   }
+
   String fullName(String email) {
     String fName;
     DatabaseMethods().getUsersByUserEmail(email).then((val) {
@@ -62,6 +63,7 @@ class Post {
     });
     return fName;
   }
+
   List<Post> postsList(QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
       return Post(
