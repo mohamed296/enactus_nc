@@ -4,9 +4,12 @@ import 'package:enactusnca/Events/Calendar.dart';
 import 'package:enactusnca/Screens/Home/PostsList.dart';
 import 'package:enactusnca/Settings/Settings.dart';
 import 'package:enactusnca/Widgets/PopUpMenu.dart';
+import 'package:enactusnca/Widgets/constants.dart';
 import 'package:enactusnca/services/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 class Home extends StatefulWidget {
   static String id = 'Home';

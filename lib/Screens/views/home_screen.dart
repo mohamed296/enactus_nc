@@ -1,32 +1,37 @@
 import 'package:enactusnca/Screens/views/search.dart';
+import 'package:enactusnca/Screens/views/sign_in.dart';
+import 'package:enactusnca/Widgets/favorite_contacts.dart';
+import 'package:enactusnca/Widgets/recent_chats.dart';
+import 'package:enactusnca/halper/constants.dart';
+import 'package:enactusnca/halper/helperfunction.dart';
+import 'package:enactusnca/services/auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'contact_screen.dart' as contactsScreen;
-import 'groups_screen.dart' as groupsScreen;
-import 'recent_screen.dart' as recentScreen;
-
 class HomeScreen extends StatefulWidget {
   static String id = 'HomeScreen';
-
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
-    with SingleTickerProviderStateMixin {
-  TabController controller;
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    controller = new TabController(vsync: this, length: 3);
-  }
+class _HomeScreenState extends State<HomeScreen> {
+  Auth authMethods = new Auth();
+  Stream chatRoomStream;
+  bool isLoading = true;
 
   @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    getUserInfo();
+  }
+
+  getUserInfo() async {
+    Constants.myEmail = await HelperFunction.getUserEmail();
+    Constants.myId = await HelperFunction.getUserId();
+    Constants.myName = await HelperFunction.getUsername();
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -38,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen>
           //  backgroundColor: Constants.darkBlue /*Theme.of(context).primaryColor*/,
           appBar: AppBar(
             automaticallyImplyLeading: false,
-            bottom: TabBar(controller: controller, tabs: <Widget>[
+            bottom: TabBar(tabs: <Widget>[
               Tab(
                 icon: Icon(Icons.person_add),
                 text: 'Message',
@@ -85,14 +90,37 @@ class _HomeScreenState extends State<HomeScreen>
             ),
             elevation: 0.0,
           ),
-          body: TabBarView(
-            controller: controller,
-            children: [
-              recentScreen.RecentScreen(),
-              groupsScreen.GroupsScreen(),
-              contactsScreen.ContactsScreen(),
-            ],
-          ),
+          body: isLoading
+              ? CircularProgressIndicator()
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    //  CategorySelector(),
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(30),
+                              bottomLeft: Radius.circular(30),
+                              topLeft: Radius.circular(30)),
+                          //   color: Constants.darkBlue,
+                        ),
+                        child: Column(
+                          children: <Widget>[
+                            ClipRRect(
+                              child: FavoriteContacts(),
+                              borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(30),
+                                  topLeft: Radius.circular(30)),
+                            ),
+                            RecentChat(),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
         ),
       ),
     ]);
