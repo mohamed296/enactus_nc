@@ -1,6 +1,8 @@
 import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
+import 'package:enactusnca/Helpers/helperfunction.dart';
 import 'package:enactusnca/Widgets/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -13,14 +15,10 @@ class Post {
   final String mediaUrl;
   final String userProfileImg;
   final String timeStamp;
+
   //final dynamic likes;
   Map likes;
   int likeCount;
-
-  String _dateTime = formatDate(
-    DateTime.now(),
-    [yyyy, '-', mm, '-', dd, ' ', HH, ':', nn],
-  );
 
   Post({
     this.ownerId,
@@ -35,7 +33,7 @@ class Post {
     this.likeCount,
   });
 
-  int getLikeCount(likes) {
+  int getLikesCount(likes) {
     if (likes == null) {
       return 0;
     }
@@ -47,12 +45,22 @@ class Post {
     });
   }
 
-  Future addNewPost({String description, String mediaUrl}) async {
+  String _dateTime = formatDate(
+    DateTime.now(),
+    [yyyy, '-', mm, '-', dd, ' ', HH, ':', nn],
+  );
+
+  Future<dynamic> addNewPost({String description, String mediaUrl}) async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    return await postCollection.document().setData({
+    final postC = Firestore.instance.collection('Posts').document();
+    String fName;
+    await HelperFunction.getUsername().then((value) => fName = value);
+    return await postC.setData({
       'ownerId': user.uid,
-      'userName': user.displayName,
-      'name': user.email,
+      'email': user.email,
+      'name': fName,
+      'likesNumber': 0,
+      'postId': postC.documentID,
       'description': description,
       'mediaUrl': mediaUrl,
       'timeStamp': _dateTime.toString(),
@@ -72,7 +80,7 @@ class Post {
         mediaUrl: doc.data['mediaUrl'],
         timeStamp: doc.data['timeStamp'],
         likes: doc['likes'],
-        likeCount: getLikeCount(this.likes),
+        likeCount: getLikesCount(this.likes),
       );
     }).toList();
   }
