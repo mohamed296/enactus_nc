@@ -1,6 +1,5 @@
 import 'package:enactusnca/AddNewPost/upload.dart';
 import 'package:enactusnca/Admin/Bott_admin.dart';
-import 'package:enactusnca/Admin/Bott_admin.dart';
 import 'package:enactusnca/Admin/EditPost.dart';
 import 'package:enactusnca/BottomNavBar.dart';
 import 'package:enactusnca/Events/Calendar.dart';
@@ -9,15 +8,14 @@ import 'package:enactusnca/Events/view_Event.dart';
 import 'package:enactusnca/Screens/Home/Home.dart';
 import 'package:enactusnca/Screens/Profile/ProfilePostTile.dart';
 import 'package:enactusnca/Screens/Profile/profile.dart';
-import 'package:enactusnca/Screens/login/sign_in.dart';
 import 'package:enactusnca/Screens/views/home_screen.dart';
 import 'package:enactusnca/Screens/views/sign_in.dart';
-
-import 'package:enactusnca/provider/Admin.dart';
 import 'package:enactusnca/utilts/app_theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'Helpers/helperfunction.dart';
 
 //void main() => runApp(MyApp());
 Future<void> main() async {
@@ -38,10 +36,32 @@ Future<void> main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   final String user;
 
   const MyApp({Key key, this.user}) : super(key: key);
+
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    getLoaggedInState();
+    super.initState();
+  }
+
+  bool isUserLoggedIn;
+
+  getLoaggedInState() async {
+    await HelperFunction.getUserLoggedIn().then((value) {
+      setState(() {
+        isUserLoggedIn = value;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<AppThemeProvider>(context);
@@ -50,7 +70,12 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: theme.getTheme(),
-        initialRoute: SignIn.id,
+        /**
+         * initialRoute has been changed to HomeScreen if the user has
+         * signed in once before.
+         * */
+        initialRoute: isUserLoggedIn != null
+            ? /**/ isUserLoggedIn ? Home.id : SignIn.id /**/ : SignIn.id,
         routes: {
           SignIn.id: (context) => SignIn(),
           // LoginScreen.id: (context) => LoginScreen(),

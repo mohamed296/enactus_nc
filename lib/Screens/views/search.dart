@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:enactusnca/Helpers/constants.dart';
+import 'package:enactusnca/Helpers/helperfunction.dart';
 import 'package:enactusnca/Screens/views/chat_screen.dart';
-import 'package:enactusnca/halper/constants.dart';
-import 'package:enactusnca/halper/helperfunction.dart';
 import 'package:enactusnca/services/database_methods.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'home_screen.dart';
 
 class SearchScreen extends StatefulWidget {
   @override

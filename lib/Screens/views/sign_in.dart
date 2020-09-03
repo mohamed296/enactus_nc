@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enactusnca/Admin/Bott_admin.dart';
+import 'package:enactusnca/Helpers/constants.dart';
+import 'package:enactusnca/Helpers/helperfunction.dart';
 import 'package:enactusnca/Screens/views/sign_up.dart';
 import 'package:enactusnca/Widgets/edite_text.dart';
-import 'package:enactusnca/bott_bar.dart';
-import 'package:enactusnca/halper/constants.dart';
-import 'package:enactusnca/halper/helperfunction.dart';
 import 'package:enactusnca/services/auth.dart';
 import 'package:enactusnca/services/database_methods.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,6 +11,7 @@ import 'package:flutter/material.dart';
 
 class SignIn extends StatefulWidget {
   static String id = 'SignIn';
+
   @override
   _SignInState createState() => _SignInState();
 }
@@ -29,6 +29,10 @@ class _SignInState extends State<SignIn> {
     HelperFunction.setUserEmail(tecEmail.text);
     _databaseMethods.getUsersByUserEmail(tecEmail.text).then((val) {
       snapshot = val;
+      /**
+       * sometimes @val is null no clue why this is causing the double chat
+       * issue,
+       * */
       String name = snapshot.documents[0].data["name"];
       String userId = snapshot.documents[0].data["teamId"];
       HelperFunction.setUsername(name.toLowerCase().toString());
@@ -64,7 +68,6 @@ class _SignInState extends State<SignIn> {
             //   color: Constants.midBlue,
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(20),
-              bottomRight: Radius.circular(20),
               topRight: Radius.circular(20),
               topLeft: Radius.circular(20),
             ),
