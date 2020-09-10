@@ -16,7 +16,6 @@ class Post {
   final String userProfileImg;
   final String timeStamp;
 
-  //final dynamic likes;
   Map likes;
   int likeCount;
 
@@ -59,7 +58,7 @@ class Post {
       'ownerId': user.uid,
       'email': user.email,
       'name': fName,
-      'likesNumber': 0,
+      'likes': {},
       'postId': postC.documentID,
       'description': description,
       'mediaUrl': mediaUrl,
@@ -71,15 +70,15 @@ class Post {
   List<Post> postsList(QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
       return Post(
-        postId: doc.documentID,
-        ownerId: doc.data['ownerId'],
-        userName: doc.data['userName'],
-        name: doc.data['name'],
-        description: doc.data['description'],
-        userProfileImg: doc.data['userProfileImg'],
-        mediaUrl: doc.data['mediaUrl'],
-        timeStamp: doc.data['timeStamp'],
-        likes: doc['likes'],
+        postId: doc['postId'],
+        ownerId: doc['ownerId'],
+        userName: doc['userName'],
+        name: doc['name'],
+        description: doc['description'],
+        userProfileImg: doc['userProfileImg'],
+        mediaUrl: doc['mediaUrl'],
+        timeStamp: doc['timeStamp'],
+        likes: doc.data['likes'],
         likeCount: getLikesCount(this.likes),
       );
     }).toList();
