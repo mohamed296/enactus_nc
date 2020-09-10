@@ -1,23 +1,18 @@
+import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:enactusnca/AddNewPost/AddNewPost.dart';
-import 'package:enactusnca/AddNewPost/upload.dart';
-import 'package:enactusnca/Admin/AddPost.dart';
-import 'package:enactusnca/Admin/EditPost.dart';
 import 'package:enactusnca/Admin/adminhome.dart';
+import 'package:enactusnca/Helpers/constants.dart';
+import 'package:enactusnca/Helpers/helperfunction.dart';
 import 'package:enactusnca/Models/User.dart';
 import 'package:enactusnca/Screens/Home/Home.dart';
+import 'package:enactusnca/Screens/Notifications/notifications.dart';
 import 'package:enactusnca/Screens/Profile/profile.dart';
 import 'package:enactusnca/Screens/bottom_nav/home.dart';
-import 'package:enactusnca/Screens/Notifications/notifications.dart';
-import 'package:enactusnca/Screens/bottom_nav/profile.dart';
 import 'package:enactusnca/Screens/views/home_screen.dart';
 import 'package:enactusnca/Widgets/constants.dart';
 import 'package:enactusnca/provider/Admin.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:provider/provider.dart';
 
 //void main() => runApp(MaterialApp(home: BottAdmin()));
@@ -52,6 +47,12 @@ class _BottAdminState extends State<BottAdmin> {
   void initState() {
     super.initState();
     _pageController = PageController();
+    getUserInfo();
+  }
+
+  getUserInfo() async {
+    Constants.myEmail = await HelperFunction.getUserEmail();
+    setState(() {});
   }
 
   @override
@@ -141,7 +142,9 @@ class _BottAdminState extends State<BottAdmin> {
                 child: notifications(),
               ),
               Container(
-                child: Profile(),
+                child: Profile(
+                  email: Constants.myEmail,
+                ),
               ),
               Container(
                 child: HomeScreen(),

@@ -1,7 +1,6 @@
 import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Helpers/functions.dart';
 import 'package:enactusnca/Helpers/helperfunction.dart';
-import 'package:enactusnca/Models/message.dart';
 import 'package:enactusnca/Models/recent_chat.dart';
 import 'package:enactusnca/Screens/views/chat_screen.dart';
 import 'package:enactusnca/services/auth.dart';
@@ -65,7 +64,6 @@ class _RecentChatState extends State<RecentChat> {
       shrinkWrap: true,
       itemCount: snapshot.data.documents.length,
       itemBuilder: (context, index) {
-        final Message chat = chats[index];
         List<String> list = List.from(
           snapshot.data.documents[index].data["users"],
         );

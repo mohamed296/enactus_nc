@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:enactusnca/AddNewPost/upload.dart';
+import 'package:enactusnca/Helpers/constants.dart';
+import 'package:enactusnca/Helpers/helperfunction.dart';
 import 'package:enactusnca/Models/User.dart';
-import 'package:enactusnca/Post/CommentCard.dart';
-import 'package:enactusnca/Post/CommentsList.dart';
-import 'package:enactusnca/Post/OpenPost.dart';
 import 'package:enactusnca/Screens/Profile/profile.dart';
 import 'package:enactusnca/Settings/Settings.dart';
 import 'package:enactusnca/Widgets/PopUpMenu.dart';
@@ -11,7 +9,6 @@ import 'package:enactusnca/Widgets/constants.dart';
 import 'package:enactusnca/Widgets/post_image.dart';
 import 'package:enactusnca/models/NewPost.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 class PostTile extends StatefulWidget {
@@ -19,6 +16,7 @@ class PostTile extends StatefulWidget {
   final User user;
   final dynamic likes;
   int likeCount;
+
   PostTile({this.post, this.user, this.likes, this.likeCount});
 
   factory PostTile.fromDocument(DocumentSnapshot doc) {
@@ -26,16 +24,19 @@ class PostTile extends StatefulWidget {
       likes: doc['likes'],
     );
   }
+
   int getLikeCount(likes) {
     if (likes == null) {
       return 0;
+    } else {
+      int count = 0;
+      likes.value.forEach((val) {
+        if (val == true) {
+          count++;
+        }
+      });
+      return count;
     }
-    int count = 0;
-    likes.value.forEach((val) {
-      if (val == true) {
-        count += 1;
-      }
-    });
   }
 
   @override
@@ -73,7 +74,48 @@ class _PostTileState extends State<PostTile> {
   });
 
   @override
+  void initState() {
+    super.initState();
+    getUserInfo();
+  }
+
+  getUserInfo() async {
+    Constants.myName = await HelperFunction.getUsername();
+    Constants.myEmail = await HelperFunction.getUserEmail();
+    Constants.myName = await HelperFunction.getUsername();
+    Constants.myId = await HelperFunction.getUserId();
+    print("welcome  ${Constants.myName} ${Constants.myEmail}");
+    setState(() {});
+  }
+
+  likePost() {
+    bool _isLiked = likes[Constants.myEmail] == true;
+    if (_isLiked) {
+      Firestore.instance
+          .collection("Posts")
+          .document(postId)
+          .updateData({'likes.${Constants.myEmail}': false});
+      setState(() {
+        likeCount--;
+        isLiked = false;
+        likes[Constants.myEmail] = false;
+      });
+    } else {
+      Firestore.instance
+          .collection("Posts")
+          .document(postId)
+          .updateData({'likes.${Constants.myEmail}': true});
+      setState(() {
+        likeCount++;
+        isLiked = true;
+        likes[Constants.myEmail] = true;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    isLiked = false;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -187,9 +229,11 @@ class _PostTileState extends State<PostTile> {
           children: [
             Padding(padding: EdgeInsets.only(top: 40, left: 20)),
             GestureDetector(
-              onTap: () {},
+              onTap: () {
+                likePost();
+              },
               child: Icon(
-                LineAwesomeIcons.heart,
+                isLiked ? LineAwesomeIcons.heart_1 : LineAwesomeIcons.heart,
                 // color: KMainColor,
                 size: 18.0,
               ),
