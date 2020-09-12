@@ -23,10 +23,10 @@ class Functions {
         .getDocuments()
         .then((value) => _doc = value);
     if ((id.substring(0, 3) == 'PRO' ||
-        id.substring(0, 3) == 'PRE' ||
-        id.substring(0, 2) == 'HR' ||
-        id.substring(0, 2) == 'MM' ||
-        id.substring(0, 2) == 'ER') &&
+            id.substring(0, 3) == 'PRE' ||
+            id.substring(0, 2) == 'HR' ||
+            id.substring(0, 2) == 'MM' ||
+            id.substring(0, 2) == 'ER') &&
         _dateTime.substring(2, 4) == '20' &&
         _doc.data.documents[0].data["id"] &&
         _doc.data.documents[0].data["isRegistered"] == false) {
