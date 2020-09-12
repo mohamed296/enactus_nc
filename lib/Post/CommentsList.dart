@@ -1,8 +1,7 @@
-/*import 'dart:html';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enactusnca/Models/NewPost.dart';
+import 'package:enactusnca/Models/comment_model.dart';
 import 'package:enactusnca/Post/CommentCard.dart';
-import 'package:enactusnca/Widgets/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -26,7 +25,7 @@ class _CommentsListState extends State<CommentsList> {
 
   bool showLoading = false;
 
-  Comment comment = Comment();
+  CommentModel comment = CommentModel();
 
   @override
   Widget build(BuildContext context) {
@@ -34,11 +33,13 @@ class _CommentsListState extends State<CommentsList> {
       children: <Widget>[
         addnewComment(),
         StreamBuilder(
-          stream: postCollection
+          stream: Firestore.instance
+              .collection('Posts')
               .document(widget.thisPost.postId)
               .collection('comments')
               .orderBy('timeStamp', descending: true)
-              .snapshots(),
+              .snapshots()
+              .map(CommentModel().commentsList),
           //.map(comment.commentsList),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
@@ -162,7 +163,7 @@ class _CommentsListState extends State<CommentsList> {
                         : SpinKitChasingDots(
                             color: Theme.of(context).accentColor,
                           ),
-                    /*  onPressed: () async {
+                    onPressed: () async {
                       setState(() => showLoading = true);
                       await comment
                           .addNewComment(
@@ -173,7 +174,7 @@ class _CommentsListState extends State<CommentsList> {
                         setState(() => showLoading = false);
                         _key.currentState.reset();
                       });
-                    },*/
+                    },
                   ),
                 ),
               )
@@ -183,4 +184,4 @@ class _CommentsListState extends State<CommentsList> {
       ),
     );
   }
-}*/
+}

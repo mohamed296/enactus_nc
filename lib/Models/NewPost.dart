@@ -9,7 +9,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 class Post {
   final String ownerId;
   final String postId;
-  final String userName;
   final String name;
   final String description;
   final String mediaUrl;
@@ -22,7 +21,6 @@ class Post {
   Post({
     this.ownerId,
     this.postId,
-    this.userName,
     this.name,
     this.description,
     this.mediaUrl,
@@ -59,7 +57,6 @@ class Post {
       'email': user.email,
       'name': fName,
       'likes': {},
-      'postId': postC.documentID,
       'description': description,
       'mediaUrl': mediaUrl,
       'timeStamp': _dateTime.toString(),
@@ -70,9 +67,8 @@ class Post {
   List<Post> postsList(QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
       return Post(
-        postId: doc['postId'],
+        postId: doc.documentID,
         ownerId: doc['ownerId'],
-        userName: doc['userName'],
         name: doc['name'],
         description: doc['description'],
         userProfileImg: doc['userProfileImg'],
@@ -85,9 +81,6 @@ class Post {
   }
 
   Stream<List<Post>> get getPosts {
-    return postCollection
-        .orderBy('timeStamp', descending: true)
-        .snapshots()
-        .map(postsList);
+    return postCollection.orderBy('timeStamp', descending: true).snapshots().map(postsList);
   }
 }
