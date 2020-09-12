@@ -16,6 +16,7 @@ class Functions {
       DateTime.now(),
       [yyyy],
     );
+
     var _doc;
     await Firestore.instance
         .collection("Posts")
@@ -30,9 +31,9 @@ class Functions {
         _dateTime.substring(2, 4) == '20' &&
         _doc.data.documents[0].data["id"] &&
         _doc.data.documents[0].data["isRegistered"] == false) {
-      return 'Invalid ID';
+      return true;
     } else {
-      return 'Valid ID';
+      return false;
     }
   }
 
