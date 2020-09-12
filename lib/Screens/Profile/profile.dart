@@ -74,7 +74,11 @@ class _ProfileState extends State<Profile> {
                       children: <Widget>[
                         CircleAvatar(
                           radius: kSpacingUnit.w * 5,
-                          backgroundImage: AssetImage('assets/images/greg.jpg'),
+                          // backgroundImage: AssetImage('assets/images/greg.jpg'),
+                          backgroundImage: NetworkImage(
+                            user?.photoUrl ??
+                                'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png',
+                          ),
                         ),
                         Align(
                           alignment: Alignment.bottomRight,
@@ -158,9 +162,8 @@ class _ProfileState extends State<Profile> {
                           HelperFunction.setUserLoggedIn(false);
                           HelperFunction.setUsername("");
                           HelperFunction.setUserEmail("");
-                          Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) => SignIn()));
+                          Navigator.of(context)
+                              .pushReplacement(MaterialPageRoute(builder: (context) => SignIn()));
                         },
                         child: ProfileListItem(
                           icon: LineAwesomeIcons.alternate_sign_out,
