@@ -7,9 +7,11 @@ import 'package:enactusnca/Settings/Settings.dart';
 import 'package:enactusnca/Widgets/PopUpMenu.dart';
 import 'package:enactusnca/Widgets/constants.dart';
 import 'package:enactusnca/Widgets/post_image.dart';
-import 'package:enactusnca/models/NewPost.dart';
+import 'package:enactusnca/Models/NewPost.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+
+import '../../Post/OpenPost.dart';
 
 class PostTile extends StatefulWidget {
   final Post post;
@@ -76,6 +78,7 @@ class _PostTileState extends State<PostTile> {
   @override
   void initState() {
     super.initState();
+    print(widget.post.mediaUrl);
     getUserInfo();
   }
 
@@ -85,7 +88,7 @@ class _PostTileState extends State<PostTile> {
     Constants.myName = await HelperFunction.getUsername();
     Constants.myId = await HelperFunction.getUserId();
     print("welcome  ${Constants.myName} ${Constants.myEmail}");
-    setState(() {});
+    // setState(() {});
   }
 
   likePost() {
@@ -191,13 +194,17 @@ class _PostTileState extends State<PostTile> {
 
   postSection(BuildContext context) {
     return FlatButton(
-      /* onPressed: () {
-        Navigator.push( context, MaterialPageRoute(builder: (context) => OpenPost(post: widget.post,focus: false,
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => OpenPost(
+              post: widget.post,
+              focus: false,
             ),
           ),
         );
-      },*/
-      onPressed: () {},
+      },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -213,9 +220,7 @@ class _PostTileState extends State<PostTile> {
               //  style: TextStyle(color: KMainColor)
             ),
           ),
-          widget.post.mediaUrl != null
-              ? PostImage(imageUrl: widget.post.mediaUrl)
-              : Container(),
+          widget.post.mediaUrl != null ? PostImage(imageUrl: widget.post.mediaUrl) : Container(),
         ],
       ),
     );
