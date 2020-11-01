@@ -7,7 +7,6 @@ import 'package:enactusnca/provider/Admin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -19,10 +18,10 @@ class BottomNavBar extends StatefulWidget {
 }
 
 final BottomNavBar _bottomNavBar = BottomNavBar();
-final home _home = home();
-final notifications _notifications = notifications();
-final profile _profile = profile();
-Widget _showpage = new home();
+final Home _home = Home();
+final Notifications _notifications = Notifications();
+final Profile _profile = Profile();
+Widget _showpage = new Home();
 
 Widget _pagechoser(int page) {
   switch (page) {
@@ -211,13 +210,13 @@ class _BottomNavBarState extends State<BottomNavBar> {
             children: <Widget>[
               Container(
                 //child: _changeHome(context)
-                child: home(),
+                child: Home(),
               ),
               Container(
-                child: notifications(),
+                child: Notifications(),
               ),
               Container(
-                child: profile(),
+                child: Profile(),
               ),
               Container(
                 color: Colors.blue,
@@ -281,7 +280,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
       AdminHome();
     } else {
       child:
-      home();
+      Home();
     }
   }
 }

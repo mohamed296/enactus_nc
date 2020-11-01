@@ -33,8 +33,8 @@ class _SignInState extends State<SignIn> {
        * sometimes @val is null no clue why this is causing the double chat
        * issue,
        * */
-      String name = snapshot.documents[0].data["name"];
-      String userId = snapshot.documents[0].data["teamId"];
+      String name = snapshot.docs[0].data()["name"];
+      String userId = snapshot.docs[0].data()["teamId"];
       HelperFunction.setUsername(name.toLowerCase().toString());
       HelperFunction.setUserId(userId.toLowerCase().toString());
       HelperFunction.setUserLoggedIn(true);
@@ -43,8 +43,7 @@ class _SignInState extends State<SignIn> {
       isLoading = true;
     });
     _auth
-        .signInWithEmail(
-            email: tecEmail.text.trim(), password: tecPassword.text.trim())
+        .signInWithEmail(email: tecEmail.text.trim(), password: tecPassword.text.trim())
         .then((value) {
       if (value != null) {
         Navigator.of(context).pushNamed(BottAdmin.id);
@@ -106,10 +105,8 @@ class _SignInState extends State<SignIn> {
                         onTap: () {},
                         child: Container(
                           color: Colors.transparent,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 5.0, vertical: 10.0),
-                          margin: EdgeInsets.only(
-                              top: 5.0, left: 35.0, bottom: 5.0),
+                          padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
+                          margin: EdgeInsets.only(top: 5.0, left: 35.0, bottom: 5.0),
                           child: Text(
                             "Forgot password?",
                             style: TextStyle(
@@ -124,15 +121,12 @@ class _SignInState extends State<SignIn> {
                           setState(() {
                             isSignIn = !isSignIn;
                             Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SignUp()));
+                                context, MaterialPageRoute(builder: (context) => SignUp()));
                           });
                         },
                         child: Container(
                           color: Colors.transparent,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 10.0),
+                          padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
                           margin: EdgeInsets.only(top: 5.0, bottom: 5.0),
                           child: Text(
                             "Sign up",

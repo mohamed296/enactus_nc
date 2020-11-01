@@ -13,10 +13,10 @@ class _EditPostState extends State<EditPost> {
     return Scaffold();
   }
 
-  @override
-  void initState() {
-    getposts();
-      }
-    
-      void getposts() {}
+  // @override
+  // void initState() {
+  //   getposts();
+  // }
+
+  // void getposts() {}
 }

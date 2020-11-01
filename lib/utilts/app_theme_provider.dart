@@ -1,6 +1,5 @@
 import 'package:enactusnca/Widgets/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:image/image.dart';
 
 class AppThemeProvider extends ChangeNotifier {
   ThemeData themeData;

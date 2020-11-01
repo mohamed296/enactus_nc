@@ -1,7 +1,7 @@
 import 'package:enactusnca/Events/Calendar.dart';
 import 'package:enactusnca/Helpers/helperfunction.dart';
 import 'package:enactusnca/Models/NewPost.dart';
-import 'package:enactusnca/Models/User.dart';
+import 'package:enactusnca/Models/user_model.dart';
 import 'package:enactusnca/Screens/Profile/ProfilePostTile.dart';
 import 'package:enactusnca/Screens/views/sign_in.dart';
 import 'package:enactusnca/Widgets/constants.dart';
@@ -29,7 +29,7 @@ class _ProfileState extends State<Profile> {
   String name, email;
 
   Auth authMethods = new Auth();
-  User user = User();
+  UserModel user = UserModel();
   final users = UserTitle();
   final post = Post();
   bool favorito = false;
@@ -48,8 +48,8 @@ class _ProfileState extends State<Profile> {
        * getUsersByUserEmail method from DatabaseMethods class
        * */
       setState(() {
-        name = val.documents[0].data["name"];
-        email = val.documents[0].data["email"];
+        name = val.documents[0].data()["name"];
+        email = val.documents[0].data()["email"];
       });
     });
   }

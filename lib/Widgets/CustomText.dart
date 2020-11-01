@@ -20,8 +20,7 @@ class CustomText extends StatelessWidget {
     }
   }
 
-  CustomText(
-      {@required this.onClick, @required this.hint, @required this.icon});
+  CustomText({@required this.onClick, @required this.hint, @required this.icon});
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -29,6 +28,7 @@ class CustomText extends StatelessWidget {
         if (value.isEmpty) {
           return _errorMassage(hint);
         }
+        return null;
       },
       onSaved: onClick,
       obscureText: hint == 'Enter your Password' ? true : false,

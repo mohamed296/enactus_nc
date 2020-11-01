@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Helpers/helperfunction.dart';
-import 'package:enactusnca/Models/User.dart';
+import 'package:enactusnca/Models/user_model.dart';
 import 'package:enactusnca/Screens/Profile/profile.dart';
-import 'package:enactusnca/Settings/Settings.dart';
 import 'package:enactusnca/Widgets/PopUpMenu.dart';
 import 'package:enactusnca/Widgets/constants.dart';
 import 'package:enactusnca/Widgets/post_image.dart';
@@ -15,9 +14,9 @@ import '../../Post/OpenPost.dart';
 
 class PostTile extends StatefulWidget {
   final Post post;
-  final User user;
+  final UserModel user;
   final dynamic likes;
-  int likeCount;
+  final int likeCount;
 
   PostTile({this.post, this.user, this.likes, this.likeCount});
 
@@ -94,20 +93,20 @@ class _PostTileState extends State<PostTile> {
   likePost() {
     bool _isLiked = likes[Constants.myEmail] == true;
     if (_isLiked) {
-      Firestore.instance
+      FirebaseFirestore.instance
           .collection("Posts")
-          .document(postId)
-          .updateData({'likes.${Constants.myEmail}': false});
+          .doc(postId)
+          .update({'likes.${Constants.myEmail}': false});
       setState(() {
         likeCount--;
         isLiked = false;
         likes[Constants.myEmail] = false;
       });
     } else {
-      Firestore.instance
+      FirebaseFirestore.instance
           .collection("Posts")
-          .document(postId)
-          .updateData({'likes.${Constants.myEmail}': true});
+          .doc(postId)
+          .update({'likes.${Constants.myEmail}': true});
       setState(() {
         likeCount++;
         isLiked = true;
@@ -277,12 +276,12 @@ class _PostTileState extends State<PostTile> {
 
   void select(String choice) {
     if (choice == PopUpMenu.settings) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Settings(),
-        ),
-      );
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => Settings(),
+      //   ),
+      // );
     } else if (choice == PopUpMenu.signOut) {
       //  auth.signOutGoogle(context);
     }

@@ -24,31 +24,31 @@ class CommentModel {
   );
 
   Future addNewComment({String comment, String postId}) async {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    User user = FirebaseAuth.instance.currentUser;
     String fName;
     await HelperFunction.getUsername().then((value) => fName = value);
-    return await Firestore.instance
+    return await FirebaseFirestore.instance
         .collection('Posts')
-        .document(postId)
+        .doc(postId)
         .collection('comments')
-        .document()
-        .setData({
+        .doc()
+        .set({
       'postId': postId,
       'comment': comment,
       'userName': fName,
-      'userImageUrl': user.photoUrl,
+      'userImageUrl': user.photoURL,
       'timeStamp': _dateTime,
     });
   }
 
   List<CommentModel> commentsList(QuerySnapshot snapshot) {
-    return snapshot.documents.map((com) {
+    return snapshot.docs.map((com) {
       return CommentModel(
-        name: com.data['userName'],
-        postUid: com.data['postId'],
-        comment: com.data['comment'],
-        timeStamp: com.data['timeStamp'] ?? '',
-        userImageUrl: com.data['userImageUrl'],
+        name: com.data()['userName'],
+        postUid: com.data()['postId'],
+        comment: com.data()['comment'],
+        timeStamp: com.data()['timeStamp'] ?? '',
+        userImageUrl: com.data()['userImageUrl'],
       );
     }).toList();
   }

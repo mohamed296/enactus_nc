@@ -3,11 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enactusnca/Admin/adminhome.dart';
 import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Helpers/helperfunction.dart';
-import 'package:enactusnca/Models/User.dart';
+import 'package:enactusnca/Models/user_model.dart';
 import 'package:enactusnca/Screens/Home/Home.dart';
 import 'package:enactusnca/Screens/Notifications/notifications.dart';
 import 'package:enactusnca/Screens/Profile/profile.dart';
-import 'package:enactusnca/Screens/bottom_nav/home.dart';
 import 'package:enactusnca/Screens/views/home_screen.dart';
 import 'package:enactusnca/Widgets/constants.dart';
 import 'package:enactusnca/provider/Admin.dart';
@@ -18,13 +17,13 @@ import 'package:provider/provider.dart';
 //void main() => runApp(MaterialApp(home: BottAdmin()));
 
 final StorageReference storageRef = FirebaseStorage.instance.ref();
-final usersRef = Firestore.instance.collection('users');
-final postsRef = Firestore.instance.collection('posts');
-final commentsRef = Firestore.instance.collection('comments');
-final activityFeedRef = Firestore.instance.collection('feed');
-final timelineRef = Firestore.instance.collection('timeline');
+final usersRef = FirebaseFirestore.instance.collection('users');
+final postsRef = FirebaseFirestore.instance.collection('posts');
+final commentsRef = FirebaseFirestore.instance.collection('comments');
+final activityFeedRef = FirebaseFirestore.instance.collection('feed');
+final timelineRef = FirebaseFirestore.instance.collection('timeline');
 final DateTime timestamp = DateTime.now();
-User currentUser;
+UserModel currentUser;
 
 class BottAdmin extends StatefulWidget {
   static String id = 'BottAdmin';
@@ -35,11 +34,11 @@ class BottAdmin extends StatefulWidget {
 
 @override
 class _BottAdminState extends State<BottAdmin> {
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
-  int _page = 0;
+  // final _scaffoldKey = GlobalKey<ScaffoldState>();
+  // int _page = 0;
   int index = 0;
   int currentIndex;
-  GlobalKey _bottomNavigationKey = GlobalKey();
+  // GlobalKey _bottomNavigationKey = GlobalKey();
   int _currentIndex = 0;
   PageController _pageController;
 
@@ -139,7 +138,7 @@ class _BottAdminState extends State<BottAdmin> {
                 child: Home(),
               ),
               Container(
-                child: notifications(),
+                child: Notifications(),
               ),
               Container(
                 child: Profile(
@@ -234,7 +233,7 @@ class _BottAdminState extends State<BottAdmin> {
       AdminHome();
     } else {
       child:
-      home();
+      Home();
     }
   }
 }

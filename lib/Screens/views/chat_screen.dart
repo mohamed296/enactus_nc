@@ -3,7 +3,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Helpers/functions.dart';
 import 'package:enactusnca/Helpers/helperfunction.dart';
-import 'package:enactusnca/Models/User.dart';
+import 'package:enactusnca/Models/user_model.dart';
 import 'package:enactusnca/Models/message.dart';
 import 'package:enactusnca/services/database_methods.dart';
 import 'package:flutter/material.dart';
@@ -29,9 +29,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
     getUserInfo();
-    databaseMethods
-        .getConversationMessages(chatRoomId: widget.chatRoomId)
-        .then((value) {
+    databaseMethods.getConversationMessages(chatRoomId: widget.chatRoomId).then((value) {
       setState(() {
         conversationStream = value;
       });
@@ -55,9 +53,9 @@ class _ChatScreenState extends State<ChatScreen> {
       // I am connected to a mobile network.
       // I am connected to a wifi network.
       if (tecMessage.text.isNotEmpty) {
-        final mesgVal = await Firestore.instance
+        final mesgVal = await FirebaseFirestore.instance
             .collection("chatRoom")
-            .document(widget.chatRoomId)
+            .doc(widget.chatRoomId)
             .collection("chats")
             .add({
           "message": tecMessage.text,
@@ -78,13 +76,13 @@ class _ChatScreenState extends State<ChatScreen> {
         };
         databaseMethods.addConversationMessages(
             chatRoomId: widget.chatRoomId, chatConversationMap: chatRoomMap);
-        await Firestore.instance
+        await FirebaseFirestore.instance
             .collection("chatRoom")
-            .document(widget.chatRoomId)
+            .doc(widget.chatRoomId)
             .collection("chats")
-            .document(mesgVal.documentID)
-            .updateData({
-          "messageId": mesgVal.documentID,
+            .doc(mesgVal.id)
+            .update({
+          "messageId": mesgVal.id,
         }).catchError((error) {
           print("getConversationErrors : ${error.toString()}");
         });
@@ -120,19 +118,15 @@ class _ChatScreenState extends State<ChatScreen> {
         children: <Widget>[
           Text(
             Functions.readTimestamp(message.time),
-            style: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.w600,
-                color: Colors.grey.shade100),
+            style:
+                TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600, color: Colors.grey.shade100),
           ),
           SizedBox(height: 8.0),
           Text(
             //message title
             message.message,
             style: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.w600,
-                color: Colors.blueGrey.shade100),
+                fontSize: 16.0, fontWeight: FontWeight.w600, color: Colors.blueGrey.shade100),
           ),
         ],
       ),
@@ -148,8 +142,8 @@ class _ChatScreenState extends State<ChatScreen> {
               ? IconButton(
                   onPressed: () {
                     setState(() {
-                      databaseMethods.changeIsLiked(!message.isLiked,
-                          widget.chatRoomId, message.messageId);
+                      databaseMethods.changeIsLiked(
+                          !message.isLiked, widget.chatRoomId, message.messageId);
                     });
                   },
                   icon: message.isLiked
@@ -274,12 +268,10 @@ class _ChatScreenState extends State<ChatScreen> {
                 decoration: BoxDecoration(
                     //    color: Constants.darkBlue,
                     borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(30.0),
-                        topLeft: Radius.circular(30.0))),
+                        topRight: Radius.circular(30.0), topLeft: Radius.circular(30.0))),
                 child: ClipRRect(
                   borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(30.0),
-                      topLeft: Radius.circular(30.0)),
+                      topRight: Radius.circular(30.0), topLeft: Radius.circular(30.0)),
                   child: StreamBuilder(
                       stream: conversationStream,
                       builder: (context, snapShot) {
@@ -290,25 +282,17 @@ class _ChatScreenState extends State<ChatScreen> {
                                 itemCount: snapShot.data.documents.length,
                                 itemBuilder: (context, index) {
                                   UserTitle userTitle = new UserTitle(
-                                      name: snapShot
-                                          .data.documents[index].data["sender"],
-                                      userId: snapShot.data.documents[index]
-                                          .data["senderId"]);
+                                      name: snapShot.data.documents[index].data["sender"],
+                                      userId: snapShot.data.documents[index].data["senderId"]);
                                   MessageTitle message = MessageTitle(
-                                    message: snapShot
-                                        .data.documents[index].data["message"],
-                                    isLiked: snapShot
-                                        .data.documents[index].data["isLiked"],
+                                    message: snapShot.data.documents[index].data["message"],
+                                    isLiked: snapShot.data.documents[index].data["isLiked"],
                                     sender: userTitle,
-                                    time: snapShot
-                                        .data.documents[index].data["time"],
-                                    unread: snapShot
-                                        .data.documents[index].data["unread"],
-                                    messageId: snapShot.data.documents[index]
-                                        .data['messageId'],
+                                    time: snapShot.data.documents[index].data["time"],
+                                    unread: snapShot.data.documents[index].data["unread"],
+                                    messageId: snapShot.data.documents[index].data['messageId'],
                                   );
-                                  bool isMe =
-                                      message.sender.userId == Constants.myId;
+                                  bool isMe = message.sender.userId == Constants.myId;
                                   return _buildMessage(message, isMe);
                                 })
                             : Center(

@@ -33,9 +33,9 @@ class _CommentsListState extends State<CommentsList> {
       children: <Widget>[
         addnewComment(),
         StreamBuilder(
-          stream: Firestore.instance
+          stream: FirebaseFirestore.instance
               .collection('Posts')
-              .document(widget.thisPost.postId)
+              .doc(widget.thisPost.postId)
               .collection('comments')
               .orderBy('timeStamp', descending: true)
               .snapshots()
