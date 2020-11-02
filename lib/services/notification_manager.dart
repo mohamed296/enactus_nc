@@ -10,9 +10,7 @@ class NotificationManager {
 
     firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) {
       print('onMessage: $message');
-      Platform.isAndroid
-          ? print(message['notification'])
-          : print(message['aps']['alert']);
+      Platform.isAndroid ? print(message['notification']) : print(message['aps']['alert']);
       return;
     }, onResume: (Map<String, dynamic> message) {
       print('onResume: $message');
@@ -24,10 +22,7 @@ class NotificationManager {
 
     firebaseMessaging.getToken().then((token) {
       print('token: $token');
-      Firestore.instance
-          .collection('users')
-          .document(email)
-          .updateData({'pushToken': token});
+      FirebaseFirestore.instance.collection('users').doc(email).update({'pushToken': token});
     }).catchError((err) {
       print(err.message.toString());
     });

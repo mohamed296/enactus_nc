@@ -18,18 +18,14 @@ const kAccentColor = Color(0xFFFFC107);
 const Kpost = 'post';
 const Kaddpost = 'addpost';
 
-final CollectionReference userCollection =
-    Firestore.instance.collection('Users');
+final CollectionReference userCollection = FirebaseFirestore.instance.collection('Users');
 
 // this is the post collection
-final CollectionReference postCollection =
-    Firestore.instance.collection('Posts');
+final CollectionReference postCollection = FirebaseFirestore.instance.collection('Posts');
 
-final CollectionReference commentsCollection =
-    Firestore.instance.collection('comments');
+final CollectionReference commentsCollection = FirebaseFirestore.instance.collection('comments');
 
-final CollectionReference chatCollection =
-    Firestore.instance.collection('Chat');
+final CollectionReference chatCollection = FirebaseFirestore.instance.collection('Chat');
 
 final kTitleTextStyle = TextStyle(
   fontSize: ScreenUtil().setSp(kSpacingUnit.w * 1.7),

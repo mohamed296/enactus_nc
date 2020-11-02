@@ -10,7 +10,7 @@
 .svn/
 
 # IntelliJ related
-*.iml
+
 *.ipr
 *.iws
 .idea/
@@ -23,6 +23,7 @@
 # Flutter/Dart/Pub related
 **/doc/api/
 .dart_tool/
+pubspec.lock
 .flutter-plugins
 .flutter-plugins-dependencies
 .packages

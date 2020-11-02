@@ -1,14 +1,12 @@
-import 'package:enactusnca/Widgets/header.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class notifications extends StatefulWidget {
+class Notifications extends StatefulWidget {
   static String id = 'notifications';
   @override
-  _notificationsState createState() => _notificationsState();
+  _NotificationsState createState() => _NotificationsState();
 }
 
-class _notificationsState extends State<notifications> {
+class _NotificationsState extends State<Notifications> {
   @override
   Widget build(BuildContext context) {
     return Stack(
