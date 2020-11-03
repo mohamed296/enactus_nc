@@ -83,4 +83,8 @@ class Post {
   Stream<List<Post>> get getPosts {
     return postCollection.orderBy('timeStamp', descending: true).snapshots().map(postsList);
   }
+
+  toMap() {}
+
+  static fromMap(map) {}
 }
