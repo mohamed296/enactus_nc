@@ -5,6 +5,7 @@ import 'package:enactusnca/Models/recent_chat.dart';
 import 'package:enactusnca/Screens/views/chat_screen.dart';
 import 'package:enactusnca/services/auth.dart';
 import 'package:enactusnca/services/database_methods.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class RecentChat extends StatefulWidget {
@@ -47,7 +48,7 @@ class _RecentChatState extends State<RecentChat> {
     Constants.myName = await HelperFunction.getUsername();
     Constants.myEmail = await HelperFunction.getUserEmail();
     Constants.myId = await HelperFunction.getUserId();
-    databaseMethods.getChatRooms(userName: Constants.myName).then((val) {
+    databaseMethods.getChatRooms(email: Constants.myEmail).then((val) {
       setState(() {
         chatRoomStream = val;
       });
@@ -219,17 +220,6 @@ class _RecentChatState extends State<RecentChat> {
         stream: chatRoomStream,
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
-            case ConnectionState.done:
-              return Center(
-                child: Text(
-                  'poor internet connection\nIt seems like you\'re one of WE clients',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 22.0,
-                  ),
-                ),
-              );
-              break;
             case ConnectionState.waiting:
               return Center(child: CircularProgressIndicator());
               break;

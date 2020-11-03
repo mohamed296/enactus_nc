@@ -1,39 +1,6 @@
 import 'package:enactusnca/Models/User.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-/*class AuthService{
-
-final FirebaseAuth _auth =FirebaseAuth.instance;
-
-  Future SignInAnon () async {
-
-  try {
-      AuthResult result =await _auth.signInAnonymously();
-      FirebaseUser User = result.user;
-      return User;
-  } catch (e) {
-    print(e.toString());
-    return null;
-  }
-  }
-}*/
-
-/*class Auth {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  Future<AuthResult> signUp(String email, String password) async {
-    final AuthResult = await _auth.createUserWithEmailAndPassword(
-        email: email, password: password);
-    return AuthResult;
-  }
-
-  Future<AuthResult> signIn(String email, String password) async {
-    final AuthResult = await _auth.signInWithEmailAndPassword(
-        email: email, password: password);
-    return AuthResult;
-  }
-}*/
-
 class Auth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
