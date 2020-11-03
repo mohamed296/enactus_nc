@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:enactusnca/models/NewPost.dart';
+import 'package:enactusnca/Models/post.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -140,7 +140,6 @@ class _AddNewPostState extends State<AddNewPost> {
             if (imageUrl != null) {
               await uploadImage().then((onComplet) async {
                 await post.addNewPost(description: newPost, mediaUrl: imageUrl).then((onComplete) {
-                  print(imageUrl);
                   setState(() => showLoadingPost = false);
                   Fluttertoast.showToast(msg: 'Post add Successfuly.');
                 });
