@@ -22,13 +22,13 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget searchList() {
     return searchSnapshot != null
         ? ListView.builder(
-            itemCount: searchSnapshot.documents.length,
+            itemCount: searchSnapshot.docs.length,
             shrinkWrap: true,
             itemBuilder: (context, index) {
               return SearchTitle(
-                username: searchSnapshot.documents[index].data["name"],
-                userEmail: searchSnapshot.documents[index].data["email"],
-                userId: searchSnapshot.documents[index].data["teamId"],
+                username: searchSnapshot.docs[index].data()["name"],
+                userEmail: searchSnapshot.docs[index].data()["email"],
+                userId: searchSnapshot.docs[index].data()["teamId"],
               );
             },
           )
@@ -177,9 +177,7 @@ class SearchTitle extends StatelessWidget {
           GestureDetector(
             onTap: () {
               createChatRoomAndStartConversation(
-                  context: context,
-                  userID: userEmail.trim(),
-                  userName: username);
+                  context: context, userID: userEmail.trim(), userName: username);
             },
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -204,8 +202,7 @@ getChatRoomId(String a, String b) {
   }
 }
 
-createChatRoomAndStartConversation(
-    {String userID, String userName, BuildContext context}) {
+createChatRoomAndStartConversation({String userID, String userName, BuildContext context}) {
   if (_userEmail != Constants.myEmail) {
     String chatRoomId = getChatRoomId(_userEmail, _myEmail);
     List<String> users = [userName, _myName];

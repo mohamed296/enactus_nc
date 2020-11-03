@@ -28,8 +28,8 @@ class _CalenderState extends State<Calender> {
   Map<DateTime, List<dynamic>> _groupEvents(List<EventModel> events) {
     Map<DateTime, List<dynamic>> data = {};
     events.forEach((event) {
-      DateTime date = DateTime(
-          event.eventDate.year, event.eventDate.month, event.eventDate.day, 12);
+      DateTime date =
+          DateTime(event.eventDate.year, event.eventDate.month, event.eventDate.day, 12);
       if (data[date] == null) data[date] = [];
       data[date].add(event);
     });
@@ -80,12 +80,10 @@ class _CalenderState extends State<Calender> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         formatButtonTextStyle: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15.0),
+                            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15.0),
                         formatButtonShowsNext: false),
                     startingDayOfWeek: StartingDayOfWeek.friday,
-                    onDaySelected: (data, events) {},
+                    // onDaySelected: (data, events) {},
                     calendarController: _controller,
                   ),
                 ],

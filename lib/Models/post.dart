@@ -9,7 +9,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 class Post {
   final String ownerId;
   final String postId;
-  final String userName;
   final String name;
   final String description;
   final String mediaUrl;
@@ -22,7 +21,6 @@ class Post {
   Post({
     this.ownerId,
     this.postId,
-    this.userName,
     this.name,
     this.description,
     this.mediaUrl,
@@ -50,44 +48,43 @@ class Post {
   );
 
   Future<dynamic> addNewPost({String description, String mediaUrl}) async {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    final postC = Firestore.instance.collection('Posts').document();
+    User user = FirebaseAuth.instance.currentUser;
+    final postC = FirebaseFirestore.instance.collection('Posts').doc();
     String fName;
     await HelperFunction.getUsername().then((value) => fName = value);
-    return await postC.setData({
+    return await postC.set({
       'ownerId': user.uid,
       'email': user.email,
       'name': fName,
       'likes': {},
-      'postId': postC.documentID,
       'description': description,
       'mediaUrl': mediaUrl,
       'timeStamp': _dateTime.toString(),
-      'userProfileImg': user.photoUrl,
+      'userProfileImg': user.photoURL,
     });
   }
 
   List<Post> postsList(QuerySnapshot snapshot) {
-    return snapshot.documents.map((doc) {
+    return snapshot.docs.map((doc) {
       return Post(
-        postId: doc['postId'],
+        postId: doc.id,
         ownerId: doc['ownerId'],
-        userName: doc['userName'],
         name: doc['name'],
         description: doc['description'],
         userProfileImg: doc['userProfileImg'],
         mediaUrl: doc['mediaUrl'],
         timeStamp: doc['timeStamp'],
-        likes: doc.data['likes'],
+        likes: doc.data()['likes'],
         likeCount: getLikesCount(this.likes),
       );
     }).toList();
   }
 
   Stream<List<Post>> get getPosts {
-    return postCollection
-        .orderBy('timeStamp', descending: true)
-        .snapshots()
-        .map(postsList);
+    return postCollection.orderBy('timeStamp', descending: true).snapshots().map(postsList);
   }
+
+  toMap() {}
+
+  static fromMap(map) {}
 }

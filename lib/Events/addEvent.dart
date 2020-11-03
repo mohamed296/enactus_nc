@@ -24,10 +24,8 @@ class _AddEventPageState extends State<AddEventPage> {
   @override
   void initState() {
     super.initState();
-    _title = TextEditingController(
-        text: widget.note != null ? widget.note.title : "");
-    _description = TextEditingController(
-        text: widget.note != null ? widget.note.description : "");
+    _title = TextEditingController(text: widget.note != null ? widget.note.title : "");
+    _description = TextEditingController(text: widget.note != null ? widget.note.description : "");
     _eventDate = DateTime.now();
     processing = false;
   }
@@ -46,42 +44,35 @@ class _AddEventPageState extends State<AddEventPage> {
           child: ListView(
             children: <Widget>[
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 child: TextFormField(
                   controller: _title,
-                  validator: (value) =>
-                      (value.isEmpty) ? "Please Enter title" : null,
+                  validator: (value) => (value.isEmpty) ? "Please Enter title" : null,
                   style: style,
                   decoration: InputDecoration(
                       labelText: "Title",
                       filled: true,
                       //  fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10))),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 child: TextFormField(
                   controller: _description,
                   minLines: 3,
                   maxLines: 5,
-                  validator: (value) =>
-                      (value.isEmpty) ? "Please Enter description" : null,
+                  validator: (value) => (value.isEmpty) ? "Please Enter description" : null,
                   style: style,
                   decoration: InputDecoration(
                       labelText: "description",
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10))),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
                 ),
               ),
               const SizedBox(height: 10.0),
               ListTile(
                 title: Text("Date (YYYY-MM-DD)"),
-                subtitle: Text(
-                    "${_eventDate.year} - ${_eventDate.month} - ${_eventDate.day}"),
+                subtitle: Text("${_eventDate.year} - ${_eventDate.month} - ${_eventDate.day}"),
                 onTap: () async {
                   DateTime picked = await showDatePicker(
                       context: context,
@@ -117,10 +108,13 @@ class _AddEventPageState extends State<AddEventPage> {
                                   "event_date": widget.note.eventDate
                                 });
                               } else {
-                                await eventDBS.createItem(EventModel(
+                                await eventDBS.createItem(
+                                  EventModel(
                                     title: _title.text,
                                     description: _description.text,
-                                    eventDate: DateTime.now()));
+                                    eventDate: DateTime.now(),
+                                  ),
+                                );
                               }
                               Navigator.pop(context);
                               setState(() {

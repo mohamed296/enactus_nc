@@ -1,24 +1,28 @@
 import 'package:flutter/material.dart';
 
-class EditeText extends StatelessWidget {
+class EditeText extends StatefulWidget {
   final String title;
   final bool obscureText;
   final TextEditingController textEditingController;
-  String data;
-  EditeText(
-      {this.title, this.obscureText, this.data, this.textEditingController});
+  final String data;
+  EditeText({this.title, this.obscureText, this.data, this.textEditingController});
+
+  @override
+  _EditeTextState createState() => _EditeTextState();
+}
+
+class _EditeTextState extends State<EditeText> {
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 40, vertical: 8),
       child: TextFormField(
-        controller: textEditingController,
-        obscureText: obscureText,
+        controller: widget.textEditingController,
+        obscureText: widget.obscureText,
         style: TextStyle(color: Colors.white),
         decoration: InputDecoration.collapsed(
-          hintText: title,
-          hintStyle: TextStyle(
-              fontSize: 18.0, color: Colors.grey, fontWeight: FontWeight.bold),
+          hintText: widget.title,
+          hintStyle: TextStyle(fontSize: 18.0, color: Colors.grey, fontWeight: FontWeight.bold),
         ),
       ),
     );

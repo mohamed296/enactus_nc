@@ -1,8 +1,9 @@
-/*import 'dart:html';
-
-import 'package:enactusnca/Models/NewPost.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:enactusnca/Models/notification_model.dart';
+import 'package:enactusnca/Models/post.dart';
+import 'package:enactusnca/Models/comment_model.dart';
 import 'package:enactusnca/Post/CommentCard.dart';
-import 'package:enactusnca/Widgets/constants.dart';
+import 'package:enactusnca/services/notification_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -26,7 +27,7 @@ class _CommentsListState extends State<CommentsList> {
 
   bool showLoading = false;
 
-  Comment comment = Comment();
+  CommentModel comment = CommentModel();
 
   @override
   Widget build(BuildContext context) {
@@ -34,11 +35,13 @@ class _CommentsListState extends State<CommentsList> {
       children: <Widget>[
         addnewComment(),
         StreamBuilder(
-          stream: postCollection
-              .document(widget.thisPost.postId)
+          stream: FirebaseFirestore.instance
+              .collection('Posts')
+              .doc(widget.thisPost.postId)
               .collection('comments')
               .orderBy('timeStamp', descending: true)
-              .snapshots(),
+              .snapshots()
+              .map(CommentModel().commentsList),
           //.map(comment.commentsList),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
@@ -159,21 +162,24 @@ class _CommentsListState extends State<CommentsList> {
                   child: IconButton(
                     icon: showLoading == false
                         ? Icon(Icons.send, color: Colors.white)
-                        : SpinKitChasingDots(
-                            color: Theme.of(context).accentColor,
-                          ),
-                    /*  onPressed: () async {
+                        : SpinKitChasingDots(color: Theme.of(context).accentColor),
+                    onPressed: () async {
                       setState(() => showLoading = true);
                       await comment
-                          .addNewComment(
-                        postId: widget.thisPost.postId,
-                        comment: newComment,
-                      )
-                          .then((done) {
-                        setState(() => showLoading = false);
-                        _key.currentState.reset();
-                      });
-                    },*/
+                          .addNewComment(postId: widget.thisPost.postId, comment: newComment)
+                          .then(
+                        (done) {
+                          NotificationModel notificationModel = NotificationModel(
+                            receiverId: widget.thisPost.ownerId,
+                            notificationPost: widget.thisPost,
+                            notificationEvent: null,
+                          );
+                          NotificationServices().sendNotification(notificationModel, false);
+                          setState(() => showLoading = false);
+                          _key.currentState.reset();
+                        },
+                      );
+                    },
                   ),
                 ),
               )
@@ -183,4 +189,4 @@ class _CommentsListState extends State<CommentsList> {
       ),
     );
   }
-}*/
+}

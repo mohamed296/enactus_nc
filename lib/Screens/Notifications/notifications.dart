@@ -1,33 +1,43 @@
-import 'package:enactusnca/Widgets/header.dart';
+import 'package:enactusnca/Screens/Notifications/notification_list.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class notifications extends StatefulWidget {
+class Notifications extends StatefulWidget {
   static String id = 'notifications';
   @override
-  _notificationsState createState() => _notificationsState();
+  _NotificationsState createState() => _NotificationsState();
 }
 
-class _notificationsState extends State<notifications> {
+class _NotificationsState extends State<Notifications> with SingleTickerProviderStateMixin {
+  TabController _tabController;
+
+  @override
+  void initState() {
+    _tabController = TabController(length: 2, vsync: this);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        DefaultTabController(
-          length: 2,
-          child: Scaffold(
-            appBar: AppBar(
-              automaticallyImplyLeading: false,
-              centerTitle: true,
-              title: Text(
-                'Notifications',
-                style: TextStyle(fontSize: 20.0),
-              ),
-              bottom: TabBar(tabs: <Widget>[Text('All'), Text('Groups')]),
-            ),
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        title: Text(
+          'Notifications',
+          style: TextStyle(fontSize: 20.0),
         ),
-      ],
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: <Widget>[Tab(text: 'All'), Tab(text: 'Groups')],
+        ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          NotificationList(),
+          Text('test'),
+        ],
+      ),
     );
   }
 }

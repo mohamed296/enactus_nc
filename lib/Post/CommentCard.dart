@@ -1,13 +1,10 @@
-/*import 'dart:html';
-
-import 'package:enactusnca/Models/NewPost.dart';
+import 'package:enactusnca/Models/comment_model.dart';
 import 'package:flutter/material.dart';
 
 class CommentCard extends StatelessWidget {
   static String id = 'CommentCard';
-  final Comment comment;
-  final Post post;
-  CommentCard({this.comment, this.post});
+  final CommentModel comment;
+  CommentCard({this.comment});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +19,10 @@ class CommentCard extends StatelessWidget {
             Container(
               margin: EdgeInsets.all(12.0),
               child: CircleAvatar(
-                //   backgroundImage: NetworkImage(comment.userImageUrl),
+                backgroundImage: NetworkImage(
+                  comment?.userImageUrl ??
+                      'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png',
+                ),
                 radius: 20.0,
               ),
             ),
@@ -41,7 +41,7 @@ class CommentCard extends StatelessWidget {
                     Row(
                       children: <Widget>[
                         Text(
-                          post.name,
+                          comment?.name ?? "",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16.0,
@@ -52,7 +52,7 @@ class CommentCard extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      post.ownerId,
+                      comment.comment,
                       style: TextStyle(color: Colors.white),
                     ),
                   ],
@@ -64,11 +64,10 @@ class CommentCard extends StatelessWidget {
         Container(
           margin: EdgeInsets.only(left: 66.0),
           child: Text(
-            post.timeStamp,
+            comment.timeStamp,
           ),
         ),
       ],
     );
   }
 }
-*/

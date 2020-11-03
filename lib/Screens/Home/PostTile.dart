@@ -1,21 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Helpers/helperfunction.dart';
-import 'package:enactusnca/Models/User.dart';
+import 'package:enactusnca/Models/user_model.dart';
 import 'package:enactusnca/Screens/Profile/profile.dart';
-import 'package:enactusnca/Settings/Settings.dart';
 import 'package:enactusnca/Widgets/PopUpMenu.dart';
 import 'package:enactusnca/Widgets/constants.dart';
 import 'package:enactusnca/Widgets/post_image.dart';
-import 'package:enactusnca/models/NewPost.dart';
+import 'package:enactusnca/Models/post.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
+import '../../Post/OpenPost.dart';
+
 class PostTile extends StatefulWidget {
   final Post post;
-  final User user;
+  final UserModel user;
   final dynamic likes;
-  int likeCount;
+  final int likeCount;
 
   PostTile({this.post, this.user, this.likes, this.likeCount});
 
@@ -76,6 +77,7 @@ class _PostTileState extends State<PostTile> {
   @override
   void initState() {
     super.initState();
+    print(widget.post.mediaUrl);
     getUserInfo();
   }
 
@@ -85,26 +87,26 @@ class _PostTileState extends State<PostTile> {
     Constants.myName = await HelperFunction.getUsername();
     Constants.myId = await HelperFunction.getUserId();
     print("welcome  ${Constants.myName} ${Constants.myEmail}");
-    setState(() {});
+    // setState(() {});
   }
 
   likePost() {
     bool _isLiked = likes[Constants.myEmail] == true;
     if (_isLiked) {
-      Firestore.instance
+      FirebaseFirestore.instance
           .collection("Posts")
-          .document(postId)
-          .updateData({'likes.${Constants.myEmail}': false});
+          .doc(postId)
+          .update({'likes.${Constants.myEmail}': false});
       setState(() {
         likeCount--;
         isLiked = false;
         likes[Constants.myEmail] = false;
       });
     } else {
-      Firestore.instance
+      FirebaseFirestore.instance
           .collection("Posts")
-          .document(postId)
-          .updateData({'likes.${Constants.myEmail}': true});
+          .doc(postId)
+          .update({'likes.${Constants.myEmail}': true});
       setState(() {
         likeCount++;
         isLiked = true;
@@ -131,8 +133,11 @@ class _PostTileState extends State<PostTile> {
   ListTile userInfo(BuildContext context) {
     return ListTile(
       leading: CircleAvatar(
-        backgroundImage: AssetImage('assets/images/greg.jpg'),
-        //    backgroundImage: NetworkImage(post.userProfileImg),
+        // backgroundImage: AssetImage('assets/images/greg.jpg'),
+        backgroundImage: NetworkImage(
+          widget?.post?.userProfileImg ??
+              'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png',
+        ),
       ),
       //title: Text(post.postId),
       // title: Text(user == null ? post.postId : ''),
@@ -191,13 +196,17 @@ class _PostTileState extends State<PostTile> {
 
   postSection(BuildContext context) {
     return FlatButton(
-      /* onPressed: () {
-        Navigator.push( context, MaterialPageRoute(builder: (context) => OpenPost(post: widget.post,focus: false,
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => OpenPost(
+              post: widget.post,
+              focus: false,
             ),
           ),
         );
-      },*/
-      onPressed: () {},
+      },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -213,9 +222,7 @@ class _PostTileState extends State<PostTile> {
               //  style: TextStyle(color: KMainColor)
             ),
           ),
-          widget.post.mediaUrl != null
-              ? PostImage(imageUrl: widget.post.mediaUrl)
-              : Container(),
+          widget.post.mediaUrl != null ? PostImage(imageUrl: widget.post.mediaUrl) : Container(),
         ],
       ),
     );
@@ -269,12 +276,12 @@ class _PostTileState extends State<PostTile> {
 
   void select(String choice) {
     if (choice == PopUpMenu.settings) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Settings(),
-        ),
-      );
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => Settings(),
+      //   ),
+      // );
     } else if (choice == PopUpMenu.signOut) {
       //  auth.signOutGoogle(context);
     }

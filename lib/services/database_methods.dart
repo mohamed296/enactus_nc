@@ -63,10 +63,10 @@ class DatabaseMethods {
         .snapshots();
   }
 
-  getChatRooms({String email}) async {
+  getChatRooms({String userName}) async {
     return Firestore.instance
         .collection("chatRoom")
-        .where("emails", arrayContains: email)
+        .where("users", arrayContains: userName)
         .orderBy('lastTime', descending: true)
         .snapshots();
   }

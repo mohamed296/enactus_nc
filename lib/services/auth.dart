@@ -1,18 +1,18 @@
-import 'package:enactusnca/Models/User.dart';
+import 'package:enactusnca/Models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Auth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  UserTitle _userFromFirebase(FirebaseUser user) {
+  UserTitle _userFromFirebase(User user) {
     return user != null ? UserTitle(userId: user.uid) : null;
   }
 
   Future signInWithEmail({String email, String password}) async {
     try {
-      AuthResult result = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
-      FirebaseUser user = result.user;
+      UserCredential result =
+          await _auth.signInWithEmailAndPassword(email: email, password: password);
+      User user = result.user;
       return _userFromFirebase(user);
     } catch (ex) {
       print("sing in issue ${ex.toString()}");
@@ -21,9 +21,9 @@ class Auth {
 
   Future signUpWithEmail({String email, String password}) async {
     try {
-      AuthResult result = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      FirebaseUser firebaseUser = result.user;
+      UserCredential result =
+          await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      User firebaseUser = result.user;
       return _userFromFirebase(firebaseUser);
     } catch (ex) {
       print("sing up issue ${ex.toString()}");

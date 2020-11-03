@@ -1,4 +1,4 @@
-import 'package:enactusnca/Models/User.dart';
+import 'package:enactusnca/Models/user_model.dart';
 
 class MessageTitle {
   final UserTitle sender;
@@ -25,9 +25,8 @@ class MessageTitle {
 
 //teb data
 class Message {
-  final User sender;
-  final String
-      time; // Would usually be type DateTime or Firebase Timestamp in production apps
+  final UserModel sender;
+  final String time; // Would usually be type DateTime or Firebase Timestamp in production apps
   final String text;
   final bool isLiked;
   final bool unread;
@@ -42,27 +41,23 @@ class Message {
 }
 
 // YOU - current user
-final User currentUser =
-    User(idd: 0, username: 'Current User', imageUrl: 'assets/images/greg.jpg');
+final UserModel currentUser =
+    UserModel(idd: 0, username: 'Current User', imageUrl: 'assets/images/greg.jpg');
 
 // USERS
-final User greg =
-    User(idd: 1, username: 'Greg', imageUrl: 'assets/images/greg.jpg');
-final User james =
-    User(idd: 2, username: 'James', imageUrl: 'assets/images/james.jpg');
-final User john =
-    User(idd: 3, username: 'John', imageUrl: 'assets/images/john.jpg');
-final User olivia =
-    User(idd: 4, username: 'Olivia', imageUrl: 'assets/images/olivia.jpg');
-final User sam =
-    User(idd: 5, username: 'Sam', imageUrl: 'assets/images/sam.jpg');
-final User sophia =
-    User(idd: 6, username: 'Sophia', imageUrl: 'assets/images/sophia.jpg');
-final User steven =
-    User(idd: 7, username: 'Steven', imageUrl: 'assets/images/steven.jpg');
+final UserModel greg = UserModel(idd: 1, username: 'Greg', imageUrl: 'assets/images/greg.jpg');
+final UserModel james = UserModel(idd: 2, username: 'James', imageUrl: 'assets/images/james.jpg');
+final UserModel john = UserModel(idd: 3, username: 'John', imageUrl: 'assets/images/john.jpg');
+final UserModel olivia =
+    UserModel(idd: 4, username: 'Olivia', imageUrl: 'assets/images/olivia.jpg');
+final UserModel sam = UserModel(idd: 5, username: 'Sam', imageUrl: 'assets/images/sam.jpg');
+final UserModel sophia =
+    UserModel(idd: 6, username: 'Sophia', imageUrl: 'assets/images/sophia.jpg');
+final UserModel steven =
+    UserModel(idd: 7, username: 'Steven', imageUrl: 'assets/images/steven.jpg');
 
 // FAVORITE CONTACTS
-List<User> favorites = [sam, steven, olivia, john, greg];
+List<UserModel> favorites = [sam, steven, olivia, john, greg];
 
 // EXAMPLE CHATS ON HOME SCREEN
 List<Message> chats = [

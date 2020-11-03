@@ -1,7 +1,7 @@
 import 'package:enactusnca/Events/Calendar.dart';
 import 'package:enactusnca/Helpers/helperfunction.dart';
-import 'package:enactusnca/Models/NewPost.dart';
-import 'package:enactusnca/Models/User.dart';
+import 'package:enactusnca/Models/post.dart';
+import 'package:enactusnca/Models/user_model.dart';
 import 'package:enactusnca/Screens/Profile/ProfilePostTile.dart';
 import 'package:enactusnca/Screens/views/sign_in.dart';
 import 'package:enactusnca/Widgets/constants.dart';
@@ -29,7 +29,7 @@ class _ProfileState extends State<Profile> {
   String name, email;
 
   Auth authMethods = new Auth();
-  User user = User();
+  UserModel user = UserModel();
   final users = UserTitle();
   final post = Post();
   bool favorito = false;
@@ -48,8 +48,8 @@ class _ProfileState extends State<Profile> {
        * getUsersByUserEmail method from DatabaseMethods class
        * */
       setState(() {
-        name = val.documents[0].data["name"];
-        email = val.documents[0].data["email"];
+        name = val.documents[0].data()["name"];
+        email = val.documents[0].data()["email"];
       });
     });
   }
@@ -74,7 +74,11 @@ class _ProfileState extends State<Profile> {
                       children: <Widget>[
                         CircleAvatar(
                           radius: kSpacingUnit.w * 5,
-                          backgroundImage: AssetImage('assets/images/greg.jpg'),
+                          // backgroundImage: AssetImage('assets/images/greg.jpg'),
+                          backgroundImage: NetworkImage(
+                            user?.photoUrl ??
+                                'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png',
+                          ),
                         ),
                         Align(
                           alignment: Alignment.bottomRight,
@@ -158,9 +162,8 @@ class _ProfileState extends State<Profile> {
                           HelperFunction.setUserLoggedIn(false);
                           HelperFunction.setUsername("");
                           HelperFunction.setUserEmail("");
-                          Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) => SignIn()));
+                          Navigator.of(context)
+                              .pushReplacement(MaterialPageRoute(builder: (context) => SignIn()));
                         },
                         child: ProfileListItem(
                           icon: LineAwesomeIcons.alternate_sign_out,

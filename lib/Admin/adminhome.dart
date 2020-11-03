@@ -1,8 +1,5 @@
 import 'package:enactusnca/Widgets/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:enactusnca/BottomNavBar.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AdminHome extends StatefulWidget {
   static String id = 'home';
@@ -12,7 +9,7 @@ class AdminHome extends StatefulWidget {
 
 class _AdminHomeState extends State<AdminHome> {
   List posts = List();
-  String Add = "";
+  String add = "";
 
   /*CreatePosts(){
       DocumentReference documentRefrance =Firestore.instance.collection("mypost").document(Add);
@@ -30,8 +27,8 @@ class _AdminHomeState extends State<AdminHome> {
   @override
   void initState() {
     super.initState();
-    posts.add(
-        "COVID-19 from spreading to prevention .../COVID-19 from spreading to prevention ...");
+    posts
+        .add("COVID-19 from spreading to prevention .../COVID-19 from spreading to prevention ...");
     posts.add(
         "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto");
   }
@@ -56,7 +53,7 @@ class _AdminHomeState extends State<AdminHome> {
                       title: Text('add post'),
                       content: TextField(
                         onChanged: (String value) {
-                          Add = value;
+                          add = value;
                         },
                       ),
                       actions: <Widget>[
@@ -69,7 +66,7 @@ class _AdminHomeState extends State<AdminHome> {
                         */
                           onPressed: () {
                             setState(() {
-                              posts.add(Add);
+                              posts.add(add);
                             });
                           },
                           child: Text('Add'),
@@ -108,52 +105,50 @@ class _AdminHomeState extends State<AdminHome> {
                       borderRadius: BorderRadius.circular(15.0),
                       color: Color.fromRGBO(20, 69, 131, 1.0),
                     ),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+                      Row(
                         children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              CircleAvatar(),
-                              SizedBox(
-                                width: 10.0,
-                              ),
-                              Text(
-                                "A_Shokry",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ],
+                          CircleAvatar(),
+                          SizedBox(
+                            width: 10.0,
                           ),
                           Text(
-                            posts[index],
+                            "A_Shokry",
                             style: TextStyle(color: Colors.white),
                           ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: 1.0,
-                            color: Colors.grey,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: <Widget>[
-                              IconButton(
-                                  icon: Icon(
-                                    Icons.favorite,
-                                    color: Colors.red,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {});
-                                  }),
-                              IconButton(
-                                  icon: Icon(
-                                    Icons.comment,
-                                  ),
-                                  onPressed: () {}),
-                            ],
-                          )
-                        ]),
+                        ],
+                      ),
+                      Text(
+                        posts[index],
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 1.0,
+                        color: Colors.grey,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          IconButton(
+                              icon: Icon(
+                                Icons.favorite,
+                                color: Colors.red,
+                              ),
+                              onPressed: () {
+                                setState(() {});
+                              }),
+                          IconButton(
+                              icon: Icon(
+                                Icons.comment,
+                              ),
+                              onPressed: () {}),
+                        ],
+                      )
+                    ]),
                   ),
                 ),
               );

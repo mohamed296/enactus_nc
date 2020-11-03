@@ -1,8 +1,11 @@
+import 'package:enactusnca/Models/comment_model.dart';
 import 'package:enactusnca/Screens/Profile/profile.dart';
 import 'package:enactusnca/Widgets/post_image.dart';
-import 'package:enactusnca/models/NewPost.dart';
+import 'package:enactusnca/Models/post.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import 'CommentsList.dart';
 
 class OpenPost extends StatefulWidget {
   final focus;
@@ -14,7 +17,7 @@ class OpenPost extends StatefulWidget {
 }
 
 class _OpenPostState extends State<OpenPost> {
-  //Comment comments = Comment();
+  // CommentModel _commentModel = CommentModel();
   bool showLoading = false;
   String comment;
 
@@ -23,7 +26,7 @@ class _OpenPostState extends State<OpenPost> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        title: Text(widget.post.userName),
+        title: Text(widget.post.name),
       ),
       body: Stack(
         children: <Widget>[
@@ -53,7 +56,7 @@ class _OpenPostState extends State<OpenPost> {
               ),
             ),
           ),
-          //  commentsSection(),
+          commentsSection(),
         ],
       ),
     );
@@ -62,9 +65,10 @@ class _OpenPostState extends State<OpenPost> {
   userinfo() {
     return ListTile(
       leading: CircleAvatar(
-        backgroundImage: NetworkImage(widget.post.userProfileImg),
+        backgroundImage: NetworkImage(widget?.post?.userProfileImg ??
+            'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png'),
       ),
-      title: Text(widget.post.userName),
+      title: Text(widget.post.name),
       subtitle: Text(widget.post.timeStamp),
       onTap: () {
         Navigator.push(
@@ -100,7 +104,7 @@ class _OpenPostState extends State<OpenPost> {
     );
   }
 
-  /*commentsSection() {
+  commentsSection() {
     return SizedBox.expand(
       child: DraggableScrollableSheet(
         minChildSize: 0.2,
@@ -115,5 +119,5 @@ class _OpenPostState extends State<OpenPost> {
         },
       ),
     );
-  }*/
+  }
 }
