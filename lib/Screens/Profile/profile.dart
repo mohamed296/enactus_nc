@@ -1,6 +1,6 @@
 import 'package:enactusnca/Events/Calendar.dart';
 import 'package:enactusnca/Helpers/helperfunction.dart';
-import 'package:enactusnca/Models/NewPost.dart';
+import 'package:enactusnca/Models/post.dart';
 import 'package:enactusnca/Models/user_model.dart';
 import 'package:enactusnca/Screens/Profile/ProfilePostTile.dart';
 import 'package:enactusnca/Screens/views/sign_in.dart';

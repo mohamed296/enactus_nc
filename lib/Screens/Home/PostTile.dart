@@ -6,7 +6,7 @@ import 'package:enactusnca/Screens/Profile/profile.dart';
 import 'package:enactusnca/Widgets/PopUpMenu.dart';
 import 'package:enactusnca/Widgets/constants.dart';
 import 'package:enactusnca/Widgets/post_image.dart';
-import 'package:enactusnca/Models/NewPost.dart';
+import 'package:enactusnca/Models/post.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
