@@ -41,15 +41,15 @@ class _HomeScreenState extends State<HomeScreen>
             bottom: TabBar(controller: controller, tabs: <Widget>[
               Tab(
                 icon: Icon(Icons.person_add),
-                text: 'Message',
+                text: 'Messages',
               ),
               Tab(
                 icon: Icon(Icons.group_add),
-                text: 'Group',
+                text: 'Groups',
               ),
               Tab(
                 icon: Icon(Icons.contacts),
-                text: 'Member',
+                text: 'Members',
               ),
             ]),
             // backgroundColor: Constants.darkBlue,

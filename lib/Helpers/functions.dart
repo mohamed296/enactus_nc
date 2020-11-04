@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:date_format/date_format.dart';
 import 'package:intl/intl.dart';
 
 class Functions {
@@ -6,6 +8,32 @@ class Functions {
       return false;
     } else {
       return true;
+    }
+  }
+
+  static checkIfIdValid(String id) async {
+    String _dateTime = formatDate(
+      DateTime.now(),
+      [yyyy],
+    );
+
+    var _doc;
+    await Firestore.instance
+        .collection("Posts")
+        .where('id.$id', isEqualTo: id)
+        .getDocuments()
+        .then((value) => _doc = value);
+    if ((id.substring(0, 3) == 'PRO' ||
+            id.substring(0, 3) == 'PRE' ||
+            id.substring(0, 2) == 'HR' ||
+            id.substring(0, 2) == 'MM' ||
+            id.substring(0, 2) == 'ER') &&
+        _dateTime.substring(2, 4) == '20' &&
+        _doc.data.documents[0].data["id"] &&
+        _doc.data.documents[0].data["isRegistered"] == false) {
+      return true;
+    } else {
+      return false;
     }
   }
 
