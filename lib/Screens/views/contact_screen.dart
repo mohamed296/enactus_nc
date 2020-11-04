@@ -90,7 +90,8 @@ class _ContactsScreenState extends State<ContactsScreen> {
   }
 }
 
-Widget singleUser({String name, String imageURL, String emali, BuildContext context}) {
+Widget singleUser(
+    {String name, String imageURL, String emali, BuildContext context}) {
   return GestureDetector(
     onTap: () {
       Navigator.pushReplacement(
@@ -111,9 +112,10 @@ Widget singleUser({String name, String imageURL, String emali, BuildContext cont
             right: 20.0,
           ),
           child: CircleAvatar(
-            radius: 35,
-            backgroundImage:
-                imageURL != null ? AssetImage("assets/images/sam.jpg") : NetworkImage(imageURL),
+            radius: 30,
+            backgroundImage: imageURL != null
+                ? AssetImage("assets/images/person.png")
+                : NetworkImage(imageURL),
           ),
         ),
         Text(

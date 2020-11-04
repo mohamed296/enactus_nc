@@ -206,8 +206,10 @@ createChatRoomAndStartConversation({String userID, String userName, BuildContext
   if (_userEmail != Constants.myEmail) {
     String chatRoomId = getChatRoomId(_userEmail, _myEmail);
     List<String> users = [userName, _myName];
+    List<String> emails = [userID.toLowerCase(), _myEmail.toLowerCase()];
     Map<String, dynamic> chatRoomMap = {
       "users": users,
+      "emails": emails,
       "lastMessage": "",
       "isRead": false,
       "lastTime": null,
