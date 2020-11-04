@@ -8,6 +8,7 @@ import 'package:enactusnca/services/auth.dart';
 import 'package:enactusnca/services/database_methods.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignIn extends StatefulWidget {
   static String id = 'SignIn';
@@ -25,7 +26,8 @@ class _SignInState extends State<SignIn> {
   QuerySnapshot snapshot;
   bool isSignIn = Constants.isSignIn;
 
-  signIn() {
+  signIn() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     HelperFunction.setUserEmail(tecEmail.text);
     _databaseMethods.getUsersByUserEmail(tecEmail.text).then((val) {
       snapshot = val;
@@ -46,6 +48,7 @@ class _SignInState extends State<SignIn> {
         .signInWithEmail(email: tecEmail.text.trim(), password: tecPassword.text.trim())
         .then((value) {
       if (value != null) {
+        sharedPreferences.setString('user', tecEmail.text);
         Navigator.of(context).pushNamed(BottAdmin.id);
       } else {
         setState(() {

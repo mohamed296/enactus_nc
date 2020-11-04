@@ -23,6 +23,7 @@ class Auth {
       {String email, String password, String name, String imgUrl}) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
+
           email: email, password: password);
       result.user.updateProfile(displayName: name, photoURL: imgUrl);
       User firebaseUser = result.user;

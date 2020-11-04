@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DatabaseMethods {
+
   uploadUserInfo({userMap, String uid}) {
     FirebaseFirestore.instance
         .collection("Users")
