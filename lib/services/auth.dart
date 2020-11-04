@@ -10,8 +10,8 @@ class Auth {
 
   Future signInWithEmail({String email, String password}) async {
     try {
-      UserCredential result =
-          await _auth.signInWithEmailAndPassword(email: email, password: password);
+      UserCredential result = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
       User user = result.user;
       return _userFromFirebase(user);
     } catch (ex) {
@@ -19,12 +19,13 @@ class Auth {
     }
   }
 
-  Future signUpWithEmail({String email, String password}) async {
+  Future signUpWithEmail(
+      {String email, String password, String name, String imgUrl}) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+
+          email: email, password: password);
+      result.user.updateProfile(displayName: name, photoURL: imgUrl);
       User firebaseUser = result.user;
       return _userFromFirebase(firebaseUser);
     } catch (ex) {

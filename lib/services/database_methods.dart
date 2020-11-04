@@ -1,8 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DatabaseMethods {
-  uploadUserInfo(userMap) {
-    FirebaseFirestore.instance.collection("Users").add(userMap).catchError((e) {
+
+  uploadUserInfo({userMap, String uid}) {
+    FirebaseFirestore.instance
+        .collection("Users")
+        .doc(uid)
+        .set(userMap)
+        .catchError((e) {
       print("Uploading error " + e.toString());
     });
   }
