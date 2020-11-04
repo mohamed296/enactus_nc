@@ -2,13 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enactusnca/Admin/Bott_admin.dart';
 import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Helpers/functions.dart';
-import 'package:enactusnca/Helpers/helperfunction.dart';
 import 'package:enactusnca/Screens/views/sign_in.dart';
 import 'package:enactusnca/Widgets/edite_text.dart';
 import 'package:enactusnca/services/auth.dart';
 import 'package:enactusnca/services/database_methods.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -28,9 +28,10 @@ class _SignUpState extends State<SignUp> {
   QuerySnapshot snapshot;
   bool isSignIn = Constants.isSignIn;
 
-  signUp() {
-    HelperFunction.setUserEmail(tecEmailUp.text.toLowerCase().toString());
-    HelperFunction.setUsername(tecName.text.toLowerCase().toString());
+  signUp() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    // HelperFunction.setUserEmail(tecEmailUp.text.toLowerCase().toString());
+    // HelperFunction.setUsername(tecName.text.toLowerCase().toString());
     Map<String, dynamic> userInfo = {
       "name": tecName.text,
       "userName": tecUserName.text.toLowerCase(),
@@ -41,17 +42,20 @@ class _SignUpState extends State<SignUp> {
       "isAdmin": Functions.checkId(tecSignUpCode.toString().toLowerCase()),
       "joiningDate": DateTime.now(),
     };
-    setState(() {
-      isLoading = !isLoading;
-    });
+
+    setState(() => isLoading = !isLoading);
     _databaseMethods.uploadUserInfo(userInfo);
-    HelperFunction.setUserLoggedIn(true);
+    // HelperFunction.setUserLoggedIn(true);
     _auth
         .signUpWithEmail(
-            email: tecEmailUp.text.trim().toLowerCase(),
-            password: tecPasswordUp.text)
-        .then((value) => print(value));
-    Navigator.of(context).popAndPushNamed(BottAdmin.id);
+          email: tecEmailUp.text.trim().toLowerCase(),
+          password: tecPasswordUp.text,
+        )
+        .then((value) => print(value))
+        .whenComplete(() {
+      sharedPreferences.setString('user', tecName.text);
+      Navigator.of(context).pushReplacementNamed(BottAdmin.id);
+    });
   }
 
   @override
@@ -124,15 +128,14 @@ class _SignUpState extends State<SignUp> {
                   GestureDetector(
                     onTap: () {
                       setState(() {
-                        Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (context) => SignIn()));
+                        Navigator.pushReplacement(
+                            context, MaterialPageRoute(builder: (context) => SignIn()));
                         isSignIn = !isSignIn;
                       });
                     },
                     child: Container(
                       color: Colors.transparent,
-                      padding:
-                          EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                       margin: EdgeInsets.only(top: 5, left: 50, bottom: 5),
                       child: Text(
                         "Sign In",

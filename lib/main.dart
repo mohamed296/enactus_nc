@@ -16,9 +16,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'Helpers/helperfunction.dart';
-
-//void main() => runApp(MyApp());
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -30,8 +27,8 @@ Future<void> main() async {
     ChangeNotifierProvider<AppThemeProvider>(
       create: (context) => AppThemeProvider(
         themeData: theme == null || theme == false
-            ? AppThemeProvider.lightTheme
-            : AppThemeProvider.darkTheme,
+            ? AppThemeProvider.darkTheme
+            : AppThemeProvider.lightTheme,
       ),
       child: MyApp(user: user),
     ),
@@ -49,22 +46,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   @override
-  void initState() {
-    getLoaggedInState();
-    super.initState();
-  }
-
-  bool isUserLoggedIn;
-
-  getLoaggedInState() async {
-    await HelperFunction.getUserLoggedIn().then((value) {
-      setState(() {
-        isUserLoggedIn = value;
-      });
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     final theme = Provider.of<AppThemeProvider>(context);
 
@@ -75,10 +56,7 @@ class _MyAppState extends State<MyApp> {
        * initialRoute has been changed to HomeScreen if the user has
        * signed in once before.
        * */
-      initialRoute: isUserLoggedIn != null
-          ? /**/ isUserLoggedIn
-              ? Home.id
-              : SignIn.id /**/ : SignIn.id,
+      initialRoute: widget.user != null ? BottAdmin.id : SignIn.id,
       routes: {
         SignIn.id: (context) => SignIn(),
         // LoginScreen.id: (context) => LoginScreen(),

@@ -1,14 +1,11 @@
-import 'package:enactusnca/Admin/adminhome.dart';
-import 'package:enactusnca/Screens/bottom_nav/home.dart';
+import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:enactusnca/Screens/Notifications/notifications.dart';
+import 'package:enactusnca/Screens/bottom_nav/home.dart';
 import 'package:enactusnca/Screens/bottom_nav/profile.dart';
 import 'package:enactusnca/Widgets/constants.dart';
-import 'package:enactusnca/provider/Admin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:bottom_navy_bar/bottom_navy_bar.dart';
-import 'package:provider/provider.dart';
 
 class BottomNavBar extends StatefulWidget {
   static String id = 'BottomNavBar';
@@ -17,11 +14,11 @@ class BottomNavBar extends StatefulWidget {
   _BottomNavBarState createState() => _BottomNavBarState();
 }
 
-final BottomNavBar _bottomNavBar = BottomNavBar();
+// final BottomNavBar _bottomNavBar = BottomNavBar();
 final Home _home = Home();
 final Notifications _notifications = Notifications();
 final Profile _profile = Profile();
-Widget _showpage = new Home();
+// Widget _showpage = new Home();
 
 Widget _pagechoser(int page) {
   switch (page) {
@@ -42,10 +39,10 @@ Widget _pagechoser(int page) {
 
 @override
 class _BottomNavBarState extends State<BottomNavBar> {
-  int _page = 0;
+  // int _page = 0;
   int index = 0;
   int currentIndex;
-  GlobalKey _bottomNavigationKey = GlobalKey();
+  // GlobalKey _bottomNavigationKey = GlobalKey();
   int _currentIndex = 0;
   PageController _pageController;
 
@@ -274,15 +271,15 @@ class _BottomNavBarState extends State<BottomNavBar> {
     ]);
   }
 
-  _changeHome(BuildContext context) {
-    if (Provider.of<Admin>(context, listen: false).isAdmin) {
-      child:
-      AdminHome();
-    } else {
-      child:
-      Home();
-    }
-  }
+  // _changeHome(BuildContext context) {
+  //   if (Provider.of<Admin>(context, listen: false).isAdmin) {
+  //     child:
+  //     AdminHome();
+  //   } else {
+  //     child:
+  //     Home();
+  //   }
+  // }
 }
 
 class MYpopup extends StatelessWidget {

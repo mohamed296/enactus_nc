@@ -18,10 +18,10 @@ class Functions {
     );
 
     var _doc;
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection("Posts")
         .where('id.$id', isEqualTo: id)
-        .getDocuments()
+        .get()
         .then((value) => _doc = value);
     if ((id.substring(0, 3) == 'PRO' ||
             id.substring(0, 3) == 'PRE' ||

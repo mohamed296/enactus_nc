@@ -2,69 +2,69 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DatabaseMethods {
   uploadUserInfo(userMap) {
-    Firestore.instance.collection("Users").add(userMap).catchError((e) {
+    FirebaseFirestore.instance.collection("Users").add(userMap).catchError((e) {
       print("Uploading error " + e.toString());
     });
   }
 
   changeIsLiked(bool newVal, String roomId, String messageId) {
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection("chatRoom")
-        .document(roomId)
+        .doc(roomId)
         .collection("chats")
-        .document(messageId)
-        .updateData({'isLiked': newVal}).catchError((e) {
+        .doc(messageId)
+        .update({'isLiked': newVal}).catchError((e) {
       print("Uploading error " + e.toString());
     });
   }
 
   getUsersByUserEmail(String email) async {
-    return await Firestore.instance
+    return await FirebaseFirestore.instance
         .collection("Users")
         .where("email", isEqualTo: email)
-        .getDocuments();
+        .get();
   }
 
   createChatRoom(String chatRoomId, chatRoomMap) {
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection("chatRoom")
-        .document(chatRoomId)
-        .setData(chatRoomMap)
+        .doc(chatRoomId)
+        .set(chatRoomMap)
         .catchError((error) {
       print("chatRoom error: ${error.toString()}");
     });
   }
 
   addConversationMessages({String chatRoomId, chatConversationMap}) {
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection("chatRoom")
-        .document(chatRoomId)
-        .updateData(chatConversationMap)
+        .doc(chatRoomId)
+        .update(chatConversationMap)
         .catchError((e) {
       print("Uploading error " + e.toString());
     });
   }
 
   markMessageAsSeen(String chatRoomId) {
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection("chatRoom")
-        .document(chatRoomId)
-        .updateData({'isRead': true}).catchError((e) {
+        .doc(chatRoomId)
+        .update({'isRead': true}).catchError((e) {
       print("Uploading error " + e.toString());
     });
   }
 
   getConversationMessages({String chatRoomId}) async {
-    return Firestore.instance
+    return FirebaseFirestore.instance
         .collection("chatRoom")
-        .document(chatRoomId)
+        .doc(chatRoomId)
         .collection("chats")
         .orderBy("time", descending: true)
         .snapshots();
   }
 
   getChatRooms({String email}) async {
-    return Firestore.instance
+    return FirebaseFirestore.instance
         .collection("chatRoom")
         .where("emails", arrayContains: email)
         .orderBy('lastTime', descending: true)
@@ -72,6 +72,6 @@ class DatabaseMethods {
   }
 
   getUsers() async {
-    return Firestore.instance.collection("Users").snapshots();
+    return FirebaseFirestore.instance.collection("Users").snapshots();
   }
 }

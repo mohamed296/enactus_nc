@@ -1,6 +1,5 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:enactusnca/Admin/adminhome.dart';
 import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Helpers/helperfunction.dart';
 import 'package:enactusnca/Models/user_model.dart';
@@ -9,10 +8,8 @@ import 'package:enactusnca/Screens/Notifications/notifications.dart';
 import 'package:enactusnca/Screens/Profile/profile.dart';
 import 'package:enactusnca/Screens/views/home_screen.dart';
 import 'package:enactusnca/Widgets/constants.dart';
-import 'package:enactusnca/provider/Admin.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 //void main() => runApp(MaterialApp(home: BottAdmin()));
 
@@ -227,15 +224,15 @@ class _BottAdminState extends State<BottAdmin> {
     ]);
   }
 
-  _changeHome(BuildContext context) {
-    if (Provider.of<Admin>(context, listen: false).isAdmin) {
-      child:
-      AdminHome();
-    } else {
-      child:
-      Home();
-    }
-  }
+  // _changeHome(BuildContext context) {
+  //   if (Provider.of<Admin>(context, listen: false).isAdmin) {
+  //     child:
+  //     AdminHome();
+  //   } else {
+  //     child:
+  //     Home();
+  //   }
+  // }
 }
 
 class MYpopup extends StatelessWidget {
