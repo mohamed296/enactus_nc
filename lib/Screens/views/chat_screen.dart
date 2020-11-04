@@ -224,7 +224,7 @@ class _ChatScreenState extends State<ChatScreen> {
               width: 35,
               child: CircleAvatar(
                 radius: 35,
-                backgroundImage: AssetImage('assets/images/greg.jpg'),
+                backgroundImage: AssetImage('assets/images/person.png'),
               ),
             ),
             SizedBox(

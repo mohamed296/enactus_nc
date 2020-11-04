@@ -7,6 +7,7 @@ import 'package:enactusnca/Screens/views/sign_in.dart';
 import 'package:enactusnca/Widgets/edite_text.dart';
 import 'package:enactusnca/services/auth.dart';
 import 'package:enactusnca/services/database_methods.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -27,11 +28,18 @@ class _SignUpState extends State<SignUp> {
   bool isLoading = false;
   QuerySnapshot snapshot;
   bool isSignIn = Constants.isSignIn;
+  Map<String, dynamic> userInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    _auth.signOut();
+  }
 
   signUp() {
     HelperFunction.setUserEmail(tecEmailUp.text.toLowerCase().toString());
     HelperFunction.setUsername(tecName.text.toLowerCase().toString());
-    Map<String, dynamic> userInfo = {
+    userInfo = {
       "name": tecName.text,
       "userName": tecUserName.text.toLowerCase(),
       "email": tecEmailUp.text.toLowerCase(),
@@ -44,14 +52,20 @@ class _SignUpState extends State<SignUp> {
     setState(() {
       isLoading = !isLoading;
     });
-    _databaseMethods.uploadUserInfo(userInfo);
-    HelperFunction.setUserLoggedIn(true);
-    _auth
+    //TODO: check if sign up operation has been executed correctly
+    Auth()
         .signUpWithEmail(
             email: tecEmailUp.text.trim().toLowerCase(),
-            password: tecPasswordUp.text)
-        .then((value) => print(value));
-    Navigator.of(context).popAndPushNamed(BottAdmin.id);
+            password: tecPasswordUp.text,
+            name: tecName.text,
+            imgUrl: null)
+        .then((value) {
+      setState(() {});
+      _databaseMethods.uploadUserInfo(
+          userMap: userInfo, uid: FirebaseAuth.instance.currentUser.uid);
+      HelperFunction.setUserLoggedIn(true);
+      Navigator.of(context).popAndPushNamed(BottAdmin.id);
+    });
   }
 
   @override
@@ -97,12 +111,12 @@ class _SignUpState extends State<SignUp> {
                     ),
                     EditeText(
                       textEditingController: tecUserName,
-                      title: "User name",
+                      title: "Full name",
                       obscureText: false,
                     ),
                     EditeText(
                       textEditingController: tecSignUpCode,
-                      title: "Special id",
+                      title: "Team Id",
                       obscureText: false,
                     ),
                     EditeText(
@@ -115,6 +129,8 @@ class _SignUpState extends State<SignUp> {
                       title: "Password",
                       obscureText: true,
                     ),
+
+                    /**TODO: add spinner with the existing communities and and departments **/
                   ],
                 ),
               ),
