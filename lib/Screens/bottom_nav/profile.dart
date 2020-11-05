@@ -1,6 +1,4 @@
-import 'package:enactusnca/BottomNavBar.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -126,16 +124,17 @@ class _Profile extends State<Profile> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    new IconButton(
-                        icon: Icon(
-                          FontAwesomeIcons.googlePlusSquare,
-                          color: Colors.red,
-                          size: 45.0,
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).push(
-                              new MaterialPageRoute(builder: (context) => new BottomNavBar()));
-                        }),
+                    // new IconButton(
+                    //   icon: Icon(
+                    //     FontAwesomeIcons.googlePlusSquare,
+                    //     color: Colors.red,
+                    //     size: 45.0,
+                    //   ),
+                    // onPressed: () {
+                    //   Navigator.of(context)
+                    //       .push(new MaterialPageRoute(builder: (context) => new BottomNavBar()));
+                    // },
+                    // ),
                   ],
                 ),
                 SizedBox(height: 30.0),

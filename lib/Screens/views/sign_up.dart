@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:enactusnca/Admin/Bott_admin.dart';
 import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Helpers/functions.dart';
+import 'package:enactusnca/Helpers/helperfunction.dart';
 import 'package:enactusnca/Screens/views/sign_in.dart';
 import 'package:enactusnca/Widgets/edite_text.dart';
 import 'package:enactusnca/services/auth.dart';
@@ -9,7 +9,8 @@ import 'package:enactusnca/services/database_methods.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../wrapper.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -35,7 +36,6 @@ class _SignUpState extends State<SignUp> {
     super.initState();
     _auth.signOut();
   }
-
 
   signUp() {
     HelperFunction.setUserEmail(tecEmailUp.text.toLowerCase().toString());
@@ -66,7 +66,7 @@ class _SignUpState extends State<SignUp> {
       _databaseMethods.uploadUserInfo(
           userMap: userInfo, uid: FirebaseAuth.instance.currentUser.uid);
       HelperFunction.setUserLoggedIn(true);
-      Navigator.of(context).popAndPushNamed(BottAdmin.id);
+      Navigator.of(context).popAndPushNamed(Wrapper.id);
     });
   }
 

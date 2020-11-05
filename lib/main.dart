@@ -1,16 +1,15 @@
 import 'package:enactusnca/AddNewPost/upload.dart';
-import 'package:enactusnca/Admin/Bott_admin.dart';
 import 'package:enactusnca/Admin/EditPost.dart';
-import 'package:enactusnca/BottomNavBar.dart';
 import 'package:enactusnca/Events/Calendar.dart';
 import 'package:enactusnca/Events/addEvent.dart';
 import 'package:enactusnca/Events/view_Event.dart';
 import 'package:enactusnca/Screens/Home/Home.dart';
 import 'package:enactusnca/Screens/Profile/ProfilePostTile.dart';
 import 'package:enactusnca/Screens/Profile/profile.dart';
-import 'package:enactusnca/Screens/views/home_screen.dart';
+import 'package:enactusnca/Screens/views/chat.dart';
 import 'package:enactusnca/Screens/views/sign_in.dart';
 import 'package:enactusnca/utilts/app_theme_provider.dart';
+import 'package:enactusnca/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -56,17 +55,16 @@ class _MyAppState extends State<MyApp> {
        * initialRoute has been changed to HomeScreen if the user has
        * signed in once before.
        * */
-      initialRoute: widget.user != null ? BottAdmin.id : SignIn.id,
+      initialRoute: widget.user != null ? Wrapper.id : SignIn.id,
       routes: {
         SignIn.id: (context) => SignIn(),
         // LoginScreen.id: (context) => LoginScreen(),
         // SignupScreen.id: (context) => SignupScreen(),
-        BottomNavBar.id: (context) => BottomNavBar(),
-        BottAdmin.id: (context) => BottAdmin(),
+        Wrapper.id: (context) => Wrapper(),
         AddNewPost.id: (context) => AddNewPost(),
         EditPost.id: (context) => EditPost(),
         Profile.id: (context) => Profile(),
-        HomeScreen.id: (context) => HomeScreen(),
+        Chat.id: (context) => Chat(),
         Calender.id: (context) => Calender(),
         AddEventPage.id: (context) => AddEventPage(),
         EventDetailsPage.id: (context) => EventDetailsPage(),
@@ -74,36 +72,5 @@ class _MyAppState extends State<MyApp> {
         ProfileListItem.id: (context) => ProfileListItem(),
       },
     );
-    /* return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<Admin>(create: (context) => Admin()),
-        // ChangeNotifierProvider<AddNewPost>(create: (context) => AddNewPost()),
-        //  ChangeNotifierProvider<User>(create: (context) => User()),
-        ChangeNotifierProvider<AppThemeProvider>(
-            create: (context) => AppThemeProvider()),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Enactus plus',
-        theme: ThemeData(),
-        // theme: ThemeProvider.of(context),
-        initialRoute: BottAdmin.id,
-        routes: {
-          SignIn.id: (context) => SignIn(),
-          // LoginScreen.id: (context) => LoginScreen(),
-          // SignupScreen.id: (context) => SignupScreen(),
-          BottomNavBar.id: (context) => BottomNavBar(),
-          BottAdmin.id: (context) => BottAdmin(),
-          AddNewPost.id: (context) => AddNewPost(),
-          EditPost.id: (context) => EditPost(),
-          Profile.id: (context) => Profile(),
-          HomeScreen.id: (context) => HomeScreen(),
-          Calender.id: (context) => Calender(),
-          AddEventPage.id: (context) => AddEventPage(),
-          EventDetailsPage.id: (context) => EventDetailsPage(),
-          Home.id: (context) => Home(),
-        },
-      ),
-    );*/
   }
 }
