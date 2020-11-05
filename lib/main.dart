@@ -4,7 +4,6 @@ import 'package:enactusnca/Events/Calendar.dart';
 import 'package:enactusnca/Events/addEvent.dart';
 import 'package:enactusnca/Events/view_Event.dart';
 import 'package:enactusnca/Screens/Home/Home.dart';
-import 'package:enactusnca/Screens/Profile/ProfilePostTile.dart';
 import 'package:enactusnca/Screens/Profile/profile.dart';
 import 'package:enactusnca/Screens/views/chat.dart';
 import 'package:enactusnca/Screens/views/sign_in.dart';
@@ -14,6 +13,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'Screens/Profile/ProfilePostTile.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 
 import '../../wrapper.dart';
 
+import '../../Helpers/helperfunction.dart';
+
 class SignUp extends StatefulWidget {
   @override
   _SignUpState createState() => _SignUpState();
@@ -142,14 +144,15 @@ class _SignUpState extends State<SignUp> {
                   GestureDetector(
                     onTap: () {
                       setState(() {
-                        Navigator.pushReplacement(
-                            context, MaterialPageRoute(builder: (context) => SignIn()));
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (context) => SignIn()));
                         isSignIn = !isSignIn;
                       });
                     },
                     child: Container(
                       color: Colors.transparent,
-                      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                       margin: EdgeInsets.only(top: 5, left: 50, bottom: 5),
                       child: Text(
                         "Sign In",
