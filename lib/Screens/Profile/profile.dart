@@ -50,6 +50,7 @@ class _ProfileState extends State<Profile> {
         email = val.documents[0].data()["email"];
       });
     });
+    print('called $firstName $firstName');
   }
 
   @override
