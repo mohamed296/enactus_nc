@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enactusnca/Helpers/constants.dart';
-import 'package:enactusnca/Helpers/functions.dart';
 import 'package:enactusnca/Helpers/helperfunction.dart';
 import 'package:enactusnca/Screens/views/sign_in.dart';
 import 'package:enactusnca/Widgets/edite_text.dart';
@@ -10,9 +9,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../wrapper.dart';
-
 import '../../Helpers/helperfunction.dart';
+import '../../wrapper.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -21,35 +19,51 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   final formKey = GlobalKey<FormState>();
-  DatabaseMethods _databaseMethods = new DatabaseMethods();
-  Auth _auth = new Auth();
-  TextEditingController tecName = new TextEditingController();
-  TextEditingController tecUserName = new TextEditingController();
-  TextEditingController tecSignUpCode = new TextEditingController();
+  TextEditingController tecFirstName = new TextEditingController();
+  TextEditingController tecLastName = new TextEditingController();
   TextEditingController tecEmailUp = new TextEditingController();
   TextEditingController tecPasswordUp = new TextEditingController();
+  List<String> communities = [
+    'Multimedia',
+    'ER',
+    'HR',
+    'Project',
+    'Presentation'
+  ];
+  List<String> mmDep = [
+    'Developing',
+    'Social Media',
+    'Photography',
+    'Graphic Design'
+  ];
+  List<String> erDep = ['FR', 'BR', 'Logistics'];
+  List<String> secondList = new List();
+  String department, community;
   bool isLoading = false;
   QuerySnapshot snapshot;
   bool isSignIn = Constants.isSignIn;
-  Map<String, dynamic> userInfo;
 
   @override
   void initState() {
     super.initState();
-    _auth.signOut();
+    secondList.addAll(mmDep);
+    department = mmDep[0];
+    community = communities[0];
   }
 
   signUp() {
     HelperFunction.setUserEmail(tecEmailUp.text.toLowerCase().toString());
-    HelperFunction.setUsername(tecName.text.toLowerCase().toString());
-    userInfo = {
-      "name": tecName.text,
-      "userName": tecUserName.text.toLowerCase(),
+    HelperFunction.setUsername(tecFirstName.text.toLowerCase().toString());
+    Map<String, dynamic> userInfo = {
+      "firstName": tecFirstName.text,
+      "lastName": tecLastName.text,
+      "department": department,
+      "community": community,
       "email": tecEmailUp.text.toLowerCase(),
-      "teamId": tecSignUpCode.text.toLowerCase(),
       "password": tecPasswordUp.text,
       "photoURL": '',
-      "isAdmin": Functions.checkId(tecSignUpCode.toString().toLowerCase()),
+      "isActive": false,
+      "isHead": false,
       "joiningDate": DateTime.now(),
     };
 
@@ -61,19 +75,77 @@ class _SignUpState extends State<SignUp> {
         .signUpWithEmail(
             email: tecEmailUp.text.trim().toLowerCase(),
             password: tecPasswordUp.text,
-            name: tecName.text,
+            name: tecFirstName.text,
             imgUrl: null)
         .then((value) {
       setState(() {});
-      _databaseMethods.uploadUserInfo(
+      DatabaseMethods().uploadUserInfo(
           userMap: userInfo, uid: FirebaseAuth.instance.currentUser.uid);
       HelperFunction.setUserLoggedIn(true);
       Navigator.of(context).popAndPushNamed(Wrapper.id);
     });
   }
 
+  Widget DropDown({List<String> list, String dropdownValue}) {
+    return DropdownButton<String>(
+      value: dropdownValue,
+      icon: Icon(
+        Icons.arrow_drop_down,
+      ),
+      iconSize: 20,
+      elevation: 16,
+      style: TextStyle(color: Colors.grey),
+      underline: Container(
+        height: 2,
+      ),
+      onChanged: (String newValue) {
+        setState(() {
+          if (list.length >= communities.length) {
+            secondList.clear();
+            if (newValue == list[0]) {
+              secondList.addAll(mmDep);
+              if (list[0] == communities[0]) {
+                community = newValue;
+                department = secondList[0];
+              }
+            } else if (newValue == list[1]) {
+              secondList.addAll(erDep);
+              if (list[0] == communities[0]) {
+                community = newValue;
+                department = secondList[0];
+              }
+            } else if (newValue == list[2]) {
+              secondList.add(communities[2]);
+              community = newValue;
+              department = newValue;
+            } else if (newValue == list[3]) {
+              secondList.add(communities[3]);
+              community = newValue;
+              department = newValue;
+            } else if (newValue == list[4]) {
+              secondList.add(communities[4]);
+              community = newValue;
+              department = newValue;
+            }
+          } else {
+            department = newValue;
+            dropdownValue = newValue;
+            print("called + ${secondList.length}");
+          }
+        });
+      },
+      items: list.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    /**Active = Boolean Field(Default=False)*/
     return Scaffold(
       //  backgroundColor: Constants.darkBlue,
       body: Center(
@@ -109,18 +181,13 @@ class _SignUpState extends State<SignUp> {
                 child: Column(
                   children: <Widget>[
                     EditeText(
-                      textEditingController: tecName,
-                      title: "Full name",
+                      textEditingController: tecFirstName,
+                      title: "First name",
                       obscureText: false,
                     ),
                     EditeText(
-                      textEditingController: tecUserName,
-                      title: "Full name",
-                      obscureText: false,
-                    ),
-                    EditeText(
-                      textEditingController: tecSignUpCode,
-                      title: "Team Id",
+                      textEditingController: tecLastName,
+                      title: "Last name",
                       obscureText: false,
                     ),
                     EditeText(
@@ -133,8 +200,20 @@ class _SignUpState extends State<SignUp> {
                       title: "Password",
                       obscureText: true,
                     ),
-
-                    /**TODO: add spinner with the existing communities and and departments **/
+                    Row(
+                      children: [
+                        Text("Select your community "),
+                        SizedBox(width: 20),
+                        DropDown(list: communities, dropdownValue: community),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text("Select your department "),
+                        SizedBox(width: 20),
+                        DropDown(list: secondList, dropdownValue: department),
+                      ],
+                    )
                   ],
                 ),
               ),

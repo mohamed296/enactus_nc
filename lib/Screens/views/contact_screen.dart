@@ -76,7 +76,8 @@ class _ContactsScreenState extends State<ContactsScreen> {
         return GestureDetector(
           child: singleUser(
               context: context,
-              name: snapshot.data.documents[index].data()['name'],
+              firstName: snapshot.data.documents[index].data()['firstName'],
+              lastName: snapshot.data.documents[index].data()['lastName'],
               emali: snapshot.data.documents[index].data()['email'],
               imageURL: snapshot.data.documents[index].data()['photoURL']),
         );
@@ -91,7 +92,11 @@ class _ContactsScreenState extends State<ContactsScreen> {
 }
 
 Widget singleUser(
-    {String name, String imageURL, String emali, BuildContext context}) {
+    {String firstName,
+    String lastName,
+    String imageURL,
+    String emali,
+    BuildContext context}) {
   return GestureDetector(
     onTap: () {
       Navigator.pushReplacement(
@@ -113,13 +118,13 @@ Widget singleUser(
           ),
           child: CircleAvatar(
             radius: 30,
-            backgroundImage: imageURL != null
+            backgroundImage: imageURL == null
                 ? AssetImage("assets/images/person.png")
                 : NetworkImage(imageURL),
           ),
         ),
         Text(
-          name,
+          '$firstName  $lastName',
           style: TextStyle(fontSize: 18.0, color: Colors.white),
         ),
       ],

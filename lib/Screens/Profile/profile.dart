@@ -28,7 +28,7 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   ScrollController controller = ScrollController();
   String name, email;
-
+  String firstName, lastName;
   Auth authMethods = new Auth();
   UserModel user = UserModel();
   final users = UserTitle();
@@ -44,21 +44,19 @@ class _ProfileState extends State<Profile> {
 
   getUserInfo() async {
     DatabaseMethods().getUsersByUserEmail(widget.email).then((val) {
-      /**
-       * the name and the email has been added to the profile using
-       * getUsersByUserEmail method from DatabaseMethods class
-       * */
       setState(() {
-        name = val.documents[0].data()["name"];
+        firstName = val.documents[0].data()["firstName"];
+        lastName = val.documents[0].data()["lastName"];
         email = val.documents[0].data()["email"];
       });
     });
+    print('called $firstName $firstName');
   }
 
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, height: 896, width: 414, allowFontScaling: true);
-    return name == null
+    return firstName == null
         ? Center(
             child: CircularProgressIndicator(),
           )
@@ -109,7 +107,9 @@ class _ProfileState extends State<Profile> {
                 Text(
                   // post.timeStamp,
                   //TODO:Set name
-                  name != null ? name : 'something went wrong',
+                  firstName != null
+                      ? '$firstName $lastName'
+                      : 'something went wrong',
                   style: kTitleTextStyle,
                 ),
                 SizedBox(height: kSpacingUnit.w * 0.5),
