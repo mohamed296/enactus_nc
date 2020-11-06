@@ -27,7 +27,7 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   ScrollController controller = ScrollController();
   String name, email;
-
+  String firstName, lastName;
   Auth authMethods = new Auth();
   UserModel user = UserModel();
   final users = UserTitle();
@@ -48,7 +48,8 @@ class _ProfileState extends State<Profile> {
        * getUsersByUserEmail method from DatabaseMethods class
        * */
       setState(() {
-        name = val.documents[0].data()["name"];
+        firstName = val.documents[0].data()["firstName"];
+        lastName = val.documents[0].data()["lastName"];
         email = val.documents[0].data()["email"];
       });
     });
@@ -57,7 +58,7 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, height: 896, width: 414, allowFontScaling: true);
-    return name == null
+    return firstName == null
         ? Center(
             child: CircularProgressIndicator(),
           )
@@ -108,7 +109,9 @@ class _ProfileState extends State<Profile> {
                 Text(
                   // post.timeStamp,
                   //TODO:Set name
-                  name != null ? name : 'something went wrong',
+                  firstName != null
+                      ? '$firstName $lastName'
+                      : 'something went wrong',
                   style: kTitleTextStyle,
                 ),
                 SizedBox(height: kSpacingUnit.w * 0.5),
@@ -162,8 +165,9 @@ class _ProfileState extends State<Profile> {
                           HelperFunction.setUserLoggedIn(false);
                           HelperFunction.setUsername("");
                           HelperFunction.setUserEmail("");
-                          Navigator.of(context)
-                              .pushReplacement(MaterialPageRoute(builder: (context) => SignIn()));
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (context) => SignIn()));
                         },
                         child: ProfileListItem(
                           icon: LineAwesomeIcons.alternate_sign_out,
