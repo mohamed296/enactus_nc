@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:enactusnca/Admin/Bott_admin.dart';
 import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Helpers/helperfunction.dart';
 import 'package:enactusnca/Screens/views/sign_up.dart';
@@ -9,6 +8,8 @@ import 'package:enactusnca/services/database_methods.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../wrapper.dart';
 
 class SignIn extends StatefulWidget {
   static String id = 'SignIn';
@@ -49,7 +50,7 @@ class _SignInState extends State<SignIn> {
         .then((value) {
       if (value != null) {
         sharedPreferences.setString('user', tecEmail.text);
-        Navigator.of(context).pushNamed(BottAdmin.id);
+        Navigator.of(context).pushNamed(Wrapper.id);
       } else {
         setState(() {
           isLoading = false;

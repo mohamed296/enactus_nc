@@ -3,6 +3,7 @@ import 'package:enactusnca/Helpers/helperfunction.dart';
 import 'package:enactusnca/Models/post.dart';
 import 'package:enactusnca/Models/user_model.dart';
 import 'package:enactusnca/Screens/Profile/ProfilePostTile.dart';
+import 'package:enactusnca/Screens/Profile/edit_profile_screen.dart';
 import 'package:enactusnca/Screens/views/sign_in.dart';
 import 'package:enactusnca/Widgets/constants.dart';
 import 'package:enactusnca/services/auth.dart';
@@ -120,17 +121,27 @@ class _ProfileState extends State<Profile> {
                   style: kCaptionTextStyle,
                 ),
                 SizedBox(height: kSpacingUnit.w * 2),
-                Container(
-                  height: kSpacingUnit.w * 4,
-                  width: kSpacingUnit.w * 20,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(kSpacingUnit.w * 3),
-                    color: Theme.of(context).accentColor,
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Edit Profile',
-                      style: kButtonTextStyle,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditProfilScreen(),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    height: kSpacingUnit.w * 4,
+                    width: kSpacingUnit.w * 20,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(kSpacingUnit.w * 3),
+                      color: Theme.of(context).accentColor,
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Edit Profile',
+                        style: kButtonTextStyle,
+                      ),
                     ),
                   ),
                 ),
