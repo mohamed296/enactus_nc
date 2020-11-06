@@ -44,10 +44,6 @@ class _ProfileState extends State<Profile> {
 
   getUserInfo() async {
     DatabaseMethods().getUsersByUserEmail(widget.email).then((val) {
-      /**
-       * the name and the email has been added to the profile using
-       * getUsersByUserEmail method from DatabaseMethods class
-       * */
       setState(() {
         firstName = val.documents[0].data()["firstName"];
         lastName = val.documents[0].data()["lastName"];
