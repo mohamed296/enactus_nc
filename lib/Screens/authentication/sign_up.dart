@@ -28,7 +28,6 @@ class _SignUpState extends State<SignUp> {
   bool isLoading = false;
   QuerySnapshot snapshot;
   bool isSignIn = Constants.isSignIn;
-  bool head = false;
 
   @override
   void initState() {
@@ -49,7 +48,7 @@ class _SignUpState extends State<SignUp> {
       joiningDate: Timestamp.now(),
       username: '${tecFirstName.text}${tecLastName.text}',
       isActive: false,
-      isHead: head,
+      isHead: false,
     );
 
     setState(() => isLoading = !isLoading);
@@ -73,31 +72,36 @@ class _SignUpState extends State<SignUp> {
       ),
       onChanged: (String newValue) {
         setState(() {
-          secondList.clear();
-          if (newValue == list[0]) {
-            secondList.addAll(mmDep);
-            if (list[0] == communities[0]) {
+          if (list.length >= communities.length) {
+            secondList.clear();
+            if (newValue == list[0]) {
+              secondList.addAll(mmDep);
+              if (list[0] == communities[0]) {
+                community = newValue;
+                department = secondList[0];
+              }
+            } else if (newValue == list[1]) {
+              secondList.addAll(erDep);
+              if (list[0] == communities[0]) {
+                community = newValue;
+                department = secondList[0];
+              }
+            } else if (newValue == list[2]) {
+              secondList.add(communities[2]);
               community = newValue;
-              department = secondList[0];
-            }
-          } else if (newValue == list[1]) {
-            secondList.addAll(erDep);
-            if (list[0] == communities[0]) {
+              department = null;
+            } else if (newValue == list[3]) {
+              secondList.add(communities[3]);
+              department = null;
               community = newValue;
-              department = secondList[0];
+            } else if (newValue == list[4]) {
+              secondList.add(communities[4]);
+              community = newValue;
+              department = null;
             }
-          } else if (newValue == list[2]) {
-            secondList.add(communities[2]);
-            community = newValue;
-            department = null;
-          } else if (newValue == list[3]) {
-            secondList.add(communities[3]);
-            department = null;
-            community = newValue;
-          } else if (newValue == list[4]) {
-            secondList.add(communities[4]);
-            community = newValue;
-            department = null;
+          } else {
+            department = newValue;
+            dropdownValue = newValue;
           }
         });
       },
@@ -165,14 +169,6 @@ class _SignUpState extends State<SignUp> {
                         textEditingController: tecPasswordUp,
                         title: "Password",
                         obscureText: true,
-                      ),
-                      CheckboxListTile(
-                        title: Text('Head'),
-                        value: head,
-                        onChanged: (inValue) => setState(() => head = inValue),
-                        controlAffinity: ListTileControlAffinity.leading,
-                        activeColor: Colors.yellow,
-                        checkColor: Colors.white,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
