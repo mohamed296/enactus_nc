@@ -5,8 +5,9 @@ import 'package:enactusnca/Events/addEvent.dart';
 import 'package:enactusnca/Events/view_Event.dart';
 import 'package:enactusnca/Screens/Home/Home.dart';
 import 'package:enactusnca/Screens/Profile/profile.dart';
-import 'package:enactusnca/Screens/views/chat.dart';
-import 'package:enactusnca/Screens/views/sign_in.dart';
+import 'package:enactusnca/Screens/chat/chat.dart';
+import 'package:enactusnca/Screens/authentication/sign_in.dart';
+import 'package:enactusnca/Screens/chat/messages/messages.dart';
 import 'package:enactusnca/utilts/app_theme_provider.dart';
 import 'package:enactusnca/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -71,6 +72,7 @@ class _MyAppState extends State<MyApp> {
         EventDetailsPage.id: (context) => EventDetailsPage(),
         Home.id: (context) => Home(),
         ProfileListItem.id: (context) => ProfileListItem(),
+        Messages.id: (context) => Messages(),
       },
     );
   }

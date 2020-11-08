@@ -1,15 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:enactusnca/Models/user_model.dart';
 
 class DatabaseMethods {
-
-  uploadUserInfo({userMap, String uid}) {
-    FirebaseFirestore.instance
-        .collection("Users")
-        .doc(uid)
-        .set(userMap)
-        .catchError((e) {
+  Future uploadUserInfo({UserModel userModel, String uid}) async {
+    return await FirebaseFirestore.instance.collection("Users").doc(uid).set({
+      "firstName": userModel.firstName,
+      "lastName": userModel.lastName,
+      "department": userModel.department,
+      "community": userModel.community,
+      "email": userModel.email,
+      "photoUrl": '',
+      "isActive": false,
+      "isHead": false,
+      "joiningDate": DateTime.now(),
+      'userName': '${userModel.firstName}${userModel.lastName}',
+    }).catchError((e) {
       print("Uploading error " + e.toString());
     });
+  }
+
+  Future getUserData(String id) async {
+    return await FirebaseFirestore.instance.collection("Users").doc(id).get();
   }
 
   changeIsLiked(bool newVal, String roomId, String messageId) {

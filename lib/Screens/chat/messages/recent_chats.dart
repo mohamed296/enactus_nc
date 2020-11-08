@@ -2,9 +2,10 @@ import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Helpers/functions.dart';
 import 'package:enactusnca/Helpers/helperfunction.dart';
 import 'package:enactusnca/Models/recent_chat.dart';
-import 'package:enactusnca/Screens/views/chat_screen.dart';
+import 'package:enactusnca/Screens/chat/messages/messages.dart';
 import 'package:enactusnca/services/auth.dart';
 import 'package:enactusnca/services/database_methods.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +20,7 @@ class _RecentChatState extends State<RecentChat> {
   DatabaseMethods databaseMethods = new DatabaseMethods();
   Stream chatRoomStream;
   bool isLoadingOver = false;
+  final user = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
@@ -66,19 +68,17 @@ class _RecentChatState extends State<RecentChat> {
       shrinkWrap: true,
       itemCount: snapshot.data.documents.length,
       itemBuilder: (context, index) {
-        List<String> list = List.from(
-          snapshot.data.documents[index].data()["users"],
-        );
+        List<String> list = List.from(snapshot.data.documents[index].data()["users"]);
         String roomID = snapshot.data.documents[index].data()["chatroomid"];
         return GestureDetector(
           onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => ChatScreen(
+                builder: (context) => Messages(
+                  group: false,
                   chatRoomId: roomID,
-                  lastSender:
-                      snapshot.data.documents[index].data()["lastSender"],
+                  lastSender: snapshot.data.documents[index].data()["lastSender"],
                   username: list[1] == Constants.myName ? list[0] : list[1],
                 ),
               ),
@@ -95,8 +95,7 @@ class _RecentChatState extends State<RecentChat> {
               horizontal: 20.0,
             ),
             decoration: BoxDecoration(
-              color: snapshot.data.documents[index].data()["lastSender"] !=
-                      Constants.myName
+              color: snapshot.data.documents[index].data()["lastSender"] != Constants.myName
                   ? !snapshot.data.documents[index].data()["isRead"]
                       ? Constants.midBlue
                       : Constants.darkBlue
@@ -120,9 +119,7 @@ class _RecentChatState extends State<RecentChat> {
                       backgroundImage:
 
                           ///TODO: change TO URL Image, use @[SenderURL]
-                          AssetImage(
-                        'assets/images/person.png',
-                      ),
+                          AssetImage('assets/images/person.png'),
                       radius: 35.0,
                     ),
                     SizedBox(width: 10.0),
@@ -130,7 +127,7 @@ class _RecentChatState extends State<RecentChat> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          list[1] == Constants.myName ? list[0] : list[1],
+                          list[1] != user.uid ? list[0] : list[1],
                           style: TextStyle(
                             color: Colors.grey.shade200,
                             fontSize: 15.0,
@@ -140,12 +137,9 @@ class _RecentChatState extends State<RecentChat> {
                         Container(
                           width: MediaQuery.of(context).size.width * 0.35,
                           child: Text(
-                            snapshot.data.documents[index]
-                                        .data()["lastMessage"] ==
-                                    null
+                            snapshot.data.documents[index].data()["lastMessage"] == null
                                 ? ""
-                                : snapshot.data.documents[index]
-                                    .data()["lastMessage"],
+                                : snapshot.data.documents[index].data()["lastMessage"],
                             style: TextStyle(
                               color: Colors.blueGrey.shade200,
                               fontSize: 15.0,
@@ -163,8 +157,7 @@ class _RecentChatState extends State<RecentChat> {
                   children: <Widget>[
                     Text(
                       Functions.readTimestamp(
-                        snapshot.data.documents[index].data()["lastTime"] ==
-                                null
+                        snapshot.data.documents[index].data()["lastTime"] == null
                             ? 0
                             : snapshot.data.documents[index].data()["lastTime"],
                       ),
@@ -178,12 +171,9 @@ class _RecentChatState extends State<RecentChat> {
                       height: 4.0,
                     ),
                     Container(
-                      child: snapshot.data.documents[index].data()["isRead"] ==
-                              null
+                      child: snapshot.data.documents[index].data()["isRead"] == null
                           ? false
-                          : snapshot.data.documents[index]
-                                      .data()["lastSender"] !=
-                                  Constants.myName
+                          : snapshot.data.documents[index].data()["lastSender"] != Constants.myName
                               ? !snapshot.data.documents[index].data()["isRead"]
                                   ? Container(
                                       alignment: Alignment.center,

@@ -5,12 +5,12 @@ import 'package:enactusnca/services/database_methods.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class ContactsScreen extends StatefulWidget {
+class Members extends StatefulWidget {
   @override
-  _ContactsScreenState createState() => _ContactsScreenState();
+  _MembersState createState() => _MembersState();
 }
 
-class _ContactsScreenState extends State<ContactsScreen> {
+class _MembersState extends State<Members> {
   Stream contactsStream;
   bool isLoadingOver = false;
   DatabaseMethods databaseMethods = new DatabaseMethods();
@@ -92,11 +92,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
 }
 
 Widget singleUser(
-    {String firstName,
-    String lastName,
-    String imageURL,
-    String emali,
-    BuildContext context}) {
+    {String firstName, String lastName, String imageURL, String emali, BuildContext context}) {
   return GestureDetector(
     onTap: () {
       Navigator.pushReplacement(
@@ -118,9 +114,8 @@ Widget singleUser(
           ),
           child: CircleAvatar(
             radius: 30,
-            backgroundImage: imageURL == null
-                ? AssetImage("assets/images/person.png")
-                : NetworkImage(imageURL),
+            backgroundImage:
+                imageURL == null ? AssetImage("assets/images/person.png") : NetworkImage(imageURL),
           ),
         ),
         Text(

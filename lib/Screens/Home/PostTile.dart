@@ -133,7 +133,7 @@ class _PostTileState extends State<PostTile> {
   ListTile userInfo(BuildContext context) {
     return ListTile(
       leading: CircleAvatar(
-        // backgroundImage: AssetImage('assets/images/greg.jpg'),
+        radius: 34.0,
         backgroundImage: NetworkImage(
           widget?.post?.userProfileImg ??
               'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png',
