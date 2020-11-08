@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Helpers/helperfunction.dart';
-import 'package:enactusnca/Screens/views/chat_screen.dart';
+import 'package:enactusnca/Screens/chat/messages/messages.dart';
 import 'package:enactusnca/services/database_methods.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -26,7 +27,8 @@ class _SearchScreenState extends State<SearchScreen> {
             shrinkWrap: true,
             itemBuilder: (context, index) {
               return SearchTitle(
-                username: searchSnapshot.docs[index].data()["name"],
+                fistName: searchSnapshot.docs[index].data()["firstName"],
+                lastName: searchSnapshot.docs[index].data()["lastName"],
                 userEmail: searchSnapshot.docs[index].data()["email"],
                 userId: searchSnapshot.docs[index].data()["teamId"],
               );
@@ -136,9 +138,9 @@ class _SearchScreenState extends State<SearchScreen> {
 }
 
 class SearchTitle extends StatelessWidget {
-  final String username, userEmail, userId;
+  final String fistName, lastName, userEmail, userId;
 
-  SearchTitle({this.username, this.userEmail, this.userId});
+  SearchTitle({this.fistName, this.lastName, this.userEmail, this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +158,7 @@ class SearchTitle extends StatelessWidget {
             children: <Widget>[
               Container(
                 child: Text(
-                  username,
+                  '$fistName $lastName',
                   style: TextStyle(
                     color: Colors.white,
                   ),
@@ -177,13 +179,16 @@ class SearchTitle extends StatelessWidget {
           GestureDetector(
             onTap: () {
               createChatRoomAndStartConversation(
-                  context: context, userID: userEmail.trim(), userName: username);
+                  context: context, userID: userEmail.trim(), userName: '$fistName $lastName');
             },
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              child: Text("Message"),
+              child: Text(
+                "Message",
+                style: TextStyle(color: Colors.black),
+              ),
               decoration: BoxDecoration(
-                //     color: Constants.yellow,
+                color: Constants.yellow,
                 borderRadius: BorderRadius.circular(30),
               ),
             ),
@@ -219,11 +224,20 @@ createChatRoomAndStartConversation({String userID, String userName, BuildContext
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ChatScreen(
+        builder: (context) => Messages(
           username: userName,
           chatRoomId: chatRoomId,
         ),
       ),
     );
+  } else {
+    Fluttertoast.showToast(
+        msg: "You can't text yourself :(\n يامتوحد",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIos: 1,
+        backgroundColor: Colors.yellow,
+        textColor: Colors.black,
+        fontSize: 16.0);
   }
 }
