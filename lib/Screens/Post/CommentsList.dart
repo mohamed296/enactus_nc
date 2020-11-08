@@ -2,10 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enactusnca/Models/notification_model.dart';
 import 'package:enactusnca/Models/post.dart';
 import 'package:enactusnca/Models/comment_model.dart';
-import 'package:enactusnca/Post/CommentCard.dart';
 import 'package:enactusnca/services/notification_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+import 'CommentCard.dart';
 
 class CommentsList extends StatefulWidget {
   static String id = 'CommentsList';

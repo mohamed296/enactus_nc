@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Helpers/helperfunction.dart';
-import 'package:enactusnca/Screens/views/chat_screen.dart';
+import 'package:enactusnca/Screens/chat/messages/messages.dart';
 import 'package:enactusnca/services/database_methods.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -179,9 +179,7 @@ class SearchTitle extends StatelessWidget {
           GestureDetector(
             onTap: () {
               createChatRoomAndStartConversation(
-                  context: context,
-                  userID: userEmail.trim(),
-                  userName: '$fistName $lastName');
+                  context: context, userID: userEmail.trim(), userName: '$fistName $lastName');
             },
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -209,8 +207,7 @@ getChatRoomId(String a, String b) {
   }
 }
 
-createChatRoomAndStartConversation(
-    {String userID, String userName, BuildContext context}) {
+createChatRoomAndStartConversation({String userID, String userName, BuildContext context}) {
   if (_userEmail != Constants.myEmail) {
     String chatRoomId = getChatRoomId(_userEmail, _myEmail);
     List<String> users = [userName, _myName];
@@ -227,7 +224,7 @@ createChatRoomAndStartConversation(
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ChatScreen(
+        builder: (context) => Messages(
           username: userName,
           chatRoomId: chatRoomId,
         ),

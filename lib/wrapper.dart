@@ -2,7 +2,7 @@ import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:enactusnca/Screens/Home/Home.dart';
 import 'package:enactusnca/Screens/Notifications/notifications.dart';
 import 'package:enactusnca/Screens/Profile/profile.dart';
-import 'package:enactusnca/Screens/views/chat.dart';
+import 'package:enactusnca/Screens/chat/chat.dart';
 import 'package:enactusnca/Widgets/constants.dart';
 import 'package:flutter/material.dart';
 
