@@ -49,7 +49,7 @@ class _SignInState extends State<SignIn> {
         .then((value) {
       if (value != null) {
         sharedPreferences.setString('user', tecEmail.text);
-        Navigator.of(context).pushNamed(Wrapper.id);
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Wrapper()));
       } else {
         setState(() {
           isLoading = false;
@@ -123,8 +123,10 @@ class _SignInState extends State<SignIn> {
                         onTap: () {
                           setState(() {
                             isSignIn = !isSignIn;
-                            Navigator.pushReplacement(
-                                context, MaterialPageRoute(builder: (context) => SignUp()));
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => SignUp()),
+                            );
                           });
                         },
                         child: Container(
@@ -147,16 +149,12 @@ class _SignInState extends State<SignIn> {
                     margin: EdgeInsets.only(right: 30.0),
                     alignment: Alignment.topRight,
                     child: CircleAvatar(
-                      //   backgroundColor: Constants.yellow,
                       radius: 35.0,
                       child: IconButton(
                         onPressed: () {
                           signIn();
                         },
-                        icon: Icon(
-                          Icons.arrow_forward,
-                          //    color: Constants.darkBlue,
-                        ),
+                        icon: Icon(Icons.arrow_forward),
                       ),
                     ),
                   )

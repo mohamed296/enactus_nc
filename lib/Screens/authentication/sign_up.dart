@@ -28,6 +28,7 @@ class _SignUpState extends State<SignUp> {
   bool isLoading = false;
   QuerySnapshot snapshot;
   bool isSignIn = Constants.isSignIn;
+  bool head = false;
 
   @override
   void initState() {
@@ -48,13 +49,13 @@ class _SignUpState extends State<SignUp> {
       joiningDate: Timestamp.now(),
       username: '${tecFirstName.text}${tecLastName.text}',
       isActive: false,
-      isHead: false,
+      isHead: head,
     );
 
     setState(() => isLoading = !isLoading);
     Auth().signUpWithEmail(userModel, tecPasswordUp.text).whenComplete(() {
       setState(() => isLoading = !isLoading);
-      Navigator.of(context).pushReplacementNamed(Wrapper.id);
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Wrapper()));
     }).catchError((e) => print(e));
   }
 
@@ -72,37 +73,31 @@ class _SignUpState extends State<SignUp> {
       ),
       onChanged: (String newValue) {
         setState(() {
-          if (list.length >= communities.length) {
-            secondList.clear();
-            if (newValue == list[0]) {
-              secondList.addAll(mmDep);
-              if (list[0] == communities[0]) {
-                community = newValue;
-                department = secondList[0];
-              }
-            } else if (newValue == list[1]) {
-              secondList.addAll(erDep);
-              if (list[0] == communities[0]) {
-                community = newValue;
-                department = secondList[0];
-              }
-            } else if (newValue == list[2]) {
-              secondList.add(communities[2]);
+          secondList.clear();
+          if (newValue == list[0]) {
+            secondList.addAll(mmDep);
+            if (list[0] == communities[0]) {
               community = newValue;
-              department = newValue;
-            } else if (newValue == list[3]) {
-              secondList.add(communities[3]);
-              community = newValue;
-              department = newValue;
-            } else if (newValue == list[4]) {
-              secondList.add(communities[4]);
-              community = newValue;
-              department = newValue;
+              department = secondList[0];
             }
-          } else {
-            department = newValue;
-            dropdownValue = newValue;
-            print("called + ${secondList.length}");
+          } else if (newValue == list[1]) {
+            secondList.addAll(erDep);
+            if (list[0] == communities[0]) {
+              community = newValue;
+              department = secondList[0];
+            }
+          } else if (newValue == list[2]) {
+            secondList.add(communities[2]);
+            community = newValue;
+            department = null;
+          } else if (newValue == list[3]) {
+            secondList.add(communities[3]);
+            department = null;
+            community = newValue;
+          } else if (newValue == list[4]) {
+            secondList.add(communities[4]);
+            community = newValue;
+            department = null;
           }
         });
       },
@@ -171,20 +166,30 @@ class _SignUpState extends State<SignUp> {
                         title: "Password",
                         obscureText: true,
                       ),
+                      CheckboxListTile(
+                        title: Text('Head'),
+                        value: head,
+                        onChanged: (inValue) => setState(() => head = inValue),
+                        controlAffinity: ListTileControlAffinity.leading,
+                        activeColor: Colors.yellow,
+                        checkColor: Colors.white,
+                      ),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Select your community "),
-                          SizedBox(width: 20),
+                          Text("community "),
                           dropDown(list: communities, dropdownValue: community),
                         ],
                       ),
-                      Row(
-                        children: [
-                          Text("Select your department "),
-                          SizedBox(width: 20),
-                          dropDown(list: secondList, dropdownValue: department),
-                        ],
-                      )
+                      community == communities.elementAt(0) || community == communities.elementAt(1)
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("department "),
+                                dropDown(list: secondList, dropdownValue: department),
+                              ],
+                            )
+                          : Container()
                     ],
                   ),
                 ),
@@ -220,7 +225,6 @@ class _SignUpState extends State<SignUp> {
                       margin: EdgeInsets.only(right: 30.0),
                       alignment: Alignment.topRight,
                       child: CircleAvatar(
-                        //  backgroundColor: Constants.yellow,
                         radius: 35.0,
                         child: IconButton(
                           onPressed: () => signUp(),

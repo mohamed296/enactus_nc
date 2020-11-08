@@ -47,11 +47,7 @@ class _RecentChatState extends State<RecentChat> {
   }
 
   getUserInfo() async {
-    Constants.myName = await HelperFunction.getUsername();
-    Constants.myEmail = await HelperFunction.getUserEmail();
-    Constants.myEmail = Constants.myEmail.toLowerCase();
-    Constants.myId = await HelperFunction.getUserId();
-    databaseMethods.getChatRooms(email: Constants.myEmail).then((val) {
+    databaseMethods.getChatRooms(email: user.email).then((val) {
       setState(() {
         chatRoomStream = val;
       });

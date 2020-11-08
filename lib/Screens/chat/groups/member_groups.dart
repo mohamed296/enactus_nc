@@ -28,11 +28,14 @@ class _MemberGroupsState extends State<MemberGroups> {
         .doc(widget.userModel.community)
         .get();
     setState(() => communityData = communityGitingData);
-    final departmentGitingData = await FirebaseFirestore.instance
-        .collection('GroupChat')
-        .doc(widget.userModel.department)
-        .get();
-    setState(() => departmentData = departmentGitingData);
+
+    if (widget.userModel.department != null) {
+      final departmentGitingData = await FirebaseFirestore.instance
+          .collection('GroupChat')
+          .doc(widget.userModel.department)
+          .get();
+      setState(() => departmentData = departmentGitingData);
+    }
     final enactusGitingData =
         await FirebaseFirestore.instance.collection('GroupChat').doc('Enactus NC').get();
     setState(() => enactusData = enactusGitingData);
@@ -87,27 +90,29 @@ class _MemberGroupsState extends State<MemberGroups> {
                     ),
                   ),
                 ),
-                ListTile(
-                  leading: ClipRRect(
-                    borderRadius: BorderRadius.circular(34.0),
-                    child: Container(
-                      color: Colors.yellow,
-                      height: 44,
-                      width: 44,
-                    ),
-                  ),
-                  title: Text(widget.userModel.department),
-                  subtitle: Text('${departmentData['lastMessage']}'),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Messages(
-                        group: true,
-                        groupName: widget.userModel.department,
-                      ),
-                    ),
-                  ),
-                )
+                widget.userModel.department != null
+                    ? ListTile(
+                        leading: ClipRRect(
+                          borderRadius: BorderRadius.circular(34.0),
+                          child: Container(
+                            color: Colors.yellow,
+                            height: 44,
+                            width: 44,
+                          ),
+                        ),
+                        title: Text(widget.userModel.department),
+                        subtitle: Text('${departmentData['lastMessage']}'),
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Messages(
+                              group: true,
+                              groupName: widget.userModel.department,
+                            ),
+                          ),
+                        ),
+                      )
+                    : Container(),
               ],
             ),
           );

@@ -55,8 +55,9 @@ class Auth {
   }
 
   Future signOut() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     try {
-      return await _auth.signOut();
+      return await _auth.signOut().whenComplete(() => sharedPreferences.remove('user'));
     } catch (ex) {
       print("Signing out issue ${ex.toString()}");
     }
