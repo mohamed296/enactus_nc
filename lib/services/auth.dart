@@ -35,7 +35,9 @@ class Auth {
           .uploadUserInfo(userModel: userModel, uid: firebaseUser.uid)
           .then((value) {
         MessageGroupServices().createGroupChatOrAddNewMember(userModel.community, userModel);
-        MessageGroupServices().createGroupChatOrAddNewMember(userModel.department, userModel);
+        if (userModel.department != null) {
+          MessageGroupServices().createGroupChatOrAddNewMember(userModel.department, userModel);
+        }
         MessageGroupServices().createGroupChatOrAddNewMember('Enactus NC', userModel);
       });
       sharedPreferences.setString('user', userModel.email);

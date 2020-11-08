@@ -1,16 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Helpers/helperfunction.dart';
+import 'package:enactusnca/Models/post.dart';
 import 'package:enactusnca/Models/user_model.dart';
+import 'package:enactusnca/Screens/Post/OpenPost.dart';
 import 'package:enactusnca/Screens/Profile/profile.dart';
 import 'package:enactusnca/Widgets/PopUpMenu.dart';
 import 'package:enactusnca/Widgets/constants.dart';
 import 'package:enactusnca/Widgets/post_image.dart';
-import 'package:enactusnca/Models/post.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-
-import '../../Post/OpenPost.dart';
 
 class PostTile extends StatefulWidget {
   final Post post;

@@ -1,8 +1,3 @@
-import 'package:enactusnca/AddNewPost/upload.dart';
-import 'package:enactusnca/Admin/EditPost.dart';
-import 'package:enactusnca/Events/Calendar.dart';
-import 'package:enactusnca/Events/addEvent.dart';
-import 'package:enactusnca/Events/view_Event.dart';
 import 'package:enactusnca/Screens/Home/Home.dart';
 import 'package:enactusnca/Screens/Profile/profile.dart';
 import 'package:enactusnca/Screens/chat/chat.dart';
@@ -15,6 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'Screens/AddNewPost/upload.dart';
+import 'Screens/Events/Calendar.dart';
+import 'Screens/Events/addEvent.dart';
+import 'Screens/Events/view_Event.dart';
 import 'Screens/Profile/ProfilePostTile.dart';
 
 Future<void> main() async {
@@ -60,11 +59,8 @@ class _MyAppState extends State<MyApp> {
       initialRoute: widget.user != null ? Wrapper.id : SignIn.id,
       routes: {
         SignIn.id: (context) => SignIn(),
-        // LoginScreen.id: (context) => LoginScreen(),
-        // SignupScreen.id: (context) => SignupScreen(),
         Wrapper.id: (context) => Wrapper(),
         AddNewPost.id: (context) => AddNewPost(),
-        EditPost.id: (context) => EditPost(),
         Profile.id: (context) => Profile(),
         Chat.id: (context) => Chat(),
         Calender.id: (context) => Calender(),

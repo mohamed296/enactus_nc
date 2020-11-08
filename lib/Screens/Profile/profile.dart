@@ -1,5 +1,5 @@
-import 'package:enactusnca/Events/Calendar.dart';
 import 'package:enactusnca/Models/post.dart';
+import 'package:enactusnca/Screens/Events/Calendar.dart';
 import 'package:enactusnca/Screens/Profile/ProfilePostTile.dart';
 import 'package:enactusnca/Screens/Profile/edit_profile_screen.dart';
 import 'package:enactusnca/Screens/authentication/sign_in.dart';

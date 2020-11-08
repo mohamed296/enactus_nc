@@ -1,6 +1,5 @@
 import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Helpers/functions.dart';
-import 'package:enactusnca/Helpers/helperfunction.dart';
 import 'package:enactusnca/Models/recent_chat.dart';
 import 'package:enactusnca/Screens/chat/messages/messages.dart';
 import 'package:enactusnca/services/auth.dart';
@@ -113,8 +112,7 @@ class _RecentChatState extends State<RecentChat> {
                     CircleAvatar(
                       backgroundColor: Colors.white,
                       backgroundImage:
-
-                          ///TODO: change TO URL Image, use @[SenderURL]
+                          //TODO: change TO URL Image, use @[SenderURL]
                           AssetImage('assets/images/person.png'),
                       radius: 35.0,
                     ),

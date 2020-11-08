@@ -1,12 +1,10 @@
-import 'package:enactusnca/AddNewPost/upload.dart';
-import 'package:enactusnca/Admin/EditPost.dart';
-import 'package:enactusnca/Events/Calendar.dart';
+import 'package:enactusnca/Screens/AddNewPost/upload.dart';
+import 'package:enactusnca/Screens/Events/Calendar.dart';
 import 'package:enactusnca/Screens/Home/PostsList.dart';
-import 'package:enactusnca/Settings/Settings.dart';
+import 'package:enactusnca/Screens/Settings/Settings.dart';
 import 'package:enactusnca/Widgets/PopUpMenu.dart';
 import 'package:enactusnca/services/auth.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Home extends StatefulWidget {
   static String id = 'Home';
@@ -79,17 +77,7 @@ class _HomeState extends State<Home> {
                   Navigator.pushNamed(context, Calender.id);
                 }),
           ),*/
-          Hero(
-            tag: 'Icon2',
-            child: new IconButton(
-                icon: Icon(
-                  FontAwesomeIcons.search,
-                  //    color: Color.fromRGBO(253, 194, 35, 1.0),
-                ),
-                onPressed: () {
-                  Navigator.pushNamed(context, EditPost.id);
-                }),
-          ),
+
           /*  Hero(
             tag: 'Icon3',
             child: new IconButton(
