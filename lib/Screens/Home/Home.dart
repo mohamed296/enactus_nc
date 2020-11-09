@@ -1,4 +1,4 @@
-import 'package:enactusnca/Screens/AddNewPost/upload.dart';
+import 'package:enactusnca/Screens/AddNewPost/add_new_post.dart';
 import 'package:enactusnca/Screens/Events/Calendar.dart';
 import 'package:enactusnca/Screens/Home/PostsList.dart';
 import 'package:enactusnca/Screens/Settings/Settings.dart';

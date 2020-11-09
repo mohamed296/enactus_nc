@@ -43,7 +43,6 @@ class _CommentsListState extends State<CommentsList> {
               .orderBy('timeStamp', descending: true)
               .snapshots()
               .map(CommentModel().commentsList),
-          //.map(comment.commentsList),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Container(
