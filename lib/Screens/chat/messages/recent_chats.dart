@@ -96,12 +96,8 @@ class _RecentChatState extends State<RecentChat> {
                       : Constants.darkBlue
                   : Constants.darkBlue,
               borderRadius: BorderRadius.only(
-                topRight: Radius.circular(
-                  20,
-                ),
-                bottomRight: Radius.circular(
-                  20,
-                ),
+                topRight: Radius.circular(20),
+                bottomRight: Radius.circular(20),
               ),
             ),
             child: Row(
@@ -109,12 +105,23 @@ class _RecentChatState extends State<RecentChat> {
               children: <Widget>[
                 Row(
                   children: <Widget>[
-                    CircleAvatar(
-                      backgroundColor: Colors.white,
-                      backgroundImage:
-                          //TODO: change TO URL Image, use @[SenderURL]
-                          AssetImage('assets/images/person.png'),
-                      radius: 35.0,
+                    Container(
+                      height: 35,
+                      width: 35,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(34.0),
+                        child: snapshot.data.documents[index].data()["null"] != null
+                            ? Image.network(
+                                snapshot.data.documents[index].data()["null"],
+                                fit: BoxFit.contain,
+                                loadingBuilder: (context, child, loadingProgress) {
+                                  return loadingProgress == null
+                                      ? child
+                                      : Center(child: CircularProgressIndicator());
+                                },
+                              )
+                            : Image.asset('assets/images/enactus.png'),
+                      ),
                     ),
                     SizedBox(width: 10.0),
                     Column(

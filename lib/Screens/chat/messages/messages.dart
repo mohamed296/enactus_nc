@@ -10,12 +10,20 @@ import 'package:flutter/material.dart';
 class Messages extends StatefulWidget {
   static String id = 'messages';
   final String username;
+  final String userImg;
   final String groupName;
   final bool group;
   final String chatRoomId;
   final String lastSender;
 
-  Messages({this.username, this.chatRoomId, this.lastSender, this.groupName, this.group});
+  Messages({
+    this.username,
+    this.chatRoomId,
+    this.lastSender,
+    this.groupName,
+    this.group,
+    this.userImg,
+  });
 
   @override
   _MessagesState createState() => _MessagesState();
@@ -55,82 +63,106 @@ class _MessagesState extends State<Messages> {
   }
 
   _buildMessage(MessageModel message) {
-    final Container msg = Container(
-      width: MediaQuery.of(context).size.width * 0.75,
-      decoration: BoxDecoration(
-        color: user.uid != message.userId ? Constants.lightBlue : Constants.midBlue,
-        borderRadius: user.uid == message.userId
-            ? BorderRadius.only(
-                topLeft: Radius.circular(15.0),
-                bottomLeft: Radius.circular(15.0),
+    return Row(
+      mainAxisAlignment:
+          user.uid == message.userId ? MainAxisAlignment.end : MainAxisAlignment.start,
+      children: [
+        user.uid == message.userId
+            ? Container(
+                padding: EdgeInsets.all(12.0),
+                height: 64,
+                width: 64,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(34.0),
+                  child: message.userImg != null
+                      ? Image.network(
+                          message.userImg,
+                          fit: BoxFit.contain,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            return loadingProgress == null
+                                ? child
+                                : Center(child: CircularProgressIndicator());
+                          },
+                        )
+                      : Image.asset('assets/images/enactus.png'),
+                ),
               )
-            : BorderRadius.only(
-                topRight: Radius.circular(15.0),
-                bottomRight: Radius.circular(15.0),
-              ),
-      ),
-      margin: user.uid == message.userId
-          ? EdgeInsets.only(top: 8.0, bottom: 8.0, left: 80.0)
-          : EdgeInsets.only(top: 8.0, bottom: 8.0),
-      padding: EdgeInsets.symmetric(vertical: 25.0, horizontal: 15.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          widget.group == true
-              ? Text(
-                  message.userName,
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.blueGrey.shade100,
-                  ),
-                )
-              : Container(),
-          SizedBox(height: 8.0),
-          Text(
-            message.message,
-            style: TextStyle(
-              fontSize: 16.0,
-              fontWeight: FontWeight.w600,
-              color: Colors.blueGrey.shade100,
-            ),
-          ),
-          SizedBox(height: 8.0),
-          Text(
-            '${message.timestamp.toDate().hour.toString()}/${message.timestamp.toDate().minute.toString()}/${message.timestamp.toDate().second.toString()}',
-            style: TextStyle(
-              fontSize: 12.0,
-              fontWeight: FontWeight.w400,
-              color: Colors.grey.shade100,
-            ),
-          ),
-        ],
-      ),
-    );
-    if (user.uid == message.userId) {
-      return msg;
-    } else {
-      return Row(
-        children: <Widget>[
-          msg,
-          Container(
-            child: user.uid != message.userId
-                ? IconButton(
-                    onPressed: () {
-                      setState(() {
-                        databaseMethods.changeIsLiked(
-                            !message.isLiked, widget.chatRoomId, message.messageId);
-                      });
-                    },
-                    icon: message.isLiked
-                        ? Icon(Icons.thumb_up, color: Constants.yellow)
-                        : Icon(Icons.thumb_up, color: Colors.grey.shade400),
+            : Container(),
+        Container(
+          width: MediaQuery.of(context).size.width * 0.75,
+          decoration: BoxDecoration(
+            color: user.uid != message.userId ? Constants.lightBlue : Constants.midBlue,
+            borderRadius: user.uid == message.userId
+                ? BorderRadius.only(
+                    topLeft: Radius.circular(15.0),
+                    bottomLeft: Radius.circular(15.0),
                   )
-                : SizedBox.shrink(),
-          )
-        ],
-      );
-    }
+                : BorderRadius.only(
+                    topRight: Radius.circular(15.0),
+                    bottomRight: Radius.circular(15.0),
+                  ),
+          ),
+          margin: user.uid == message.userId
+              ? EdgeInsets.only(top: 8.0, bottom: 8.0)
+              : EdgeInsets.only(top: 8.0, bottom: 8.0),
+          padding: EdgeInsets.symmetric(vertical: 25.0, horizontal: 15.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              widget.group == true
+                  ? Text(
+                      message.userName,
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.blueGrey.shade100,
+                      ),
+                    )
+                  : Container(),
+              SizedBox(height: 8.0),
+              Text(
+                message.message,
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.blueGrey.shade100,
+                ),
+              ),
+              SizedBox(height: 8.0),
+              Text(
+                '${message.timestamp.toDate().hour.toString()}/${message.timestamp.toDate().minute.toString()}/${message.timestamp.toDate().second.toString()}',
+                style: TextStyle(
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w200,
+                  color: Colors.grey.shade100,
+                ),
+              ),
+            ],
+          ),
+        ),
+        user.uid != message.userId
+            ? Container(
+                padding: EdgeInsets.all(12.0),
+                height: 64,
+                width: 64,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(34.0),
+                  child: message.userImg != null
+                      ? Image.network(
+                          message.userImg,
+                          fit: BoxFit.contain,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            return loadingProgress == null
+                                ? child
+                                : Center(child: CircularProgressIndicator());
+                          },
+                        )
+                      : Image.asset('assets/images/enactus.png'),
+                ),
+              )
+            : Container(),
+      ],
+    );
   }
 
   _buildMessageComposer() {
@@ -181,25 +213,26 @@ class _MessagesState extends State<Messages> {
             Container(
               height: 35,
               width: 35,
-              child: CircleAvatar(
-                radius: 35,
-                backgroundImage: AssetImage('assets/images/person.png'),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(34.0),
+                child: widget.userImg != null
+                    ? Image.network(
+                        widget.userImg,
+                        fit: BoxFit.contain,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          return loadingProgress == null
+                              ? child
+                              : Center(child: CircularProgressIndicator());
+                        },
+                      )
+                    : Image.asset('assets/images/enactus.png'),
               ),
             ),
-            SizedBox(width: 8),
-            Text(
-              widget.group == true ? widget.groupName : widget.username,
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-            ),
+            SizedBox(width: 12.0),
+            Text(widget.group == true ? widget.groupName : widget.username),
           ],
         ),
         leading: BackButton(),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.more_horiz, color: Colors.white),
-          )
-        ],
       ),
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),

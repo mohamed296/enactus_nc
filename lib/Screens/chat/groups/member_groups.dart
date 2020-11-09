@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Models/user_model.dart';
 import 'package:enactusnca/Screens/chat/messages/messages.dart';
 import 'package:flutter/material.dart';
@@ -48,66 +49,120 @@ class _MemberGroupsState extends State<MemberGroups> {
         : SingleChildScrollView(
             child: Column(
               children: [
-                ListTile(
-                  leading: ClipRRect(
-                    borderRadius: BorderRadius.circular(34.0),
-                    child: Container(
-                      color: Colors.yellow,
-                      height: 44,
-                      width: 44,
+                Container(
+                  margin: EdgeInsets.only(
+                    top: 5.0,
+                    bottom: 5.0,
+                    right: 20.0,
+                  ),
+                  padding: EdgeInsets.symmetric(
+                    vertical: 10.0,
+                    horizontal: 20.0,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Constants.midBlue,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(20),
+                      bottomRight: Radius.circular(20),
                     ),
                   ),
-                  title: Text('Enactus NC'),
-                  subtitle: Text('${enactusData['lastMessage']}'),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Messages(
-                        group: true,
-                        groupName: 'Enactus NC',
+                  child: ListTile(
+                    leading: Container(
+                      height: 35,
+                      width: 35,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(34.0),
+                        child: Image.asset('assets/images/enactus.png'),
+                      ),
+                    ),
+                    title: Text('Enactus NC'),
+                    subtitle: Text('${enactusData['lastMessage']}'),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Messages(
+                          group: true,
+                          groupName: 'Enactus NC',
+                        ),
                       ),
                     ),
                   ),
                 ),
-                ListTile(
-                  leading: ClipRRect(
-                    borderRadius: BorderRadius.circular(34.0),
-                    child: Container(
-                      color: Colors.yellow,
-                      height: 44,
-                      width: 44,
+                Container(
+                  margin: EdgeInsets.only(
+                    top: 5.0,
+                    bottom: 5.0,
+                    right: 20.0,
+                  ),
+                  padding: EdgeInsets.symmetric(
+                    vertical: 10.0,
+                    horizontal: 20.0,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Constants.midBlue,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(20),
+                      bottomRight: Radius.circular(20),
                     ),
                   ),
-                  title: Text(widget.userModel.community),
-                  subtitle: Text('${communityData['lastMessage']}'),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Messages(
-                        group: true,
-                        groupName: widget.userModel.community,
+                  child: ListTile(
+                    leading: Container(
+                      height: 35,
+                      width: 35,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(34.0),
+                        child: Image.asset('assets/images/enactus.png'),
+                      ),
+                    ),
+                    title: Text(widget.userModel.community),
+                    subtitle: Text('${communityData['lastMessage']}'),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Messages(
+                          group: true,
+                          groupName: widget.userModel.community,
+                        ),
                       ),
                     ),
                   ),
                 ),
                 widget.userModel.department != null
-                    ? ListTile(
-                        leading: ClipRRect(
-                          borderRadius: BorderRadius.circular(34.0),
-                          child: Container(
-                            color: Colors.yellow,
-                            height: 44,
-                            width: 44,
+                    ? Container(
+                        margin: EdgeInsets.only(
+                          top: 5.0,
+                          bottom: 5.0,
+                          right: 20.0,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          vertical: 10.0,
+                          horizontal: 20.0,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Constants.midBlue,
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(20),
+                            bottomRight: Radius.circular(20),
                           ),
                         ),
-                        title: Text(widget.userModel.department),
-                        subtitle: Text('${departmentData['lastMessage']}'),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Messages(
-                              group: true,
-                              groupName: widget.userModel.department,
+                        child: ListTile(
+                          leading: Container(
+                            height: 35,
+                            width: 35,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(34.0),
+                              child: Image.asset('assets/images/enactus.png'),
+                            ),
+                          ),
+                          title: Text(widget.userModel.department),
+                          subtitle: Text('${departmentData['lastMessage']}'),
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Messages(
+                                group: true,
+                                groupName: widget.userModel.department,
+                              ),
                             ),
                           ),
                         ),
