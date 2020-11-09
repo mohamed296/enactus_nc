@@ -85,8 +85,6 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           ],
         ),
-        //   backgroundColor: Constants.darkBlue,
-        elevation: 0.0,
         title: Text("Search"),
       ),
       body: Container(

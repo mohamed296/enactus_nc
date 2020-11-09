@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Models/user_model.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:enactusnca/services/user_services.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -18,42 +18,109 @@ class EditProfilScreen extends StatefulWidget {
 }
 
 class _EditProfilScreenState extends State<EditProfilScreen> {
-  final user = FirebaseAuth.instance.currentUser;
   String firstName, lastName, email, department, community;
   File _image;
   String _imgURL;
-  List<String> communities = [
-    'Multimedia',
-    'ER',
-    'HR',
-    'Project',
-    'Presentation'
-  ];
-  List<String> mmDep = [
-    'Developing',
-    'Social Media',
-    'Photography',
-    'Graphic Design'
-  ];
+  bool loading = false;
+  List<String> communities = Constants.communities;
+  List<String> mmDep = Constants.mmDep;
+  List<String> erDep = Constants.erDep;
+  List<String> secondList = List();
 
   @override
   void initState() {
     super.initState();
-
+    if (widget.userModel.community == communities[0]) {
+      secondList.addAll(mmDep);
+    } else {
+      secondList.addAll(erDep);
+    }
     community = widget.userModel.community;
     department = widget.userModel.department;
   }
 
-  bool loading = false;
-
   Future getImage() async {
-    final pickedFile =
-        await ImagePicker().getImage(source: ImageSource.gallery);
+    final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
     setState(() {
       _imgURL = pickedFile.hashCode.toString();
       _image = File(pickedFile.path);
     });
     return _image;
+  }
+
+  Widget dropDown({List<String> list, String dropdownValue}) {
+    return DropdownButton<String>(
+      value: dropdownValue,
+      icon: Icon(Icons.arrow_drop_down),
+      iconSize: 20,
+      elevation: 16,
+      style: TextStyle(color: Colors.grey),
+      underline: Container(height: 2),
+      onChanged: (String newValue) {
+        setState(() {
+          if (list.length >= communities.length) {
+            secondList.clear();
+            if (newValue == list[0]) {
+              secondList.addAll(mmDep);
+              if (list[0] == communities[0]) {
+                community = newValue;
+                department = secondList[0];
+              }
+            } else if (newValue == list[1]) {
+              secondList.addAll(erDep);
+              if (list[0] == communities[0]) {
+                community = newValue;
+                department = secondList[0];
+              }
+            } else if (newValue == list[2]) {
+              secondList.add(communities[2]);
+              community = newValue;
+              department = null;
+            } else if (newValue == list[3]) {
+              secondList.add(communities[3]);
+              department = null;
+              community = newValue;
+            } else if (newValue == list[4]) {
+              secondList.add(communities[4]);
+              community = newValue;
+              department = null;
+            } else if (newValue == list[5]) {
+              secondList.add(communities[5]);
+              community = newValue;
+              department = null;
+            }
+          } else {
+            department = newValue;
+            dropdownValue = newValue;
+          }
+        });
+      },
+      items: list.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
+  }
+
+  void onSave() {
+    setState(() => loading = true);
+    UserModel userModel = UserModel(
+      firstName: firstName ?? widget.userModel.firstName,
+      lastName: lastName ?? widget.userModel.lastName,
+      photoUrl: _imgURL ?? widget.userModel.photoUrl,
+      email: email ?? widget.userModel.email,
+      community: community ?? widget.userModel.community,
+      department: community == communities[0] || community == communities[1]
+          ? department ?? widget.userModel.department
+          : department = null,
+    );
+    uploadImage(context)
+        .whenComplete(() => UserServices().updateUserData(userModel).whenComplete(() {
+              setState(() => loading = false);
+              Navigator.pop(context);
+            }).catchError((e) => print(e)));
   }
 
   @override
@@ -99,7 +166,7 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
                                 image: _image != null
                                     ? FileImage(_image)
                                     : NetworkImage(
-                                        user?.photoURL ??
+                                        widget?.userModel?.photoUrl ??
                                             "https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png",
                                       ),
                               ),
@@ -113,8 +180,7 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
                                 width: 40,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  border:
-                                      Border.all(width: 2, color: Colors.white),
+                                  border: Border.all(width: 2, color: Colors.white),
                                   color: Theme.of(context).accentColor,
                                 ),
                                 child: IconButton(
@@ -129,8 +195,7 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 35.0),
                       child: TextField(
-                        onChanged: (String val) =>
-                            setState(() => firstName = val),
+                        onChanged: (String val) => setState(() => firstName = val),
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.only(bottom: 3),
                           labelText: 'FirstName',
@@ -147,8 +212,7 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 35.0),
                       child: TextField(
-                        onChanged: (String val) =>
-                            setState(() => lastName = val),
+                        onChanged: (String val) => setState(() => lastName = val),
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.only(bottom: 3),
                           labelText: 'lastName',
@@ -179,57 +243,20 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 35.0),
-                      child: Row(
-                        children: [
-                          Text("Community : "),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          DropdownButton(
-                              value: community,
-                              items: communities.map((e) {
-                                return DropdownMenuItem(
-                                  child: Text(e),
-                                  value: e,
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  community = value;
-                                });
-                              }),
-                        ],
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("community "),
+                        dropDown(list: communities, dropdownValue: community),
+                      ],
                     ),
-                    community == communities[0] || community == communities[1]
-                        ? Padding(
-                            padding: const EdgeInsets.only(bottom: 35.0),
-                            child: Row(
-                              children: [
-                                Text("Departments : "),
-                                SizedBox(
-                                  width: 15,
-                                ),
-                                DropdownButton(
-                                    value: department,
-                                    items: mmDep.map((e) {
-                                      return DropdownMenuItem(
-                                        child: Text(e),
-                                        value: e,
-                                      );
-                                    }).toList(),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        community == communities[0] ||
-                                                community == communities[1]
-                                            ? department = value
-                                            : department = null;
-                                      });
-                                    }),
-                              ],
-                            ),
+                    community == communities.elementAt(0) || community == communities.elementAt(1)
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("department "),
+                              dropDown(list: secondList, dropdownValue: department),
+                            ],
                           )
                         : Container(),
                     SizedBox(height: 35),
@@ -262,33 +289,7 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            onPressed: () {
-                              setState(() => loading = true);
-                              uploadImage(context).then((value) {
-                                FirebaseFirestore.instance
-                                    .collection('Users')
-                                    .doc(user.uid)
-                                    .update({
-                                  "fistName":
-                                      firstName ?? widget.userModel.firstName,
-                                  "lastName":
-                                      lastName ?? widget.userModel.lastName,
-                                  "email": email ?? widget.userModel.email,
-                                  "community":
-                                      community ?? widget.userModel.community,
-                                  "department":
-                                      department ?? widget.userModel.department,
-                                  "photoURL":
-                                      _imgURL ?? widget.userModel.photoUrl,
-                                });
-                                user.updateProfile(
-                                    displayName: widget.userModel.username,
-                                    photoURL: _imgURL);
-                              }).whenComplete(() {
-                                setState(() => loading = false);
-                                Navigator.pop(context);
-                              }).catchError((e) => print(e));
-                            },
+                            onPressed: onSave,
                           ),
                         )
                       ],
