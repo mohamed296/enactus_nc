@@ -32,10 +32,6 @@ class _SignInState extends State<SignIn> {
     HelperFunction.setUserEmail(tecEmail.text);
     _databaseMethods.getUsersByUserEmail(tecEmail.text).then((val) {
       snapshot = val;
-      /**
-       * sometimes @val is null no clue why this is causing the double chat
-       * issue,
-       * */
       String name =
           '${snapshot.docs[0].data()["firstName"]} ${snapshot.docs[0].data()["lastName"]}';
       HelperFunction.setUsername(name.toLowerCase().toString());
