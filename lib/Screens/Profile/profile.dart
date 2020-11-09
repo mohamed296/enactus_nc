@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enactusnca/Models/post.dart';
 import 'package:enactusnca/Models/user_model.dart';
 import 'package:enactusnca/Screens/Events/Calendar.dart';
+import 'package:enactusnca/Screens/Profile/HelpSupport.dart';
 import 'package:enactusnca/Screens/Profile/ProfilePostTile.dart';
 import 'package:enactusnca/Screens/Profile/edit_profile_screen.dart';
 import 'package:enactusnca/Screens/authentication/sign_in.dart';
@@ -77,7 +78,8 @@ class _ProfileState extends State<Profile> {
                                 child: Icon(
                                   LineAwesomeIcons.pen,
                                   color: kDarkPrimaryColor,
-                                  size: ScreenUtil().setSp(kSpacingUnit.w * 1.5),
+                                  size:
+                                      ScreenUtil().setSp(kSpacingUnit.w * 1.5),
                                 ),
                               ),
                             ),
@@ -109,7 +111,8 @@ class _ProfileState extends State<Profile> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => EditProfilScreen(userModel: userModel),
+                          builder: (context) =>
+                              EditProfilScreen(userModel: userModel),
                         ),
                       );
                     },
@@ -132,20 +135,22 @@ class _ProfileState extends State<Profile> {
                     },
                     child: ProfileListItem(
                       icon: LineAwesomeIcons.user_shield,
-                      text: 'Privacy',
+                      text: 'Calender',
                     ),
                   ),
-                  ProfileListItem(
-                    icon: LineAwesomeIcons.history,
-                    text: 'Purchase History',
-                  ),
-                  ProfileListItem(
-                    icon: LineAwesomeIcons.question_circle,
-                    text: 'Help & Support',
-                  ),
-                  ProfileListItem(
-                    icon: LineAwesomeIcons.cog,
-                    text: 'Settings',
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HelpSupport(),
+                        ),
+                      );
+                    },
+                    child: ProfileListItem(
+                      icon: LineAwesomeIcons.question_circle,
+                      text: 'Help & Support',
+                    ),
                   ),
                   GestureDetector(
                     onTap: () {
