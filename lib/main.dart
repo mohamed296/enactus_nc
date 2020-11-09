@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'Screens/AddNewPost/upload.dart';
+import 'Screens/AddNewPost/add_new_post.dart';
 import 'Screens/Events/Calendar.dart';
 import 'Screens/Events/addEvent.dart';
 import 'Screens/Events/view_Event.dart';

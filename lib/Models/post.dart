@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
-import 'package:enactusnca/Helpers/helperfunction.dart';
 import 'package:enactusnca/Widgets/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -50,12 +49,10 @@ class Post {
   Future<dynamic> addNewPost({String description, String mediaUrl}) async {
     User user = FirebaseAuth.instance.currentUser;
     final postC = FirebaseFirestore.instance.collection('Posts').doc();
-    String fName;
-    await HelperFunction.getUsername().then((value) => fName = value);
     return await postC.set({
       'ownerId': user.uid,
       'email': user.email,
-      'name': fName,
+      'name': user.displayName,
       'likes': {},
       'description': description,
       'mediaUrl': mediaUrl,

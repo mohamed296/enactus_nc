@@ -12,7 +12,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:path/path.dart';
 
 class Profile extends StatefulWidget {
   static String id = 'Profile';
@@ -78,8 +77,7 @@ class _ProfileState extends State<Profile> {
                                 child: Icon(
                                   LineAwesomeIcons.pen,
                                   color: kDarkPrimaryColor,
-                                  size:
-                                      ScreenUtil().setSp(kSpacingUnit.w * 1.5),
+                                  size: ScreenUtil().setSp(kSpacingUnit.w * 1.5),
                                 ),
                               ),
                             ),
@@ -96,6 +94,7 @@ class _ProfileState extends State<Profile> {
                   GestureDetector(
                     onTap: () {
                       UserModel userModel = UserModel(
+                        id: snapshot.data.id,
                         firstName: snapshot.data.firstName,
                         lastName: snapshot.data.lastName,
                         photoUrl: snapshot.data.photoUrl,
@@ -103,17 +102,14 @@ class _ProfileState extends State<Profile> {
                         community: snapshot.data.community,
                         department: snapshot.data.department,
                         joiningDate: snapshot.data.joiningDate,
-                        username:
-                            '${snapshot.data.firstName}${snapshot.data.lastName}',
+                        username: snapshot.data.username,
                         isActive: snapshot.data.isActive,
                         isHead: snapshot.data.isHead,
                       );
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => EditProfilScreen(
-                            userModel: userModel,
-                          ),
+                          builder: (context) => EditProfilScreen(userModel: userModel),
                         ),
                       );
                     },
