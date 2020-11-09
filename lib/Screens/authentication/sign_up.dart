@@ -20,9 +20,10 @@ class _SignUpState extends State<SignUp> {
   TextEditingController tecLastName = TextEditingController();
   TextEditingController tecEmailUp = TextEditingController();
   TextEditingController tecPasswordUp = TextEditingController();
-  List<String> communities = ['Multimedia', 'ER', 'HR', 'Project', 'Presentation'];
-  List<String> mmDep = ['Developing', 'Social Media', 'Photography', 'Graphic Design'];
-  List<String> erDep = ['FR', 'BR', 'Logistics'];
+
+  List<String> communities = Constants.communities;
+  List<String> mmDep = Constants.mmDep;
+  List<String> erDep = Constants.erDep;
   List<String> secondList = List();
   String department, community;
   bool isLoading = false;
@@ -61,9 +62,7 @@ class _SignUpState extends State<SignUp> {
   Widget dropDown({List<String> list, String dropdownValue}) {
     return DropdownButton<String>(
       value: dropdownValue,
-      icon: Icon(
-        Icons.arrow_drop_down,
-      ),
+      icon: Icon(Icons.arrow_drop_down),
       iconSize: 20,
       elevation: 16,
       style: TextStyle(color: Colors.grey),

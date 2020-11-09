@@ -1,4 +1,4 @@
-import 'package:enactusnca/Screens/AddNewPost/upload.dart';
+import 'package:enactusnca/Screens/AddNewPost/add_new_post.dart';
 import 'package:enactusnca/Screens/Events/Calendar.dart';
 import 'package:enactusnca/Screens/Home/PostsList.dart';
 import 'package:enactusnca/Screens/Settings/Settings.dart';
@@ -44,26 +44,16 @@ class _HomeState extends State<Home> {
         ],
       ),*/
       appBar: AppBar(
-        //elevation: 5.0,
-        //   backgroundColor: Color.fromRGBO(25, 53, 93, 1.0),
-        leading: Builder(
-            builder: (context) => Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: InkWell(
-                    onTap: () => Scaffold.of(context).openDrawer(),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          fit: BoxFit.fill,
-                          image: AssetImage(
-                            'assets/images/enplus.png',
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                )),
+        leading: Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            image: DecorationImage(
+              scale: 0.8,
+              fit: BoxFit.fill,
+              image: AssetImage('assets/images/enactus.png'),
+            ),
+          ),
+        ),
 
         actions: <Widget>[
           /*    Hero(
