@@ -1,7 +1,6 @@
 import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Helpers/helperfunction.dart';
-import 'package:enactusnca/Widgets/favorite_contacts.dart';
-import 'package:enactusnca/Widgets/recent_chats.dart';
+import 'package:enactusnca/Screens/chat/messages/recent_chats.dart';
 import 'package:flutter/material.dart';
 
 class RecentScreen extends StatefulWidget {
@@ -47,12 +46,12 @@ class _RecentScreenState extends State<RecentScreen> {
                     ),
                     child: Column(
                       children: <Widget>[
-                        ClipRRect(
-                          child: FavoriteContacts(),
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(30),
-                              topLeft: Radius.circular(30)),
-                        ),
+                        // ClipRRect(
+                        //   child: FavoriteContacts(),
+                        //   borderRadius: BorderRadius.only(
+                        //       topRight: Radius.circular(30),
+                        //       topLeft: Radius.circular(30)),
+                        // ),
                         RecentChat(),
                       ],
                     ),

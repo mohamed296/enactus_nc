@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:enactusnca/Models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -9,16 +10,39 @@ import 'package:image_picker/image_picker.dart';
 
 class EditProfilScreen extends StatefulWidget {
   static String id = 'editProfilScreen';
+  final UserModel userModel;
 
+  const EditProfilScreen({this.userModel});
   @override
   _EditProfilScreenState createState() => _EditProfilScreenState();
 }
 
 class _EditProfilScreenState extends State<EditProfilScreen> {
   final user = FirebaseAuth.instance.currentUser;
-  String name, email;
+  String firstName, lastName, email, department, community;
   File _image;
   String _imgURL;
+  List<String> communities = [
+    'Multimedia',
+    'ER',
+    'HR',
+    'Project',
+    'Presentation'
+  ];
+  List<String> mmDep = [
+    'Developing',
+    'Social Media',
+    'Photography',
+    'Graphic Design'
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    community = widget.userModel.community;
+    department = widget.userModel.department;
+  }
 
   bool loading = false;
 
@@ -105,13 +129,31 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 35.0),
                       child: TextField(
-                        onChanged: (String val) => setState(() => name = val),
-                        enabled: true,
+                        onChanged: (String val) =>
+                            setState(() => firstName = val),
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.only(bottom: 3),
-                          labelText: 'Name',
+                          labelText: 'FirstName',
                           floatingLabelBehavior: FloatingLabelBehavior.always,
-                          hintText: "${user.displayName}",
+                          hintText: "${widget.userModel.firstName}",
+                          hintStyle: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 35.0),
+                      child: TextField(
+                        onChanged: (String val) =>
+                            setState(() => lastName = val),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(bottom: 3),
+                          labelText: 'lastName',
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                          hintText: "${widget.userModel.lastName}",
                           hintStyle: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
@@ -124,12 +166,11 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
                       padding: const EdgeInsets.only(bottom: 35.0),
                       child: TextField(
                         onChanged: (String val) => setState(() => email = val),
-                        enabled: false,
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.only(bottom: 3),
                           labelText: 'E-mail',
                           floatingLabelBehavior: FloatingLabelBehavior.always,
-                          hintText: "${user.email}",
+                          hintText: "${widget.userModel.email}",
                           hintStyle: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
@@ -138,6 +179,59 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
                         ),
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 35.0),
+                      child: Row(
+                        children: [
+                          Text("Community : "),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          DropdownButton(
+                              value: community,
+                              items: communities.map((e) {
+                                return DropdownMenuItem(
+                                  child: Text(e),
+                                  value: e,
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  community = value;
+                                });
+                              }),
+                        ],
+                      ),
+                    ),
+                    community == communities[0] || community == communities[1]
+                        ? Padding(
+                            padding: const EdgeInsets.only(bottom: 35.0),
+                            child: Row(
+                              children: [
+                                Text("Departments : "),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                DropdownButton(
+                                    value: department,
+                                    items: mmDep.map((e) {
+                                      return DropdownMenuItem(
+                                        child: Text(e),
+                                        value: e,
+                                      );
+                                    }).toList(),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        community == communities[0] ||
+                                                community == communities[1]
+                                            ? department = value
+                                            : department = null;
+                                      });
+                                    }),
+                              ],
+                            ),
+                          )
+                        : Container(),
                     SizedBox(height: 35),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -175,11 +269,21 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
                                     .collection('Users')
                                     .doc(user.uid)
                                     .update({
-                                  "userName": name,
-                                  "photoURL": _imgURL
+                                  "fistName":
+                                      firstName ?? widget.userModel.firstName,
+                                  "lastName":
+                                      lastName ?? widget.userModel.lastName,
+                                  "email": email ?? widget.userModel.email,
+                                  "community":
+                                      community ?? widget.userModel.community,
+                                  "department":
+                                      department ?? widget.userModel.department,
+                                  "photoURL":
+                                      _imgURL ?? widget.userModel.photoUrl,
                                 });
                                 user.updateProfile(
-                                    displayName: name, photoURL: _imgURL);
+                                    displayName: widget.userModel.username,
+                                    photoURL: _imgURL);
                               }).whenComplete(() {
                                 setState(() => loading = false);
                                 Navigator.pop(context);

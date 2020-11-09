@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Helpers/helperfunction.dart';
-import 'package:enactusnca/Screens/views/sign_up.dart';
+import 'package:enactusnca/Screens/authentication/sign_up.dart';
 import 'package:enactusnca/Widgets/edite_text.dart';
 import 'package:enactusnca/services/auth.dart';
 import 'package:enactusnca/services/database_methods.dart';
@@ -41,12 +41,11 @@ class _SignInState extends State<SignIn> {
       isLoading = true;
     });
     _auth
-        .signInWithEmail(
-            email: tecEmail.text.trim(), password: tecPassword.text.trim())
+        .signInWithEmail(email: tecEmail.text.trim(), password: tecPassword.text.trim())
         .then((value) {
       if (value != null) {
         sharedPreferences.setString('user', tecEmail.text);
-        Navigator.of(context).pushNamed(Wrapper.id);
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Wrapper()));
       } else {
         setState(() {
           isLoading = false;
@@ -105,10 +104,8 @@ class _SignInState extends State<SignIn> {
                         onTap: () {},
                         child: Container(
                           color: Colors.transparent,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 5.0, vertical: 10.0),
-                          margin: EdgeInsets.only(
-                              top: 5.0, left: 35.0, bottom: 5.0),
+                          padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
+                          margin: EdgeInsets.only(top: 5.0, left: 35.0, bottom: 5.0),
                           child: Text(
                             "Forgot password?",
                             style: TextStyle(
@@ -122,16 +119,15 @@ class _SignInState extends State<SignIn> {
                         onTap: () {
                           setState(() {
                             isSignIn = !isSignIn;
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SignUp()));
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => SignUp()),
+                            );
                           });
                         },
                         child: Container(
                           color: Colors.transparent,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 10.0),
+                          padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
                           margin: EdgeInsets.only(top: 5.0, bottom: 5.0),
                           child: Text(
                             "Sign up",
@@ -149,16 +145,12 @@ class _SignInState extends State<SignIn> {
                     margin: EdgeInsets.only(right: 30.0),
                     alignment: Alignment.topRight,
                     child: CircleAvatar(
-                      //   backgroundColor: Constants.yellow,
                       radius: 35.0,
                       child: IconButton(
                         onPressed: () {
                           signIn();
                         },
-                        icon: Icon(
-                          Icons.arrow_forward,
-                          //    color: Constants.darkBlue,
-                        ),
+                        icon: Icon(Icons.arrow_forward),
                       ),
                     ),
                   )

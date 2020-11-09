@@ -1,16 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Helpers/helperfunction.dart';
+import 'package:enactusnca/Models/post.dart';
 import 'package:enactusnca/Models/user_model.dart';
+import 'package:enactusnca/Screens/Post/OpenPost.dart';
 import 'package:enactusnca/Screens/Profile/profile.dart';
 import 'package:enactusnca/Widgets/PopUpMenu.dart';
 import 'package:enactusnca/Widgets/constants.dart';
 import 'package:enactusnca/Widgets/post_image.dart';
-import 'package:enactusnca/Models/post.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-
-import '../../Post/OpenPost.dart';
 
 class PostTile extends StatefulWidget {
   final Post post;
@@ -133,7 +132,7 @@ class _PostTileState extends State<PostTile> {
   ListTile userInfo(BuildContext context) {
     return ListTile(
       leading: CircleAvatar(
-        // backgroundImage: AssetImage('assets/images/greg.jpg'),
+        radius: 34.0,
         backgroundImage: NetworkImage(
           widget?.post?.userProfileImg ??
               'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png',
