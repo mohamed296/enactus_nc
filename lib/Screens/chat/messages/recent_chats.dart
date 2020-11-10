@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Helpers/functions.dart';
 import 'package:enactusnca/Models/recent_chat.dart';
@@ -67,17 +68,6 @@ class _RecentChatState extends State<RecentChat> {
             List.from(snapshot.data.documents[index].data()["users"]);
         String roomID = snapshot.data.documents[index].data()["chatroomid"];
         List emails = snapshot.data.documents[index].data()['emails'];
-        String imgURL;
-        for (int i = 0; i < emails.length; i++) {
-          if (emails[i] != Constants.myEmail) {
-            databaseMethods.getUsersByUserEmail(emails[i]).then((val) {
-              setState(() {
-                imgURL = val.data.documents[0].data()["photoUrl"];
-              });
-            });
-          }
-        }
-        print('$imgURL asdsadasd');
         return GestureDetector(
           onTap: () {
             Navigator.push(
@@ -123,13 +113,49 @@ class _RecentChatState extends State<RecentChat> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Row(
-                  children: <Widget>[
-                    CircleAvatar(
-                      backgroundColor: Colors.white,
-                      backgroundImage: imgURL == null
-                          ? AssetImage('assets/images/person.png')
-                          : Image.network(imgURL),
-                      radius: 35.0,
+                  children: [
+                    FutureBuilder(
+                      future: Constants.myEmail == emails[0]
+                          ? databaseMethods.getUsersByUserEmail(emails[1])
+                          : databaseMethods.getUsersByUserEmail(emails[0]),
+                      builder: (context, newSnap) {
+                        QuerySnapshot querySnapshot = newSnap.data;
+                        String imgURL =
+                            querySnapshot.docs[0].data()["photoUrl"];
+                        switch (newSnap.connectionState) {
+                          case ConnectionState.done:
+                            return CircleAvatar(
+                              backgroundColor: Colors.white,
+                              backgroundImage: imgURL == null
+                                  ? AssetImage('assets/images/person.png')
+                                  : NetworkImage(imgURL),
+                              radius: 35.0,
+                            );
+                          case ConnectionState.active:
+                            return CircleAvatar(
+                              backgroundColor: Colors.white,
+                              backgroundImage: imgURL == null
+                                  ? AssetImage('assets/images/person.png')
+                                  : NetworkImage(imgURL),
+                              radius: 35.0,
+                            );
+                          case ConnectionState.waiting:
+                            return CircleAvatar(
+                              backgroundColor: Colors.white,
+                              backgroundImage:
+                                  AssetImage('assets/images/person.png'),
+                              radius: 35.0,
+                            );
+                          default:
+                            return CircleAvatar(
+                              backgroundColor: Colors.white,
+                              backgroundImage: imgURL == null
+                                  ? AssetImage('assets/images/person.png')
+                                  : NetworkImage(imgURL),
+                              radius: 35.0,
+                            );
+                        }
+                      },
                     ),
                     SizedBox(width: 10.0),
                     Column(
@@ -234,7 +260,6 @@ class _RecentChatState extends State<RecentChat> {
               return Center(child: CircularProgressIndicator());
               break;
             default:
-              print("lentgh ${snapshot.hasData}");
               return snapshot.hasData
                   ? contactsList(snapshot)
                   : Center(

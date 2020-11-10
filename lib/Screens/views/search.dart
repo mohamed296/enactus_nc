@@ -177,7 +177,9 @@ class SearchTitle extends StatelessWidget {
           GestureDetector(
             onTap: () {
               createChatRoomAndStartConversation(
-                  context: context, userID: userEmail.trim(), userName: '$fistName $lastName');
+                  context: context,
+                  userID: userEmail.trim(),
+                  userName: '$fistName $lastName');
             },
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -198,6 +200,7 @@ class SearchTitle extends StatelessWidget {
 }
 
 getChatRoomId(String a, String b) {
+  print('$a  $b');
   if (a.substring(0, 1).codeUnitAt(0) < b.substring(0, 1).codeUnitAt(0)) {
     return "$b\_$a";
   } else {
@@ -205,7 +208,8 @@ getChatRoomId(String a, String b) {
   }
 }
 
-createChatRoomAndStartConversation({String userID, String userName, BuildContext context}) {
+createChatRoomAndStartConversation(
+    {String userID, String userName, BuildContext context}) {
   if (_userEmail != Constants.myEmail) {
     String chatRoomId = getChatRoomId(_userEmail, _myEmail);
     List<String> users = [userName, _myName];
