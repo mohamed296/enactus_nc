@@ -1,3 +1,4 @@
+import 'package:enactusnca/Helpers/helperfunction.dart';
 import 'package:enactusnca/Models/user_model.dart';
 import 'package:enactusnca/services/message_group_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,8 +11,8 @@ class Auth {
 
   Future signInWithEmail({String email, String password}) async {
     try {
-      UserCredential result =
-          await _auth.signInWithEmailAndPassword(email: email, password: password);
+      UserCredential result = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
       User user = result.user;
       return user;
     } catch (ex) {
@@ -34,13 +35,19 @@ class Auth {
       await DatabaseMethods()
           .uploadUserInfo(userModel: userModel, uid: firebaseUser.uid)
           .then((value) {
-        MessageGroupServices().createGroupChatOrAddNewMember(userModel.community, userModel);
+        MessageGroupServices()
+            .createGroupChatOrAddNewMember(userModel.community, userModel);
         if (userModel.department != null) {
-          MessageGroupServices().createGroupChatOrAddNewMember(userModel.department, userModel);
+          MessageGroupServices()
+              .createGroupChatOrAddNewMember(userModel.department, userModel);
         }
-        MessageGroupServices().createGroupChatOrAddNewMember('Enactus NC', userModel);
+        MessageGroupServices()
+            .createGroupChatOrAddNewMember('Enactus NC', userModel);
       });
       sharedPreferences.setString('user', userModel.email);
+      HelperFunction.setUserEmail(userModel.email);
+      HelperFunction.setUsername(
+          '${userModel.firstName} ${userModel.lastName}');
 
       return firebaseUser;
     } catch (ex) {
@@ -59,7 +66,9 @@ class Auth {
   Future signOut() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     try {
-      return await _auth.signOut().whenComplete(() => sharedPreferences.remove('user'));
+      return await _auth
+          .signOut()
+          .whenComplete(() => sharedPreferences.remove('user'));
     } catch (ex) {
       print("Signing out issue ${ex.toString()}");
     }

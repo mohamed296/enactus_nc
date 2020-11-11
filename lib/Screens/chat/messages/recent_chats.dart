@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Helpers/functions.dart';
 import 'package:enactusnca/Models/recent_chat.dart';
@@ -63,8 +64,11 @@ class _RecentChatState extends State<RecentChat> {
       shrinkWrap: true,
       itemCount: snapshot.data.documents.length,
       itemBuilder: (context, index) {
-        List<String> list = List.from(snapshot.data.documents[index].data()["users"]);
+        List<String> list =
+            List.from(snapshot.data.documents[index].data()["users"]);
         String roomID = snapshot.data.documents[index].data()["chatroomid"];
+        List emails = snapshot.data.documents[index].data()['emails'];
+        String imgURL;
         return GestureDetector(
           onTap: () {
             Navigator.push(
@@ -73,7 +77,9 @@ class _RecentChatState extends State<RecentChat> {
                 builder: (context) => Messages(
                   group: false,
                   chatRoomId: roomID,
-                  lastSender: snapshot.data.documents[index].data()["lastSender"],
+                  imageUrl: imgURL,
+                  lastSender:
+                      snapshot.data.documents[index].data()["lastSender"],
                   username: list[1] == Constants.myName ? list[0] : list[1],
                 ),
               ),
@@ -90,38 +96,52 @@ class _RecentChatState extends State<RecentChat> {
               horizontal: 20.0,
             ),
             decoration: BoxDecoration(
-              color: snapshot.data.documents[index].data()["lastSender"] != Constants.myName
+              color: snapshot.data.documents[index].data()["lastSender"] !=
+                      Constants.myName
                   ? !snapshot.data.documents[index].data()["isRead"]
                       ? Constants.midBlue
                       : Constants.darkBlue
                   : Constants.darkBlue,
               borderRadius: BorderRadius.only(
-                topRight: Radius.circular(20),
-                bottomRight: Radius.circular(20),
+                topRight: Radius.circular(
+                  20,
+                ),
+                bottomRight: Radius.circular(
+                  20,
+                ),
               ),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Row(
-                  children: <Widget>[
-                    Container(
-                      height: 35,
-                      width: 35,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(34.0),
-                        child: snapshot.data.documents[index].data()["null"] != null
-                            ? Image.network(
-                                snapshot.data.documents[index].data()["null"],
-                                fit: BoxFit.contain,
-                                loadingBuilder: (context, child, loadingProgress) {
-                                  return loadingProgress == null
-                                      ? child
-                                      : Center(child: CircularProgressIndicator());
-                                },
-                              )
-                            : Image.asset('assets/images/enactus.png'),
-                      ),
+                  children: [
+                    FutureBuilder<dynamic>(
+                      future: Constants.myEmail == emails[0]
+                          ? databaseMethods.getUsersByUserEmail(emails[1])
+                          : databaseMethods.getUsersByUserEmail(emails[0]),
+                      builder: (context, newSnap) {
+                        QuerySnapshot querySnapshot = newSnap.data;
+                        querySnapshot != null
+                            ? imgURL = querySnapshot.docs[0].data()["photoUrl"]
+                            : null;
+                        switch (newSnap.connectionState) {
+                          case ConnectionState.done:
+                            return CircleAvatar(
+                              backgroundColor: Colors.white,
+                              backgroundImage: imgURL == null
+                                  ? AssetImage('assets/images/person.png')
+                                  : NetworkImage(imgURL),
+                              radius: 35.0,
+                            );
+                          case ConnectionState.active:
+                            return CircularProgressIndicator();
+                          case ConnectionState.waiting:
+                            return CircularProgressIndicator();
+                          default:
+                            return CircularProgressIndicator();
+                        }
+                      },
                     ),
                     SizedBox(width: 10.0),
                     Column(
@@ -138,9 +158,12 @@ class _RecentChatState extends State<RecentChat> {
                         Container(
                           width: MediaQuery.of(context).size.width * 0.35,
                           child: Text(
-                            snapshot.data.documents[index].data()["lastMessage"] == null
+                            snapshot.data.documents[index]
+                                        .data()["lastMessage"] ==
+                                    null
                                 ? ""
-                                : snapshot.data.documents[index].data()["lastMessage"],
+                                : snapshot.data.documents[index]
+                                    .data()["lastMessage"],
                             style: TextStyle(
                               color: Colors.blueGrey.shade200,
                               fontSize: 15.0,
@@ -158,7 +181,8 @@ class _RecentChatState extends State<RecentChat> {
                   children: <Widget>[
                     Text(
                       Functions.readTimestamp(
-                        snapshot.data.documents[index].data()["lastTime"] == null
+                        snapshot.data.documents[index].data()["lastTime"] ==
+                                null
                             ? 0
                             : snapshot.data.documents[index].data()["lastTime"],
                       ),
@@ -172,9 +196,12 @@ class _RecentChatState extends State<RecentChat> {
                       height: 4.0,
                     ),
                     Container(
-                      child: snapshot.data.documents[index].data()["isRead"] == null
+                      child: snapshot.data.documents[index].data()["isRead"] ==
+                              null
                           ? false
-                          : snapshot.data.documents[index].data()["lastSender"] != Constants.myName
+                          : snapshot.data.documents[index]
+                                      .data()["lastSender"] !=
+                                  Constants.myName
                               ? !snapshot.data.documents[index].data()["isRead"]
                                   ? Container(
                                       alignment: Alignment.center,
@@ -219,7 +246,6 @@ class _RecentChatState extends State<RecentChat> {
               return Center(child: CircularProgressIndicator());
               break;
             default:
-              print("lentgh ${snapshot.hasData}");
               return snapshot.hasData
                   ? contactsList(snapshot)
                   : Center(

@@ -9,7 +9,8 @@ class DatabaseMethods {
       "department": userModel.department,
       "community": userModel.community,
       "email": userModel.email,
-      "photoUrl": '',
+      "photoUrl": null,
+      "uid": uid,
       "isActive": false,
       "isHead": false,
       "joiningDate": DateTime.now(),
@@ -85,6 +86,14 @@ class DatabaseMethods {
         .where("emails", arrayContains: email)
         .orderBy('lastTime', descending: true)
         .snapshots();
+  }
+
+  getChatRooByRoomId({String roomId}) async {
+    return FirebaseFirestore.instance
+        .collection("chatRoom")
+        .where("chatroomid", isEqualTo: roomId)
+        .orderBy('lastTime', descending: true)
+        .get();
   }
 
   getUsers() async {
