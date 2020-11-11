@@ -11,7 +11,7 @@ class UserServices {
         .collection('Users')
         .doc(user.uid)
         .update({
-          "fistName": userModel.firstName,
+          "firstName": userModel.firstName,
           "lastName": userModel.lastName,
           'userName': '${userModel.firstName} ${userModel.lastName}',
           "email": userModel.email,
@@ -26,8 +26,10 @@ class UserServices {
           ),
         )
         .whenComplete(() {
-          MessageGroupServices().createGroupChatOrAddNewMember(userModel.community, userModel);
-          MessageGroupServices().createGroupChatOrAddNewMember(userModel.department, userModel);
+          MessageGroupServices()
+              .createGroupChatOrAddNewMember(userModel.community, userModel);
+          MessageGroupServices()
+              .createGroupChatOrAddNewMember(userModel.department, userModel);
         });
   }
 

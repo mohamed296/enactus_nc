@@ -200,12 +200,10 @@ class SearchTitle extends StatelessWidget {
 }
 
 getChatRoomId(String a, String b) {
-  print('$a  $b');
-  if (a.substring(0, 1).codeUnitAt(0) < b.substring(0, 1).codeUnitAt(0)) {
+  if (a.length > b.length)
     return "$b\_$a";
-  } else {
+  else
     return "$a\_$b";
-  }
 }
 
 createChatRoomAndStartConversation(

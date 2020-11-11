@@ -1,5 +1,3 @@
-import 'package:enactusnca/Helpers/constants.dart';
-import 'package:enactusnca/Helpers/helperfunction.dart';
 import 'package:enactusnca/Screens/Profile/profile.dart';
 import 'package:enactusnca/services/database_methods.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,9 +20,6 @@ class _MembersState extends State<Members> {
   }
 
   getUserInfo() async {
-    Constants.myName = await HelperFunction.getUsername();
-    Constants.myEmail = await HelperFunction.getUserEmail();
-    Constants.myId = await HelperFunction.getUserId();
     databaseMethods.getUsers().then((val) {
       setState(() {
         contactsStream = val;
@@ -74,12 +69,40 @@ class _MembersState extends State<Members> {
       scrollDirection: Axis.vertical,
       itemBuilder: (context, index) {
         return GestureDetector(
-          child: singleUser(
-              context: context,
-              firstName: snapshot.data.documents[index].data()['firstName'],
-              lastName: snapshot.data.documents[index].data()['lastName'],
-              emali: snapshot.data.documents[index].data()['email'],
-              imageURL: snapshot.data.documents[index].data()['photoURL']),
+          onTap: () {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Profile(
+                          userId: snapshot.data.documents[index].data()['uid'],
+                        )));
+          },
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 20.0,
+                  left: 20.0,
+                  right: 20.0,
+                ),
+                child: CircleAvatar(
+                  radius: 30,
+                  backgroundImage: snapshot.data.documents[index]
+                              .data()['photoUrl'] ==
+                          null
+                      ? AssetImage("assets/images/person.png")
+                      : NetworkImage(
+                          snapshot.data.documents[index].data()['photoUrl']),
+                ),
+              ),
+              Text(
+                '${snapshot.data.documents[index].data()['firstName']} ${snapshot.data.documents[index].data()['lastName']}',
+                style: TextStyle(fontSize: 18.0, color: Colors.white),
+              ),
+            ],
+          ),
         );
       },
     );
@@ -89,40 +112,4 @@ class _MembersState extends State<Members> {
   Widget build(BuildContext context) {
     return createChatContacts();
   }
-}
-
-Widget singleUser(
-    {String firstName, String lastName, String imageURL, String emali, BuildContext context}) {
-  return GestureDetector(
-    onTap: () {
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => Profile(
-                    email: emali,
-                  )));
-    },
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(
-            top: 20.0,
-            left: 20.0,
-            right: 20.0,
-          ),
-          child: CircleAvatar(
-            radius: 30,
-            backgroundImage:
-                imageURL == null ? AssetImage("assets/images/person.png") : NetworkImage(imageURL),
-          ),
-        ),
-        Text(
-          '$firstName  $lastName',
-          style: TextStyle(fontSize: 18.0, color: Colors.white),
-        ),
-      ],
-    ),
-  );
 }

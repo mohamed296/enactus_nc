@@ -68,6 +68,7 @@ class _RecentChatState extends State<RecentChat> {
             List.from(snapshot.data.documents[index].data()["users"]);
         String roomID = snapshot.data.documents[index].data()["chatroomid"];
         List emails = snapshot.data.documents[index].data()['emails'];
+        String imgURL;
         return GestureDetector(
           onTap: () {
             Navigator.push(
@@ -76,6 +77,7 @@ class _RecentChatState extends State<RecentChat> {
                 builder: (context) => Messages(
                   group: false,
                   chatRoomId: roomID,
+                  imageUrl: imgURL,
                   lastSender:
                       snapshot.data.documents[index].data()["lastSender"],
                   username: list[1] == Constants.myName ? list[0] : list[1],
@@ -114,14 +116,15 @@ class _RecentChatState extends State<RecentChat> {
               children: <Widget>[
                 Row(
                   children: [
-                    FutureBuilder(
+                    FutureBuilder<dynamic>(
                       future: Constants.myEmail == emails[0]
                           ? databaseMethods.getUsersByUserEmail(emails[1])
                           : databaseMethods.getUsersByUserEmail(emails[0]),
                       builder: (context, newSnap) {
                         QuerySnapshot querySnapshot = newSnap.data;
-                        String imgURL =
-                            querySnapshot.docs[0].data()["photoUrl"];
+                        querySnapshot != null
+                            ? imgURL = querySnapshot.docs[0].data()["photoUrl"]
+                            : null;
                         switch (newSnap.connectionState) {
                           case ConnectionState.done:
                             return CircleAvatar(
@@ -132,28 +135,11 @@ class _RecentChatState extends State<RecentChat> {
                               radius: 35.0,
                             );
                           case ConnectionState.active:
-                            return CircleAvatar(
-                              backgroundColor: Colors.white,
-                              backgroundImage: imgURL == null
-                                  ? AssetImage('assets/images/person.png')
-                                  : NetworkImage(imgURL),
-                              radius: 35.0,
-                            );
+                            return CircularProgressIndicator();
                           case ConnectionState.waiting:
-                            return CircleAvatar(
-                              backgroundColor: Colors.white,
-                              backgroundImage:
-                                  AssetImage('assets/images/person.png'),
-                              radius: 35.0,
-                            );
+                            return CircularProgressIndicator();
                           default:
-                            return CircleAvatar(
-                              backgroundColor: Colors.white,
-                              backgroundImage: imgURL == null
-                                  ? AssetImage('assets/images/person.png')
-                                  : NetworkImage(imgURL),
-                              radius: 35.0,
-                            );
+                            return CircularProgressIndicator();
                         }
                       },
                     ),
