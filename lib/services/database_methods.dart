@@ -42,8 +42,8 @@ class DatabaseMethods {
         .get();
   }
 
-  createChatRoom(String chatRoomId, chatRoomMap) {
-    FirebaseFirestore.instance
+  createChatRoom(String chatRoomId, chatRoomMap) async {
+    return await FirebaseFirestore.instance
         .collection("chatRoom")
         .doc(chatRoomId)
         .set(chatRoomMap)

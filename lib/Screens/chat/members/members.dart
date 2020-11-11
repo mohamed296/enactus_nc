@@ -69,6 +69,7 @@ class _MembersState extends State<Members> {
       scrollDirection: Axis.vertical,
       itemBuilder: (context, index) {
         return GestureDetector(
+          behavior: HitTestBehavior.opaque,
           onTap: () {
             Navigator.pushReplacement(
                 context,
@@ -77,31 +78,34 @@ class _MembersState extends State<Members> {
                           userId: snapshot.data.documents[index].data()['uid'],
                         )));
           },
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 20.0,
-                  left: 20.0,
-                  right: 20.0,
+          child: Container(
+            width: double.infinity,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 20.0,
+                    left: 20.0,
+                    right: 20.0,
+                  ),
+                  child: CircleAvatar(
+                    radius: 30,
+                    backgroundImage: snapshot.data.documents[index]
+                                .data()['photoUrl'] ==
+                            null
+                        ? AssetImage("assets/images/person.png")
+                        : NetworkImage(
+                            snapshot.data.documents[index].data()['photoUrl']),
+                  ),
                 ),
-                child: CircleAvatar(
-                  radius: 30,
-                  backgroundImage: snapshot.data.documents[index]
-                              .data()['photoUrl'] ==
-                          null
-                      ? AssetImage("assets/images/person.png")
-                      : NetworkImage(
-                          snapshot.data.documents[index].data()['photoUrl']),
+                Text(
+                  '${snapshot.data.documents[index].data()['firstName']} ${snapshot.data.documents[index].data()['lastName']}',
+                  style: TextStyle(fontSize: 18.0, color: Colors.white),
                 ),
-              ),
-              Text(
-                '${snapshot.data.documents[index].data()['firstName']} ${snapshot.data.documents[index].data()['lastName']}',
-                style: TextStyle(fontSize: 18.0, color: Colors.white),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },

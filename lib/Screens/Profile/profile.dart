@@ -147,10 +147,8 @@ class _ProfileState extends State<Profile> {
                             .getChatRooByRoomId(roomId: roomId)
                             .then((value) {
                           QuerySnapshot roomSnapShoot = value;
-                          if (roomSnapShoot.docs.length >= 0) {
-                            roomId = createChatRoomIdII(
-                                snapshot.data.email.toLowerCase(),
-                                user.email.toLowerCase());
+                          if (roomSnapShoot.docs.isEmpty) {
+                            print('creating a room');
                             List<String> users = [
                               '${snapshot.data.firstName} ${snapshot.data.lastName}',
                               user.displayName
@@ -169,11 +167,14 @@ class _ProfileState extends State<Profile> {
                             };
                             DatabaseMethods()
                                 .createChatRoom(roomId, chatRoomMap)
-                                .then((val) => navigateToMessagesScreen(
-                                    context: context,
-                                    roomId: roomId,
-                                    snapshot: snapshot,
-                                    roomSnapShoot: roomSnapShoot));
+                                .then((val) {
+                              print('room created');
+                              navigateToMessagesScreen(
+                                  context: context,
+                                  roomId: roomId,
+                                  snapshot: snapshot,
+                                  roomSnapShoot: roomSnapShoot);
+                            });
                           } else {
                             print("the room exists");
                             navigateToMessagesScreen(
@@ -246,8 +247,6 @@ class _ProfileState extends State<Profile> {
   }
 }
 
-createNewRoom() {}
-
 navigateToMessagesScreen(
     {BuildContext context,
     String roomId,
@@ -260,7 +259,9 @@ navigateToMessagesScreen(
         group: false,
         chatRoomId: roomId,
         imageUrl: snapshot.data.photoUrl,
-        lastSender: "",
+        lastSender: roomSnapShoot.docs.isEmpty
+            ? null
+            : roomSnapShoot.docs[0].data()['lastSender'],
         username: '${snapshot.data.firstName} ${snapshot.data.lastName}',
       ),
     ),
@@ -269,14 +270,6 @@ navigateToMessagesScreen(
 
 createChatRoomId(String a, String b) {
   if (a.length > b.length)
-    return "$b\_$a";
-  else
-    return "$a\_$b";
-}
-
-createChatRoomIdII(String a, String b) {
-  print('$a  $b');
-  if (a.substring(0, 1).codeUnitAt(0) < b.substring(0, 1).codeUnitAt(0))
     return "$b\_$a";
   else
     return "$a\_$b";
