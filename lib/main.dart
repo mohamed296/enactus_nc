@@ -1,24 +1,21 @@
-import 'package:enactusnca/AddNewPost/upload.dart';
-import 'package:enactusnca/Admin/Bott_admin.dart';
-import 'package:enactusnca/Admin/EditPost.dart';
-import 'package:enactusnca/BottomNavBar.dart';
-import 'package:enactusnca/Events/Calendar.dart';
-import 'package:enactusnca/Events/addEvent.dart';
-import 'package:enactusnca/Events/view_Event.dart';
 import 'package:enactusnca/Screens/Home/Home.dart';
-import 'package:enactusnca/Screens/Profile/ProfilePostTile.dart';
 import 'package:enactusnca/Screens/Profile/profile.dart';
-import 'package:enactusnca/Screens/views/home_screen.dart';
-import 'package:enactusnca/Screens/views/sign_in.dart';
+import 'package:enactusnca/Screens/chat/chat.dart';
+import 'package:enactusnca/Screens/authentication/sign_in.dart';
+import 'package:enactusnca/Screens/chat/messages/messages.dart';
 import 'package:enactusnca/utilts/app_theme_provider.dart';
+import 'package:enactusnca/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'Helpers/helperfunction.dart';
+import 'Screens/AddNewPost/add_new_post.dart';
+import 'Screens/Events/Calendar.dart';
+import 'Screens/Events/addEvent.dart';
+import 'Screens/Events/view_Event.dart';
+import 'Screens/Profile/ProfilePostTile.dart';
 
-//void main() => runApp(MyApp());
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -30,8 +27,8 @@ Future<void> main() async {
     ChangeNotifierProvider<AppThemeProvider>(
       create: (context) => AppThemeProvider(
         themeData: theme == null || theme == false
-            ? AppThemeProvider.lightTheme
-            : AppThemeProvider.darkTheme,
+            ? AppThemeProvider.darkTheme
+            : AppThemeProvider.lightTheme,
       ),
       child: MyApp(user: user),
     ),
@@ -49,22 +46,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   @override
-  void initState() {
-    getLoaggedInState();
-    super.initState();
-  }
-
-  bool isUserLoggedIn;
-
-  getLoaggedInState() async {
-    await HelperFunction.getUserLoggedIn().then((value) {
-      setState(() {
-        isUserLoggedIn = value;
-      });
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     final theme = Provider.of<AppThemeProvider>(context);
 
@@ -75,57 +56,20 @@ class _MyAppState extends State<MyApp> {
        * initialRoute has been changed to HomeScreen if the user has
        * signed in once before.
        * */
-      initialRoute: isUserLoggedIn != null
-          ? /**/ isUserLoggedIn
-              ? Home.id
-              : SignIn.id /**/ : SignIn.id,
+      initialRoute: widget.user != null ? Wrapper.id : SignIn.id,
       routes: {
         SignIn.id: (context) => SignIn(),
-        // LoginScreen.id: (context) => LoginScreen(),
-        // SignupScreen.id: (context) => SignupScreen(),
-        BottomNavBar.id: (context) => BottomNavBar(),
-        BottAdmin.id: (context) => BottAdmin(),
+        Wrapper.id: (context) => Wrapper(),
         AddNewPost.id: (context) => AddNewPost(),
-        EditPost.id: (context) => EditPost(),
         Profile.id: (context) => Profile(),
-        HomeScreen.id: (context) => HomeScreen(),
+        Chat.id: (context) => Chat(),
         Calender.id: (context) => Calender(),
         AddEventPage.id: (context) => AddEventPage(),
         EventDetailsPage.id: (context) => EventDetailsPage(),
         Home.id: (context) => Home(),
         ProfileListItem.id: (context) => ProfileListItem(),
+        Messages.id: (context) => Messages(),
       },
     );
-    /* return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<Admin>(create: (context) => Admin()),
-        // ChangeNotifierProvider<AddNewPost>(create: (context) => AddNewPost()),
-        //  ChangeNotifierProvider<User>(create: (context) => User()),
-        ChangeNotifierProvider<AppThemeProvider>(
-            create: (context) => AppThemeProvider()),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Enactus plus',
-        theme: ThemeData(),
-        // theme: ThemeProvider.of(context),
-        initialRoute: BottAdmin.id,
-        routes: {
-          SignIn.id: (context) => SignIn(),
-          // LoginScreen.id: (context) => LoginScreen(),
-          // SignupScreen.id: (context) => SignupScreen(),
-          BottomNavBar.id: (context) => BottomNavBar(),
-          BottAdmin.id: (context) => BottAdmin(),
-          AddNewPost.id: (context) => AddNewPost(),
-          EditPost.id: (context) => EditPost(),
-          Profile.id: (context) => Profile(),
-          HomeScreen.id: (context) => HomeScreen(),
-          Calender.id: (context) => Calender(),
-          AddEventPage.id: (context) => AddEventPage(),
-          EventDetailsPage.id: (context) => EventDetailsPage(),
-          Home.id: (context) => Home(),
-        },
-      ),
-    );*/
   }
 }

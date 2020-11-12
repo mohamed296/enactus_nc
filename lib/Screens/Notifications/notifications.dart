@@ -1,31 +1,32 @@
+import 'package:enactusnca/Models/notification_model.dart';
+import 'package:enactusnca/services/notification_services.dart';
 import 'package:flutter/material.dart';
 
-class Notifications extends StatefulWidget {
-  static String id = 'notifications';
-  @override
-  _NotificationsState createState() => _NotificationsState();
-}
+import 'notification_tile.dart';
 
-class _NotificationsState extends State<Notifications> {
+class Notifications extends StatelessWidget {
+  static String id = 'notifications';
+
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        DefaultTabController(
-          length: 2,
-          child: Scaffold(
-            appBar: AppBar(
-              automaticallyImplyLeading: false,
-              centerTitle: true,
-              title: Text(
-                'Notifications',
-                style: TextStyle(fontSize: 20.0),
-              ),
-              bottom: TabBar(tabs: <Widget>[Text('All'), Text('Groups')]),
-            ),
-          ),
-        ),
-      ],
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text('Notifications', style: TextStyle(fontSize: 20.0)),
+      ),
+      body: StreamBuilder<List<NotificationModel>>(
+        stream: NotificationServices().getNotificationList,
+        builder: (context, snapshot) {
+          return snapshot.hasData
+              ? ListView.builder(
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (context, index) {
+                    return NotificationTile(notificationModel: snapshot.data[index]);
+                  },
+                )
+              : CircularProgressIndicator();
+        },
+      ),
     );
   }
 }

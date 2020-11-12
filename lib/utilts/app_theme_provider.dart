@@ -48,34 +48,36 @@ class AppThemeProvider extends ChangeNotifier {
 
   // Dark Theme
   static final ThemeData darkTheme = ThemeData(
-      primarySwatch: Colors.blueGrey,
-      accentColor: KSacandColor,
-      scaffoldBackgroundColor: kDarkColor,
-      cursorColor: kDarkColor,
-      buttonColor: kDarkColor,
-      brightness: Brightness.dark,
+    primarySwatch: Colors.blueGrey,
+    accentColor: KSacandColor,
+    scaffoldBackgroundColor: kDarkColor,
+    cursorColor: Colors.amber,
+    buttonColor: kDarkColor,
+    brightness: Brightness.dark,
 
-      // color of floating action in dark theme
-      floatingActionButtonTheme: FloatingActionButtonThemeData(
-        backgroundColor: Colors.amber,
-      ),
+    // color of floating action in dark theme
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: Colors.amber,
+    ),
 
-      // color of the icons
-      iconTheme: IconThemeData(color: Colors.amber),
+    // color of the icons
+    iconTheme: IconThemeData(color: Colors.amber),
 
-      // appbar in dark theme
-      appBarTheme: AppBarTheme(
-        elevation: 0.0,
-        color: kDarkColor,
-        textTheme: TextTheme(
-          headline6: TextStyle(
-            color: Colors.white,
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-          ),
+    // appbar in dark theme
+    appBarTheme: AppBarTheme(
+      elevation: 0.0,
+      centerTitle: true,
+      color: kDarkColor,
+      textTheme: TextTheme(
+        headline6: TextStyle(
+          color: Colors.white,
+          fontSize: 18.0,
+          fontWeight: FontWeight.bold,
         ),
-        iconTheme: IconThemeData(color: KSacandColor),
-        actionsIconTheme: IconThemeData(color: KSacandColor),
       ),
-      backgroundColor: KMainColor);
+      iconTheme: IconThemeData(color: KSacandColor),
+      actionsIconTheme: IconThemeData(color: KSacandColor),
+    ),
+    backgroundColor: KMainColor,
+  );
 }

@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Helpers/helperfunction.dart';
-import 'package:enactusnca/Screens/views/chat_screen.dart';
+import 'package:enactusnca/Screens/chat/messages/messages.dart';
 import 'package:enactusnca/services/database_methods.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -26,9 +27,11 @@ class _SearchScreenState extends State<SearchScreen> {
             shrinkWrap: true,
             itemBuilder: (context, index) {
               return SearchTitle(
-                username: searchSnapshot.docs[index].data()["name"],
+                fistName: searchSnapshot.docs[index].data()["firstName"],
+                lastName: searchSnapshot.docs[index].data()["lastName"],
                 userEmail: searchSnapshot.docs[index].data()["email"],
                 userId: searchSnapshot.docs[index].data()["teamId"],
+                imgUrl: searchSnapshot.docs[index].data()["photoUrl"],
               );
             },
           )
@@ -83,8 +86,6 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           ],
         ),
-        //   backgroundColor: Constants.darkBlue,
-        elevation: 0.0,
         title: Text("Search"),
       ),
       body: Container(
@@ -136,9 +137,10 @@ class _SearchScreenState extends State<SearchScreen> {
 }
 
 class SearchTitle extends StatelessWidget {
-  final String username, userEmail, userId;
+  final String fistName, lastName, userEmail, userId, imgUrl;
 
-  SearchTitle({this.username, this.userEmail, this.userId});
+  SearchTitle(
+      {this.fistName, this.lastName, this.userEmail, this.userId, this.imgUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +158,7 @@ class SearchTitle extends StatelessWidget {
             children: <Widget>[
               Container(
                 child: Text(
-                  username,
+                  '$fistName $lastName',
                   style: TextStyle(
                     color: Colors.white,
                   ),
@@ -177,13 +179,19 @@ class SearchTitle extends StatelessWidget {
           GestureDetector(
             onTap: () {
               createChatRoomAndStartConversation(
-                  context: context, userID: userEmail.trim(), userName: username);
+                  context: context,
+                  userID: userEmail.trim(),
+                  imgUrl: imgUrl,
+                  userName: '$fistName $lastName');
             },
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              child: Text("Message"),
+              child: Text(
+                "Message",
+                style: TextStyle(color: Colors.black),
+              ),
               decoration: BoxDecoration(
-                //     color: Constants.yellow,
+                color: Constants.yellow,
                 borderRadius: BorderRadius.circular(30),
               ),
             ),
@@ -195,33 +203,82 @@ class SearchTitle extends StatelessWidget {
 }
 
 getChatRoomId(String a, String b) {
-  if (a.substring(0, 1).codeUnitAt(0) < b.substring(0, 1).codeUnitAt(0)) {
+  if (a.length > b.length)
     return "$b\_$a";
-  } else {
+  else
     return "$a\_$b";
+}
+
+createChatRoomAndStartConversation(
+    {String userID, String userName, BuildContext context, String imgUrl}) {
+  if (_userEmail != Constants.myEmail) {
+    String chatRoomId = getChatRoomId(_userEmail, _myEmail);
+
+    DatabaseMethods().getChatRooByRoomId(roomId: chatRoomId).then((value) {
+      QuerySnapshot roomSnapShoot = value;
+
+      if (roomSnapShoot.docs.isEmpty) {
+        print('creating a room');
+        List<String> users = [userName, _myName];
+        List<String> emails = [userID.toLowerCase(), _myEmail.toLowerCase()];
+
+        Map<String, dynamic> chatRoomMap = {
+          "users": users,
+          "emails": emails,
+          "lastMessage": "",
+          "isRead": false,
+          "lastTime": null,
+          "chatroomid": chatRoomId,
+        };
+        DatabaseMethods().createChatRoom(chatRoomId, chatRoomMap).then((val) {
+          print('room created');
+          navigateToMessagesScreen(
+              context: context,
+              roomId: chatRoomId,
+              imgUrl: imgUrl,
+              name: userName,
+              roomSnapShoot: roomSnapShoot);
+        });
+      } else {
+        print("the room exists");
+        navigateToMessagesScreen(
+            context: context,
+            roomId: chatRoomId,
+            imgUrl: imgUrl,
+            name: userName,
+            roomSnapShoot: roomSnapShoot);
+      }
+    });
+  } else {
+    Fluttertoast.showToast(
+        msg: "You can't text yourself :(\n يامتوحد",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIos: 1,
+        backgroundColor: Colors.yellow,
+        textColor: Colors.black,
+        fontSize: 16.0);
   }
 }
 
-createChatRoomAndStartConversation({String userID, String userName, BuildContext context}) {
-  if (_userEmail != Constants.myEmail) {
-    String chatRoomId = getChatRoomId(_userEmail, _myEmail);
-    List<String> users = [userName, _myName];
-    Map<String, dynamic> chatRoomMap = {
-      "users": users,
-      "lastMessage": "",
-      "isRead": false,
-      "lastTime": null,
-      "chatroomid": chatRoomId,
-    };
-    DatabaseMethods().createChatRoom(chatRoomId, chatRoomMap);
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ChatScreen(
-          username: userName,
-          chatRoomId: chatRoomId,
-        ),
+navigateToMessagesScreen(
+    {BuildContext context,
+    String roomId,
+    String imgUrl,
+    String name,
+    QuerySnapshot roomSnapShoot}) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => Messages(
+        group: false,
+        chatRoomId: roomId,
+        imageUrl: imgUrl,
+        lastSender: roomSnapShoot.docs.isEmpty
+            ? null
+            : roomSnapShoot.docs[0].data()['lastSender'],
+        username: name,
       ),
-    );
-  }
+    ),
+  );
 }

@@ -11,4 +11,8 @@ class Constants {
   static String otherUserName = "";
   static String otherUserId = "";
   static bool isSignIn = true;
+
+  static List<String> communities = ['Multimedia', 'ER', 'HR', 'Project', 'Presentation'];
+  static List<String> mmDep = ['Developing', 'Social Media', 'Photography', 'Graphic Design'];
+  static List<String> erDep = ['FR', 'BR', 'Logistics'];
 }

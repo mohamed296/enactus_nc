@@ -1,63 +1,55 @@
+import 'package:enactusnca/Helpers/helperfunction.dart';
 import 'package:enactusnca/Models/user_model.dart';
+import 'package:enactusnca/services/message_group_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-/*class AuthService{
-
-final FirebaseAuth _auth =FirebaseAuth.instance;
-
-  Future SignInAnon () async {
-
-  try {
-      AuthResult result =await _auth.signInAnonymously();
-      FirebaseUser User = result.user;
-      return User;
-  } catch (e) {
-    print(e.toString());
-    return null;
-  }
-  }
-}*/
-
-/*class Auth {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  Future<AuthResult> signUp(String email, String password) async {
-    final AuthResult = await _auth.createUserWithEmailAndPassword(
-        email: email, password: password);
-    return AuthResult;
-  }
-
-  Future<AuthResult> signIn(String email, String password) async {
-    final AuthResult = await _auth.signInWithEmailAndPassword(
-        email: email, password: password);
-    return AuthResult;
-  }
-}*/
+import 'database_methods.dart';
 
 class Auth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  UserTitle _userFromFirebase(User user) {
-    return user != null ? UserTitle(userId: user.uid) : null;
-  }
-
   Future signInWithEmail({String email, String password}) async {
     try {
-      UserCredential result =
-          await _auth.signInWithEmailAndPassword(email: email, password: password);
+      UserCredential result = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
       User user = result.user;
-      return _userFromFirebase(user);
+      return user;
     } catch (ex) {
       print("sing in issue ${ex.toString()}");
     }
   }
 
-  Future signUpWithEmail({String email, String password}) async {
+  Future signUpWithEmail(UserModel userModel, String password) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     try {
-      UserCredential result =
-          await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
+        email: userModel.email,
+        password: password,
+      );
+      await result.user.updateProfile(
+        displayName: '${userModel.firstName} ${userModel.lastName}',
+        photoURL: userModel.photoUrl,
+      );
       User firebaseUser = result.user;
-      return _userFromFirebase(firebaseUser);
+      await DatabaseMethods()
+          .uploadUserInfo(userModel: userModel, uid: firebaseUser.uid)
+          .then((value) {
+        MessageGroupServices()
+            .createGroupChatOrAddNewMember(userModel.community, userModel);
+        if (userModel.department != null) {
+          MessageGroupServices()
+              .createGroupChatOrAddNewMember(userModel.department, userModel);
+        }
+        MessageGroupServices()
+            .createGroupChatOrAddNewMember('Enactus NC', userModel);
+      });
+      sharedPreferences.setString('user', userModel.email);
+      HelperFunction.setUserEmail(userModel.email);
+      HelperFunction.setUsername(
+          '${userModel.firstName} ${userModel.lastName}');
+
+      return firebaseUser;
     } catch (ex) {
       print("sing up issue ${ex.toString()}");
     }
@@ -72,8 +64,11 @@ class Auth {
   }
 
   Future signOut() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     try {
-      return await _auth.signOut();
+      return await _auth
+          .signOut()
+          .whenComplete(() => sharedPreferences.remove('user'));
     } catch (ex) {
       print("Signing out issue ${ex.toString()}");
     }

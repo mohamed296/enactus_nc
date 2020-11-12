@@ -1,10 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:enactusnca/Models/user_model.dart';
 
 class DatabaseMethods {
-  uploadUserInfo(userMap) {
-    FirebaseFirestore.instance.collection("Users").add(userMap).catchError((e) {
+  Future uploadUserInfo({UserModel userModel, String uid}) async {
+    return await FirebaseFirestore.instance.collection("Users").doc(uid).set({
+      "firstName": userModel.firstName,
+      "lastName": userModel.lastName,
+      "department": userModel.department,
+      "community": userModel.community,
+      "email": userModel.email,
+      "photoUrl": null,
+      "uid": uid,
+      "isActive": false,
+      "isHead": false,
+      "joiningDate": DateTime.now(),
+      'userName': '${userModel.firstName}${userModel.lastName}',
+    }).catchError((e) {
       print("Uploading error " + e.toString());
     });
+  }
+
+  Future getUserData(String id) async {
+    return await FirebaseFirestore.instance.collection("Users").doc(id).get();
   }
 
   changeIsLiked(bool newVal, String roomId, String messageId) {
@@ -25,8 +42,8 @@ class DatabaseMethods {
         .get();
   }
 
-  createChatRoom(String chatRoomId, chatRoomMap) {
-    FirebaseFirestore.instance
+  createChatRoom(String chatRoomId, chatRoomMap) async {
+    return await FirebaseFirestore.instance
         .collection("chatRoom")
         .doc(chatRoomId)
         .set(chatRoomMap)
@@ -63,12 +80,20 @@ class DatabaseMethods {
         .snapshots();
   }
 
-  getChatRooms({String userName}) async {
+  getChatRooms({String email}) async {
     return FirebaseFirestore.instance
         .collection("chatRoom")
-        .where("users", arrayContains: userName)
+        .where("emails", arrayContains: email)
         .orderBy('lastTime', descending: true)
         .snapshots();
+  }
+
+  getChatRooByRoomId({String roomId}) async {
+    return FirebaseFirestore.instance
+        .collection("chatRoom")
+        .where("chatroomid", isEqualTo: roomId)
+        .orderBy('lastTime', descending: true)
+        .get();
   }
 
   getUsers() async {
