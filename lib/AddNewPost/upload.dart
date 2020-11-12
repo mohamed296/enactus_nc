@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:enactusnca/models/NewPost.dart';
+import 'package:enactusnca/Models/NewPost.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
