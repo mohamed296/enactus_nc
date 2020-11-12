@@ -3,6 +3,7 @@ import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Helpers/helperfunction.dart';
 import 'package:enactusnca/Screens/chat/messages/messages.dart';
 import 'package:enactusnca/services/database_methods.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -219,8 +220,9 @@ createChatRoomAndStartConversation(
 
       if (roomSnapShoot.docs.isEmpty) {
         print('creating a room');
-        List<String> users = [userName, _myName];
-        List<String> emails = [userID.toLowerCase(), _myEmail.toLowerCase()];
+        User user = FirebaseAuth.instance.currentUser;
+        List<String> users = [userName, user.displayName];
+        List<String> emails = [userID.toLowerCase(), user.email.toLowerCase()];
 
         Map<String, dynamic> chatRoomMap = {
           "users": users,

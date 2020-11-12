@@ -51,10 +51,8 @@ class _RecentChatState extends State<RecentChat> {
       setState(() {
         chatRoomStream = val;
       });
-      print("welcome  ${Constants.myName} ${Constants.myEmail}");
     });
     isLoadingOver = true;
-
     setState(() {});
   }
 
@@ -64,8 +62,7 @@ class _RecentChatState extends State<RecentChat> {
       shrinkWrap: true,
       itemCount: snapshot.data.documents.length,
       itemBuilder: (context, index) {
-        List<String> list =
-            List.from(snapshot.data.documents[index].data()["users"]);
+        List list = snapshot.data.documents[index].data()["users"];
         String roomID = snapshot.data.documents[index].data()["chatroomid"];
         List emails = snapshot.data.documents[index].data()['emails'];
         String imgURL;
@@ -80,7 +77,7 @@ class _RecentChatState extends State<RecentChat> {
                   imageUrl: imgURL,
                   lastSender:
                       snapshot.data.documents[index].data()["lastSender"],
-                  username: list[1] == Constants.myName ? list[0] : list[1],
+                  username: list[1] == user.displayName ? list[0] : list[1],
                 ),
               ),
             );
@@ -97,7 +94,7 @@ class _RecentChatState extends State<RecentChat> {
             ),
             decoration: BoxDecoration(
               color: snapshot.data.documents[index].data()["lastSender"] !=
-                      Constants.myName
+                      user.displayName
                   ? !snapshot.data.documents[index].data()["isRead"]
                       ? Constants.midBlue
                       : Constants.darkBlue
@@ -163,7 +160,10 @@ class _RecentChatState extends State<RecentChat> {
                                     null
                                 ? ""
                                 : snapshot.data.documents[index]
-                                    .data()["lastMessage"],
+                                            .data()["lastSender"] ==
+                                        user.displayName
+                                    ? 'You: ${snapshot.data.documents[index].data()["lastMessage"]}'
+                                    : '${snapshot.data.documents[index].data()["lastMessage"]}',
                             style: TextStyle(
                               color: Colors.blueGrey.shade200,
                               fontSize: 15.0,
@@ -201,7 +201,7 @@ class _RecentChatState extends State<RecentChat> {
                           ? false
                           : snapshot.data.documents[index]
                                       .data()["lastSender"] !=
-                                  Constants.myName
+                                  user.displayName
                               ? !snapshot.data.documents[index].data()["isRead"]
                                   ? Container(
                                       alignment: Alignment.center,
