@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enactusnca/Helpers/constants.dart';
+import 'package:enactusnca/Helpers/helperfunction.dart';
 import 'package:enactusnca/Models/user_model.dart';
 import 'package:enactusnca/Screens/authentication/sign_in.dart';
 import 'package:enactusnca/Widgets/edite_text.dart';
@@ -42,8 +43,8 @@ class _SignUpState extends State<SignUp> {
     UserModel userModel = UserModel(
       firstName: tecFirstName.text,
       lastName: tecLastName.text,
-      photoUrl: '',
-      email: tecEmailUp.text,
+      photoUrl: null,
+      email: tecEmailUp.text.toLowerCase(),
       community: community,
       department: department,
       joiningDate: Timestamp.now(),
@@ -54,8 +55,11 @@ class _SignUpState extends State<SignUp> {
 
     setState(() => isLoading = !isLoading);
     Auth().signUpWithEmail(userModel, tecPasswordUp.text).whenComplete(() {
+      HelperFunction.setUserEmail(tecEmailUp.text.toLowerCase());
+      HelperFunction.setUserEmail(tecEmailUp.text.toLowerCase());
       setState(() => isLoading = !isLoading);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Wrapper()));
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Wrapper()));
     }).catchError((e) => print(e));
   }
 
@@ -176,12 +180,15 @@ class _SignUpState extends State<SignUp> {
                           dropDown(list: communities, dropdownValue: community),
                         ],
                       ),
-                      community == communities.elementAt(0) || community == communities.elementAt(1)
+                      community == communities.elementAt(0) ||
+                              community == communities.elementAt(1)
                           ? Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text("department "),
-                                dropDown(list: secondList, dropdownValue: department),
+                                dropDown(
+                                    list: secondList,
+                                    dropdownValue: department),
                               ],
                             )
                           : Container()
@@ -203,7 +210,8 @@ class _SignUpState extends State<SignUp> {
                       },
                       child: Container(
                         color: Colors.transparent,
-                        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                         margin: EdgeInsets.only(top: 5, left: 50, bottom: 5),
                         child: Text(
                           "Sign In",

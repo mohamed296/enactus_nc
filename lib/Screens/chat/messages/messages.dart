@@ -15,9 +15,10 @@ class Messages extends StatefulWidget {
   final bool group;
   final String chatRoomId;
   final String lastSender;
-
+  final String imageUrl;
   Messages({
     this.username,
+    this.imageUrl,
     this.chatRoomId,
     this.lastSender,
     this.groupName,
@@ -54,18 +55,21 @@ class _MessagesState extends State<Messages> {
     widget.group == true
         ? MessageGroupServices()
             .sendGroupMessage(messageModel)
-            .catchError((error) => print("getConversationErrors : ${error.toString()}"))
+            .catchError(
+                (error) => print("getConversationErrors : ${error.toString()}"))
             .whenComplete(() => tecMessage.clear())
         : MessageServices()
             .sendMessage(messageModel)
-            .catchError((error) => print("getConversationErrors : ${error.toString()}"))
+            .catchError(
+                (error) => print("getConversationErrors : ${error.toString()}"))
             .whenComplete(() => tecMessage.clear());
   }
 
   _buildMessage(MessageModel message) {
     return Row(
-      mainAxisAlignment:
-          user.uid == message.userId ? MainAxisAlignment.end : MainAxisAlignment.start,
+      mainAxisAlignment: user.uid == message.userId
+          ? MainAxisAlignment.end
+          : MainAxisAlignment.start,
       children: [
         user.uid == message.userId
             ? Container(
@@ -91,7 +95,9 @@ class _MessagesState extends State<Messages> {
         Container(
           width: MediaQuery.of(context).size.width * 0.75,
           decoration: BoxDecoration(
-            color: user.uid != message.userId ? Constants.lightBlue : Constants.midBlue,
+            color: user.uid != message.userId
+                ? Constants.lightBlue
+                : Constants.midBlue,
             borderRadius: user.uid == message.userId
                 ? BorderRadius.only(
                     topLeft: Radius.circular(15.0),
@@ -172,13 +178,13 @@ class _MessagesState extends State<Messages> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          IconButton(
+          /* IconButton(
             icon: Icon(Icons.photo),
             color: Constants.yellow,
             onPressed: () {
               //TODO: add the ability to send media files
             },
-          ),
+          ),*/
           Expanded(
             child: TextField(
               controller: tecMessage,
@@ -215,9 +221,9 @@ class _MessagesState extends State<Messages> {
               width: 35,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(34.0),
-                child: widget.userImg != null
+                child: widget.imageUrl != null
                     ? Image.network(
-                        widget.userImg,
+                        widget.imageUrl,
                         fit: BoxFit.contain,
                         loadingBuilder: (context, child, loadingProgress) {
                           return loadingProgress == null
