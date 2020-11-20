@@ -1,4 +1,5 @@
 import 'package:enactusnca/Screens/views/search.dart';
+import 'package:enactusnca/Widgets/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -34,6 +35,7 @@ class _ChatState extends State<Chat> with SingleTickerProviderStateMixin {
         length: 3,
         child: Scaffold(
           appBar: AppBar(
+            automaticallyImplyLeading: false,
             bottom: TabBar(
               controller: controller,
               tabs: <Widget>[
@@ -53,7 +55,14 @@ class _ChatState extends State<Chat> with SingleTickerProviderStateMixin {
                 },
               ),
             ],
-            title: Text("Chat"),
+            centerTitle: false,
+            title: Text(
+              "Chat",
+              style: TextStyle(
+                color: KSacandColor,
+                fontSize: 25,
+              ),
+            ),
           ),
           body: TabBarView(
             controller: controller,
