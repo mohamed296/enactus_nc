@@ -1,4 +1,5 @@
 import 'package:enactusnca/Models/notification_model.dart';
+import 'package:enactusnca/Widgets/constants.dart';
 import 'package:enactusnca/services/notification_services.dart';
 import 'package:flutter/material.dart';
 
@@ -11,8 +12,10 @@ class Notifications extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         centerTitle: true,
-        title: Text('Notifications', style: TextStyle(fontSize: 20.0)),
+        title: Text('Notifications',
+            style: TextStyle(fontSize: 20.0, color: KSacandColor)),
       ),
       body: StreamBuilder<List<NotificationModel>>(
         stream: NotificationServices().getNotificationList,
@@ -21,7 +24,8 @@ class Notifications extends StatelessWidget {
               ? ListView.builder(
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, index) {
-                    return NotificationTile(notificationModel: snapshot.data[index]);
+                    return NotificationTile(
+                        notificationModel: snapshot.data[index]);
                   },
                 )
               : CircularProgressIndicator();

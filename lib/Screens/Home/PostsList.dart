@@ -37,17 +37,19 @@ class _PostsListState extends State<PostsList> {
                       padding: EdgeInsets.all(5.0),
                       child: Material(
                         borderRadius: BorderRadius.circular(15.0),
-                        elevation: 12.0,
-                        //shadowColor: Color(0x8022417A),
-                        shadowColor: KMainColor,
+                        elevation: 15.0,
+                        shadowColor: KSacandColor.withOpacity(0.2),
+                        // shadowColor: KMainColor,
                         child: Container(
                           // width: double.infinity,
                           //  padding: EdgeInsets.all(5.0),
                           decoration: BoxDecoration(
+                            border:
+                                Border.all(color: Colors.blueGrey, width: 1),
                             borderRadius: BorderRadius.circular(15.0),
                             //  color: Color.fromRGBO(20, 69, 131, 1.0),
                             //   color: Colors.white70
-                            color: kDarkColor,
+                            color: Color(0xff17335B),
                           ),
                           child: PostTile(post: snapshot.data[index]),
                         ),

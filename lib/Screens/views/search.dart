@@ -1,8 +1,12 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Helpers/helperfunction.dart';
 import 'package:enactusnca/Screens/chat/messages/messages.dart';
+import 'package:enactusnca/Widgets/constants.dart';
 import 'package:enactusnca/services/database_methods.dart';
+import 'package:enactusnca/wrapper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -77,17 +81,21 @@ class _SearchScreenState extends State<SearchScreen> {
             IconButton(
               icon: Icon(
                 Icons.arrow_back,
-                color: Colors.white,
+                color: KSacandColor,
               ),
               onPressed: () {
                 /*  Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => HomeScreen()));*/
-                Navigator.pop(context);
+                // Navigator.pop(context);
+                Navigator.pushNamed(context, Wrapper.id);
               },
             ),
           ],
         ),
-        title: Text("Search"),
+        title: Text(
+          "Search",
+          style: TextStyle(color: KSacandColor),
+        ),
       ),
       body: Container(
         //  color: Constants.darkBlue,
@@ -100,7 +108,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                     child: TextField(
                       controller: etcSearch,
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: KSacandColor),
                       decoration: InputDecoration(
                         hintText: "Email",
                         hintStyle: TextStyle(color: Colors.grey.shade200),
@@ -123,7 +131,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         //   backgroundColor: Constants.darkBlue,
                         child: Icon(
                       Icons.search,
-                      color: Colors.white,
+                      color: KSacandColor,
                     )),
                   ),
                 ),
