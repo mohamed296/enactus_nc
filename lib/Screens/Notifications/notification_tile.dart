@@ -10,13 +10,17 @@ class NotificationTile extends StatelessWidget {
     return ListTile(
       leading: ClipRRect(
         borderRadius: BorderRadius.circular(18.0),
-        child: Image.network(
-          notificationModel.senderImg,
-          fit: BoxFit.cover,
-          loadingBuilder: (context, child, loadingProgress) {
-            return loadingProgress == null ? child : Center(child: CircularProgressIndicator());
-          },
-        ),
+        child: notificationModel.senderImg != null
+            ? Image.network(
+                notificationModel.senderImg,
+                fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  return loadingProgress == null
+                      ? child
+                      : Center(child: CircularProgressIndicator());
+                },
+              )
+            : Image.asset('assets/images/enactus.png'),
       ),
       title: Text(notificationModel.notificationMsg),
       subtitle: Text(notificationModel.notificationTime),

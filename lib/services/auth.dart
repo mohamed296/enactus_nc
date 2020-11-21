@@ -11,8 +11,8 @@ class Auth {
 
   Future signInWithEmail({String email, String password}) async {
     try {
-      UserCredential result = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
+      UserCredential result =
+          await _auth.signInWithEmailAndPassword(email: email, password: password);
       User user = result.user;
       return user;
     } catch (ex) {
@@ -31,23 +31,32 @@ class Auth {
         displayName: '${userModel.firstName} ${userModel.lastName}',
         photoURL: userModel.photoUrl,
       );
-      User firebaseUser = result.user;
+      final User firebaseUser = result.user;
+      final UserModel authUser = UserModel(
+        id: firebaseUser.uid,
+        firstName: userModel.firstName,
+        lastName: userModel.lastName,
+        photoUrl: userModel.photoUrl,
+        email: userModel.email,
+        community: userModel.community,
+        department: userModel.department,
+        joiningDate: userModel.joiningDate,
+        username: userModel.username,
+        isActive: userModel.isActive,
+        isHead: userModel.isHead,
+      );
       await DatabaseMethods()
-          .uploadUserInfo(userModel: userModel, uid: firebaseUser.uid)
+          .uploadUserInfo(userModel: authUser, uid: firebaseUser.uid)
           .then((value) {
-        MessageGroupServices()
-            .createGroupChatOrAddNewMember(userModel.community, userModel);
+        MessageGroupServices().createGroupChatOrAddNewMember(authUser.community, authUser);
         if (userModel.department != null) {
-          MessageGroupServices()
-              .createGroupChatOrAddNewMember(userModel.department, userModel);
+          MessageGroupServices().createGroupChatOrAddNewMember(authUser.department, authUser);
         }
-        MessageGroupServices()
-            .createGroupChatOrAddNewMember('Enactus NC', userModel);
+        MessageGroupServices().createGroupChatOrAddNewMember('Enactus NC', authUser);
       });
-      sharedPreferences.setString('user', userModel.email);
-      HelperFunction.setUserEmail(userModel.email);
-      HelperFunction.setUsername(
-          '${userModel.firstName} ${userModel.lastName}');
+      sharedPreferences.setString('user', authUser.email);
+      HelperFunction.setUserEmail(authUser.email);
+      HelperFunction.setUsername('${authUser.firstName} ${authUser.lastName}');
 
       return firebaseUser;
     } catch (ex) {
@@ -66,9 +75,7 @@ class Auth {
   Future signOut() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     try {
-      return await _auth
-          .signOut()
-          .whenComplete(() => sharedPreferences.remove('user'));
+      return await _auth.signOut().whenComplete(() => sharedPreferences.remove('user'));
     } catch (ex) {
       print("Signing out issue ${ex.toString()}");
     }

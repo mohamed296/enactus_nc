@@ -48,7 +48,7 @@ class AppThemeProvider extends ChangeNotifier {
 
   // Dark Theme
   static final ThemeData darkTheme = ThemeData(
-    primarySwatch: Colors.blueGrey,
+    primaryColor: Color(0xff0C1E34),
     accentColor: KSacandColor,
     //scaffoldBackgroundColor: kDarkColor,
     scaffoldBackgroundColor: Color(0xff0C1E34),
