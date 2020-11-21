@@ -19,7 +19,6 @@ class MessageServices {
         'timestamp': DateTime.now(),
         'type': messageModel.type,
         'read': false,
-        'isLiked': false,
       };
       DocumentReference addMessage = await FirebaseFirestore.instance
           .collection("chatRoom")
@@ -60,7 +59,6 @@ class MessageServices {
             userId: message.data()['userId'],
             userImg: message.data()['userImg'],
             userName: message.data()['userName'],
-            isLiked: message.data()['isLiked'],
             read: message.data()['read'],
           ),
         )

@@ -8,7 +8,6 @@ class MessageModel {
   final String userName;
   final String message;
   final Timestamp timestamp;
-  final bool isLiked;
   final bool read;
   final String type;
 
@@ -21,7 +20,6 @@ class MessageModel {
     this.message,
     this.timestamp,
     this.type,
-    this.isLiked,
     this.read,
   });
 }
