@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:enactusnca/Models/post.dart';
-import 'package:enactusnca/wrapper.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -44,8 +43,8 @@ class _AddNewPostState extends State<AddNewPost> {
 
   handleTakePhoto() async {
     Navigator.pop(context);
-    File file = await ImagePicker.pickImage(
-        source: ImageSource.camera, maxHeight: 675, maxWidth: 960);
+    File file =
+        await ImagePicker.pickImage(source: ImageSource.camera, maxHeight: 675, maxWidth: 960);
     setState(() {
       this.file = file;
     });
@@ -53,8 +52,8 @@ class _AddNewPostState extends State<AddNewPost> {
 
   handleChoosePhoto() async {
     Navigator.pop(context);
-    File file = await ImagePicker.pickImage(
-        source: ImageSource.gallery, maxHeight: 675, maxWidth: 960);
+    File file =
+        await ImagePicker.pickImage(source: ImageSource.gallery, maxHeight: 675, maxWidth: 960);
     setState(() {
       this.file = file;
     });
@@ -141,9 +140,7 @@ class _AddNewPostState extends State<AddNewPost> {
             setState(() => showLoadingPost = true);
             if (imageUrl != null) {
               await uploadImage().then((onComplet) async {
-                await post
-                    .addNewPost(description: newPost, mediaUrl: imageUrl)
-                    .then((onComplete) {
+                await post.addNewPost(description: newPost, mediaUrl: imageUrl).then((onComplete) {
                   setState(() => showLoadingPost = false);
                   Fluttertoast.showToast(msg: 'Post add Successfuly.');
                 });
