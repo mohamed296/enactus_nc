@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'constants.dart';
-
 class EditeText extends StatefulWidget {
   final String title;
   final bool obscureText;
   final TextEditingController textEditingController;
   final String data;
-  EditeText(
-      {this.title, this.obscureText, this.data, this.textEditingController});
+  EditeText({this.title, this.obscureText, this.data, this.textEditingController});
 
   @override
   _EditeTextState createState() => _EditeTextState();
@@ -35,8 +32,7 @@ class _EditeTextState extends State<EditeText> {
           labelText: widget.title,
           errorText: 'Error message',
           border: OutlineInputBorder(),
-          hintStyle: TextStyle(
-              fontSize: 18.0, color: Colors.grey, fontWeight: FontWeight.bold),
+          hintStyle: TextStyle(fontSize: 18.0, color: Colors.grey, fontWeight: FontWeight.bold),
         ),
       ),
     );

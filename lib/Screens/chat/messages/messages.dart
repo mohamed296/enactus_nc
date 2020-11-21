@@ -5,6 +5,7 @@ import 'package:enactusnca/Models/user_model.dart';
 import 'package:enactusnca/services/database_methods.dart';
 import 'package:enactusnca/services/message_group_services.dart';
 import 'package:enactusnca/services/message_services.dart';
+import 'package:enactusnca/services/user_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -290,38 +291,51 @@ class _MessagesState extends State<Messages> {
   }
 
   _buildMessageComposer() {
-    return Container(
-      height: 80.0,
-      padding: EdgeInsets.symmetric(horizontal: 16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Expanded(
-            child: TextField(
-              controller: tecMessage,
-              textCapitalization: TextCapitalization.sentences,
-              style: TextStyle(color: Colors.white),
-              onChanged: (value) {},
-              decoration: InputDecoration.collapsed(
-                hintStyle: TextStyle(
-                  color: Colors.grey.shade100,
+    return StreamBuilder<UserModel>(
+      stream: FirebaseFirestore.instance
+          .collection('Users')
+          .doc(user.uid)
+          .snapshots()
+          .map(UserServices().userData),
+      builder: (context, snapshot) {
+        return snapshot.hasData
+            ? Container(
+                height: 80.0,
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                      child: TextField(
+                        controller: tecMessage,
+                        textCapitalization: TextCapitalization.sentences,
+                        style: TextStyle(color: Colors.white),
+                        onChanged: (value) {},
+                        decoration: InputDecoration.collapsed(
+                          hintStyle: TextStyle(
+                            color: Colors.grey.shade100,
+                          ),
+                          hintText: "Send a message..",
+                        ),
+                      ),
+                    ),
+                    snapshot.data.isHead && widget.groupName != null
+                        ? IconButton(
+                            icon: Icon(Icons.table_chart),
+                            color: Constants.yellow,
+                            onPressed: () => showGroupMembers(context),
+                          )
+                        : Container(),
+                    IconButton(
+                      icon: Icon(Icons.send),
+                      color: Constants.yellow,
+                      onPressed: () => sendMessage(type: 'Message'),
+                    )
+                  ],
                 ),
-                hintText: "Send a message..",
-              ),
-            ),
-          ),
-          IconButton(
-            icon: Icon(Icons.table_chart),
-            color: Constants.yellow,
-            onPressed: () => showGroupMembers(context),
-          ),
-          IconButton(
-            icon: Icon(Icons.send),
-            color: Constants.yellow,
-            onPressed: () => sendMessage(type: 'Message'),
-          )
-        ],
-      ),
+              )
+            : CircularProgressIndicator();
+      },
     );
   }
 

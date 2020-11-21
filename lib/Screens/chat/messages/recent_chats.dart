@@ -75,8 +75,7 @@ class _RecentChatState extends State<RecentChat> {
                   group: false,
                   chatRoomId: roomID,
                   imageUrl: imgURL,
-                  lastSender:
-                      snapshot.data.documents[index].data()["lastSender"],
+                  lastSender: snapshot.data.documents[index].data()["lastSender"],
                   username: list[1] == user.displayName ? list[0] : list[1],
                 ),
               ),
@@ -93,8 +92,7 @@ class _RecentChatState extends State<RecentChat> {
               horizontal: 20.0,
             ),
             decoration: BoxDecoration(
-              color: snapshot.data.documents[index].data()["lastSender"] !=
-                      user.displayName
+              color: snapshot.data.documents[index].data()["lastSender"] != user.displayName
                   ? !snapshot.data.documents[index].data()["isRead"]
                       ? Constants.midBlue
                       : Constants.darkBlue
@@ -119,9 +117,7 @@ class _RecentChatState extends State<RecentChat> {
                           : databaseMethods.getUsersByUserEmail(emails[0]),
                       builder: (context, newSnap) {
                         QuerySnapshot querySnapshot = newSnap.data;
-                        querySnapshot != null
-                            ? imgURL = querySnapshot.docs[0].data()["photoUrl"]
-                            : null;
+                        imgURL = querySnapshot.docs[0].data()["photoUrl"];
                         switch (newSnap.connectionState) {
                           case ConnectionState.done:
                             return CircleAvatar(
@@ -155,12 +151,9 @@ class _RecentChatState extends State<RecentChat> {
                         Container(
                           width: MediaQuery.of(context).size.width * 0.35,
                           child: Text(
-                            snapshot.data.documents[index]
-                                        .data()["lastMessage"] ==
-                                    null
+                            snapshot.data.documents[index].data()["lastMessage"] == null
                                 ? ""
-                                : snapshot.data.documents[index]
-                                            .data()["lastSender"] ==
+                                : snapshot.data.documents[index].data()["lastSender"] ==
                                         user.displayName
                                     ? 'You: ${snapshot.data.documents[index].data()["lastMessage"]}'
                                     : '${snapshot.data.documents[index].data()["lastMessage"]}',
@@ -181,8 +174,7 @@ class _RecentChatState extends State<RecentChat> {
                   children: <Widget>[
                     Text(
                       Functions.readTimestamp(
-                        snapshot.data.documents[index].data()["lastTime"] ==
-                                null
+                        snapshot.data.documents[index].data()["lastTime"] == null
                             ? 0
                             : snapshot.data.documents[index].data()["lastTime"],
                       ),
@@ -196,12 +188,9 @@ class _RecentChatState extends State<RecentChat> {
                       height: 4.0,
                     ),
                     Container(
-                      child: snapshot.data.documents[index].data()["isRead"] ==
-                              null
+                      child: snapshot.data.documents[index].data()["isRead"] == null
                           ? false
-                          : snapshot.data.documents[index]
-                                      .data()["lastSender"] !=
-                                  user.displayName
+                          : snapshot.data.documents[index].data()["lastSender"] != user.displayName
                               ? !snapshot.data.documents[index].data()["isRead"]
                                   ? Container(
                                       alignment: Alignment.center,
