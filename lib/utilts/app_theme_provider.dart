@@ -48,16 +48,17 @@ class AppThemeProvider extends ChangeNotifier {
 
   // Dark Theme
   static final ThemeData darkTheme = ThemeData(
-    primarySwatch: Colors.blueGrey,
+    primaryColor: Color(0xff0C1E34),
     accentColor: KSacandColor,
-    scaffoldBackgroundColor: kDarkColor,
+    //scaffoldBackgroundColor: kDarkColor,
+    scaffoldBackgroundColor: Color(0xff0C1E34),
     cursorColor: Colors.amber,
-    buttonColor: kDarkColor,
+    buttonColor: Color(0xff0C1E34),
     brightness: Brightness.dark,
 
     // color of floating action in dark theme
     floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: Colors.amber,
+      backgroundColor: KSacandColor,
     ),
 
     // color of the icons
@@ -67,7 +68,7 @@ class AppThemeProvider extends ChangeNotifier {
     appBarTheme: AppBarTheme(
       elevation: 0.0,
       centerTitle: true,
-      color: kDarkColor,
+      color: Color(0xff0C1E34),
       textTheme: TextTheme(
         headline6: TextStyle(
           color: Colors.white,

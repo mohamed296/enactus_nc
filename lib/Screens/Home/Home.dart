@@ -44,17 +44,29 @@ class _HomeState extends State<Home> {
         ],
       ),*/
       appBar: AppBar(
-        leading: Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            image: DecorationImage(
-              scale: 0.8,
-              fit: BoxFit.fill,
-              image: AssetImage('assets/images/enactus.png'),
+        leading: Center(
+          child: Container(
+            /*  decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              image: DecorationImage(
+                scale: 10.0,
+                fit: BoxFit.fill,
+                image: AssetImage('assets/images/logo.png'),
+              ),
+            ), */
+
+            padding: EdgeInsets.only(left: 5),
+            height: 100,
+            child: Center(
+              child: Image(
+                image: AssetImage(
+                  'assets/images/logo.png',
+                ),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ),
-
         actions: <Widget>[
           /*    Hero(
             tag: 'Icon1',

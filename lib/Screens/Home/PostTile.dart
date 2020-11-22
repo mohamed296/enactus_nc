@@ -9,6 +9,7 @@ import 'package:enactusnca/Widgets/PopUpMenu.dart';
 import 'package:enactusnca/Widgets/constants.dart';
 import 'package:enactusnca/Widgets/post_image.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 class PostTile extends StatefulWidget {
@@ -167,29 +168,13 @@ class _PostTileState extends State<PostTile> {
           ),
         );
       },*/
-      /* trailing: IconButton(
+      /*   trailing: IconButton(
         onPressed: () => print('edit'),
         icon: Icon(
-          LineAwesomeIcons.user_edit,
-          color: KMainColor,
+          Icons.delete,
+          color: KSacandColor,
         ),
-      ),*/
-      trailing: Padding(
-        padding: EdgeInsets.only(
-          right: 2.0,
-        ),
-        child: PopupMenuButton(
-          onSelected: select,
-          itemBuilder: (context) {
-            return PopUpMenu.choices.map((String choice) {
-              return PopupMenuItem(
-                child: Text(choice),
-                value: choice,
-              );
-            }).toList();
-          },
-        ),
-      ),
+      ), */
     );
   }
 
@@ -221,7 +206,9 @@ class _PostTileState extends State<PostTile> {
               //  style: TextStyle(color: KMainColor)
             ),
           ),
-          widget.post.mediaUrl != null ? PostImage(imageUrl: widget.post.mediaUrl) : Container(),
+          widget.post.mediaUrl != null
+              ? PostImage(imageUrl: widget.post.mediaUrl)
+              : Container(),
         ],
       ),
     );
@@ -248,7 +235,7 @@ class _PostTileState extends State<PostTile> {
             GestureDetector(
               //  onTap: () => Navigator.pushNamed(context, CommentCard.id),
               child: Icon(
-                LineAwesomeIcons.comment,
+                FontAwesomeIcons.comment,
                 //   color: KMainColor,
                 size: 18.0,
               ),

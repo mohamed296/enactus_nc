@@ -9,14 +9,18 @@ class NotificationTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: ClipRRect(
-        borderRadius: BorderRadius.circular(18.0),
-        child: Image.network(
-          notificationModel.senderImg,
-          fit: BoxFit.cover,
-          loadingBuilder: (context, child, loadingProgress) {
-            return loadingProgress == null ? child : Center(child: CircularProgressIndicator());
-          },
-        ),
+        borderRadius: BorderRadius.circular(8.0),
+        child: notificationModel.senderImg != null
+            ? Image.network(
+                notificationModel.senderImg,
+                fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  return loadingProgress == null
+                      ? child
+                      : Center(child: CircularProgressIndicator());
+                },
+              )
+            : Icon(Icons.calendar_today), //Image.asset('assets/images/enactus.png'),
       ),
       title: Text(notificationModel.notificationMsg),
       subtitle: Text(notificationModel.notificationTime),

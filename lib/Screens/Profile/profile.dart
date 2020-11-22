@@ -41,7 +41,6 @@ class _ProfileState extends State<Profile> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getUserInfo();
   }
@@ -81,32 +80,33 @@ class _ProfileState extends State<Profile> {
                       child: Stack(
                         children: <Widget>[
                           CircleAvatar(
-                              radius: kSpacingUnit.w * 5,
-                              backgroundImage:
-                                  NetworkImage(snapshot.data.photoUrl)),
-                          Align(
-                            alignment: Alignment.bottomRight,
-                            child: snapshot.data.email == user.email
-                                ? Container(
-                                    height: kSpacingUnit.w * 2.5,
-                                    width: kSpacingUnit.w * 2.5,
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context).accentColor,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Center(
-                                      heightFactor: kSpacingUnit.w * 1.5,
-                                      widthFactor: kSpacingUnit.w * 1.5,
-                                      child: Icon(
-                                        LineAwesomeIcons.pen,
-                                        color: kDarkPrimaryColor,
-                                        size: ScreenUtil()
-                                            .setSp(kSpacingUnit.w * 1.5),
-                                      ),
-                                    ),
-                                  )
-                                : Container(),
+                            radius: kSpacingUnit.w * 5,
+                            child: (snapshot.data.photoUrl != null)
+                                ? Image.network(snapshot.data.photoUrl)
+                                : Image.asset('assets/images/enactus.png'),
                           ),
+                          // Align(
+                          //   alignment: Alignment.bottomRight,
+                          //   child: snapshot.data.email == user.email
+                          //       ? Container(
+                          //           height: kSpacingUnit.w * 2.5,
+                          //           width: kSpacingUnit.w * 2.5,
+                          //           decoration: BoxDecoration(
+                          //             color: Theme.of(context).accentColor,
+                          //             shape: BoxShape.circle,
+                          //           ),
+                          //           child: Center(
+                          //             heightFactor: kSpacingUnit.w * 1.5,
+                          //             widthFactor: kSpacingUnit.w * 1.5,
+                          //             child: Icon(
+                          //               LineAwesomeIcons.pen,
+                          //               color: kDarkPrimaryColor,
+                          //               size: ScreenUtil().setSp(kSpacingUnit.w * 1.5),
+                          //             ),
+                          //           ),
+                          //         )
+                          //       : Container(),
+                          // ),
                         ],
                       ),
                     ),
@@ -136,16 +136,12 @@ class _ProfileState extends State<Profile> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  EditProfilScreen(userModel: userModel)),
+                              builder: (context) => EditProfilScreen(userModel: userModel)),
                         );
                       } else {
                         String roomId = createChatRoomId(
-                            snapshot.data.email.toLowerCase(),
-                            user.email.toLowerCase());
-                        DatabaseMethods()
-                            .getChatRooByRoomId(roomId: roomId)
-                            .then((value) {
+                            snapshot.data.email.toLowerCase(), user.email.toLowerCase());
+                        DatabaseMethods().getChatRooByRoomId(roomId: roomId).then((value) {
                           QuerySnapshot roomSnapShoot = value;
                           if (roomSnapShoot.docs.isEmpty) {
                             print('creating a room');
@@ -165,9 +161,7 @@ class _ProfileState extends State<Profile> {
                               "lastTime": null,
                               "chatroomid": roomId,
                             };
-                            DatabaseMethods()
-                                .createChatRoom(roomId, chatRoomMap)
-                                .then((val) {
+                            DatabaseMethods().createChatRoom(roomId, chatRoomMap).then((val) {
                               print('room created');
                               navigateToMessagesScreen(
                                   context: context,
@@ -248,10 +242,7 @@ class _ProfileState extends State<Profile> {
 }
 
 navigateToMessagesScreen(
-    {BuildContext context,
-    String roomId,
-    snapshot,
-    QuerySnapshot roomSnapShoot}) {
+    {BuildContext context, String roomId, snapshot, QuerySnapshot roomSnapShoot}) {
   Navigator.push(
     context,
     MaterialPageRoute(
@@ -259,9 +250,7 @@ navigateToMessagesScreen(
         group: false,
         chatRoomId: roomId,
         imageUrl: snapshot.data.photoUrl,
-        lastSender: roomSnapShoot.docs.isEmpty
-            ? null
-            : roomSnapShoot.docs[0].data()['lastSender'],
+        lastSender: roomSnapShoot.docs.isEmpty ? null : roomSnapShoot.docs[0].data()['lastSender'],
         username: '${snapshot.data.firstName} ${snapshot.data.lastName}',
       ),
     ),

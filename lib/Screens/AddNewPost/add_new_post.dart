@@ -111,7 +111,7 @@ class _AddNewPostState extends State<AddNewPost> {
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
                         borderSide: BorderSide(
-                          width: 1,
+                          width: 2,
                           color: Theme.of(context).accentColor,
                         ),
                       ),
@@ -168,6 +168,7 @@ class _AddNewPostState extends State<AddNewPost> {
         children: [
           CircleAvatar(
             radius: 16.0,
+
             /*   backgroundImage: NetworkImage(
              _user?.photoUrl ??
                   'https://fakeimg.pl/350x200/?text=World&font=lobster',
@@ -200,22 +201,27 @@ class _AddNewPostState extends State<AddNewPost> {
                     width: double.infinity,
                   )
                 : (showLoadingImage == false)
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(
-                            Icons.add,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                          SizedBox(width: 4.0),
-                          Text(
-                            'Add Photo',
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
+                    ? Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(
+                              Icons.camera_alt,
+                              color: Theme.of(context).accentColor,
                             ),
-                          ),
-                        ],
+                            SizedBox(width: 4.0),
+                            Text(
+                              'Add Photo',
+                              style: TextStyle(
+                                color: Theme.of(context).accentColor,
+                              ),
+                            ),
+                          ],
+                        ),
                       )
                     : SpinKitFoldingCube(color: Theme.of(context).primaryColor),
           ),

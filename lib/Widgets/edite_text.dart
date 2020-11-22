@@ -15,13 +15,23 @@ class _EditeTextState extends State<EditeText> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 40, vertical: 8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(
+          20,
+        ),
+
+        //  color: KSacandColor.withOpacity(0.2),
+      ),
+      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       child: TextFormField(
         controller: widget.textEditingController,
         obscureText: widget.obscureText,
         style: TextStyle(color: Colors.white),
-        decoration: InputDecoration.collapsed(
+        decoration: InputDecoration(
           hintText: widget.title,
+          labelText: widget.title,
+          errorText: 'Error message',
+          border: OutlineInputBorder(),
           hintStyle: TextStyle(fontSize: 18.0, color: Colors.grey, fontWeight: FontWeight.bold),
         ),
       ),

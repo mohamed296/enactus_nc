@@ -3,6 +3,7 @@ import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Helpers/helperfunction.dart';
 import 'package:enactusnca/Models/user_model.dart';
 import 'package:enactusnca/Screens/authentication/sign_in.dart';
+import 'package:enactusnca/Widgets/constants.dart';
 import 'package:enactusnca/Widgets/edite_text.dart';
 import 'package:enactusnca/services/auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -58,8 +59,7 @@ class _SignUpState extends State<SignUp> {
       HelperFunction.setUserEmail(tecEmailUp.text.toLowerCase());
       HelperFunction.setUserEmail(tecEmailUp.text.toLowerCase());
       setState(() => isLoading = !isLoading);
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => Wrapper()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Wrapper()));
     }).catchError((e) => print(e));
   }
 
@@ -135,17 +135,32 @@ class _SignUpState extends State<SignUp> {
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-                  child: Text(
-                    "Sign Up",
-                    style: TextStyle(
-                      fontSize: 28.0,
-                      letterSpacing: 1.2,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                  margin: EdgeInsets.symmetric(horizontal: 10),
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  width: 200,
+                  child: Center(
+                    child: Image(
+                      image: AssetImage(
+                        'assets/images/logo.png',
+                      ),
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                ),
+                Center(
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                    child: Text(
+                      "Sign Up",
+                      style: TextStyle(
+                        fontSize: 28.0,
+                        letterSpacing: 1.2,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
@@ -158,37 +173,46 @@ class _SignUpState extends State<SignUp> {
                         title: "First name",
                         obscureText: false,
                       ),
+                      SizedBox(
+                        height: 10,
+                      ),
                       EditeText(
                         textEditingController: tecLastName,
                         title: "Last name",
                         obscureText: false,
+                      ),
+                      SizedBox(
+                        height: 10,
                       ),
                       EditeText(
                         textEditingController: tecEmailUp,
                         title: "E-mail",
                         obscureText: false,
                       ),
+                      SizedBox(
+                        height: 10,
+                      ),
                       EditeText(
                         textEditingController: tecPasswordUp,
                         title: "Password",
                         obscureText: true,
                       ),
+                      SizedBox(
+                        height: 10,
+                      ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Text("community "),
                           dropDown(list: communities, dropdownValue: community),
                         ],
                       ),
-                      community == communities.elementAt(0) ||
-                              community == communities.elementAt(1)
+                      community == communities.elementAt(0) || community == communities.elementAt(1)
                           ? Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 Text("department "),
-                                dropDown(
-                                    list: secondList,
-                                    dropdownValue: department),
+                                dropDown(list: secondList, dropdownValue: department),
                               ],
                             )
                           : Container()
@@ -210,8 +234,7 @@ class _SignUpState extends State<SignUp> {
                       },
                       child: Container(
                         color: Colors.transparent,
-                        padding:
-                            EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                         margin: EdgeInsets.only(top: 5, left: 50, bottom: 5),
                         child: Text(
                           "Sign In",
@@ -224,10 +247,12 @@ class _SignUpState extends State<SignUp> {
                         ),
                       ),
                     ),
+                    Padding(padding: EdgeInsets.all(20)),
                     Container(
                       margin: EdgeInsets.only(right: 30.0),
                       alignment: Alignment.topRight,
                       child: CircleAvatar(
+                        backgroundColor: KSacandColor,
                         radius: 35.0,
                         child: IconButton(
                           onPressed: () => signUp(),
