@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Helpers/helperfunction.dart';
-import 'package:enactusnca/Screens/authentication/sign_up.dart';
-import 'package:enactusnca/Widgets/edite_text.dart';
 import 'package:enactusnca/services/auth.dart';
 import 'package:enactusnca/services/database_methods.dart';
 import 'package:flutter/cupertino.dart';
@@ -41,11 +39,13 @@ class _SignInState extends State<SignIn> {
       isLoading = true;
     });
     _auth
-        .signInWithEmail(email: tecEmail.text.trim(), password: tecPassword.text.trim())
+        .signInWithEmail(
+            email: tecEmail.text.trim(), password: tecPassword.text.trim())
         .then((value) {
       if (value != null) {
         sharedPreferences.setString('user', tecEmail.text);
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Wrapper()));
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => Wrapper()));
       } else {
         setState(() {
           isLoading = false;
@@ -57,109 +57,74 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Constants.darkBlue,
-      body: Center(
-        child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 10),
-          padding: EdgeInsets.symmetric(vertical: 20),
-          decoration: BoxDecoration(
-            //   color: Constants.midBlue,
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-              topLeft: Radius.circular(20),
-            ),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-                child: Text(
-                  "Sign In",
-                  style: TextStyle(
-                      fontSize: 28.0,
-                      letterSpacing: 1.2,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
+      backgroundColor: Constants.darkBlue,
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(height: 50),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 50),
+              child: Center(
+                child: Image(
+                  width: 200,
+                  image: AssetImage('assets/images/team_logo.png'),
                 ),
               ),
-              EditeText(
-                textEditingController: tecEmail,
-                title: "Email",
-                obscureText: false,
-              ),
-              EditeText(
-                textEditingController: tecPassword,
-                title: "Password",
-                obscureText: true,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      GestureDetector(
-                        onTap: () {},
-                        child: Container(
-                          color: Colors.transparent,
-                          padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
-                          margin: EdgeInsets.only(top: 5.0, left: 35.0, bottom: 5.0),
-                          child: Text(
-                            "Forgot password?",
-                            style: TextStyle(
-                                fontSize: 14.0,
-                                color: Colors.blueGrey,
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            isSignIn = !isSignIn;
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => SignUp()),
-                            );
-                          });
-                        },
-                        child: Container(
-                          color: Colors.transparent,
-                          padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-                          margin: EdgeInsets.only(top: 5.0, bottom: 5.0),
-                          child: Text(
-                            "Sign up",
-                            style: TextStyle(
-                                decoration: TextDecoration.underline,
-                                fontSize: 14.0,
-                                color: Colors.blueAccent,
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(right: 30.0),
-                    alignment: Alignment.topRight,
-                    child: CircleAvatar(
-                      radius: 35.0,
-                      child: IconButton(
-                        onPressed: () {
-                          signIn();
-                        },
-                        icon: Icon(Icons.arrow_forward),
+            ),
+            Column(
+              children: [
+                RaisedButton(
+                  onPressed: singInWithPhoneNumber(),
+                  textColor: Colors.black,
+                  padding: const EdgeInsets.all(0.0),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: <Color>[
+                          Color(0xFFFFB300),
+                          Color(0xFFFFA000),
+                          Color(0xFFFF8F00),
+                        ],
                       ),
                     ),
-                  )
-                ],
-              ),
-            ],
-          ),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 15),
+                    child: const Text('SIGN IN WITH PHONE',
+                        style: TextStyle(color: Colors.black, fontSize: 14)),
+                  ),
+                ),
+                SizedBox(height: 10),
+                RaisedButton(
+                  onPressed: signInWithGoogle(),
+                  textColor: Colors.black,
+                  padding: const EdgeInsets.all(0),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: <Color>[
+                          Color(0xFFFFB300),
+                          Color(0xFFFFA000),
+                          Color(0xFFFF8F00),
+                        ],
+                      ),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 15),
+                    child: const Text('SIGN IN WITH GOOGLE',
+                        style: TextStyle(color: Colors.black, fontSize: 14)),
+                  ),
+                ),
+              ],
+            )
+          ],
         ),
       ),
     );
   }
+
+  singInWithPhoneNumber() {}
+
+  signInWithGoogle() {}
 }
