@@ -75,6 +75,7 @@ class _MembersState extends State<Members> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => Profile(
+                          isAppBarEnabled: true,
                           userId: snapshot.data.documents[index].data()['uid'],
                         )));
           },
@@ -92,9 +93,12 @@ class _MembersState extends State<Members> {
                   ),
                   child: CircleAvatar(
                     radius: 30,
-                    backgroundImage: snapshot.data.documents[index].data()['photoUrl'] == null
+                    backgroundImage: snapshot.data.documents[index]
+                                .data()['photoUrl'] ==
+                            null
                         ? AssetImage("assets/images/person.png")
-                        : NetworkImage(snapshot.data.documents[index].data()['photoUrl']),
+                        : NetworkImage(
+                            snapshot.data.documents[index].data()['photoUrl']),
                   ),
                 ),
                 Text(
