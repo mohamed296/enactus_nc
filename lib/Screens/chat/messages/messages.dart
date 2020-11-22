@@ -61,7 +61,7 @@ class _MessagesState extends State<Messages> {
     }
   }
 
-  sendMessage({String type, DateTime dateTime, UserModel userModel}) async {
+  sendMessage({String type, DateTime dateTime, UserModel userModel, bool sendNotification}) async {
     MessageModel messageModel = MessageModel(
       userId: type == 'Task' ? userModel.id : null,
       userImg: userModel?.photoUrl ?? null,
@@ -72,7 +72,7 @@ class _MessagesState extends State<Messages> {
     widget.group == true
         ? type == 'Task'
             ? MessageGroupServices()
-                .sendTaskMessage(messageModel, dateTime)
+                .sendTaskMessage(messageModel, dateTime, sendNotification)
                 .catchError((error) => print("getConversationErrors : ${error.toString()}"))
                 .whenComplete(() => tecMessage.clear())
             : MessageGroupServices()
@@ -98,43 +98,64 @@ class _MessagesState extends State<Messages> {
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setState) {
-            return StreamBuilder<List<UserModel>>(
-              stream: FirebaseFirestore.instance
-                  .collection('GroupChat')
-                  .doc(widget.groupName)
-                  .collection('members')
-                  .snapshots()
-                  .map(MessageGroupServices().listOfMembers),
-              builder: (context, snapshot) {
-                return snapshot.hasData
-                    ? ListView.builder(
-                        physics: BouncingScrollPhysics(),
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (context, index) => ListTile(
-                          onTap: () => _selectDate(context).then((dataTime) {
-                            final UserModel taskUser = UserModel(
-                              id: snapshot.data[index].id,
-                              username: snapshot.data[index].username,
-                              photoUrl: snapshot.data[index].photoUrl,
-                            );
-                            sendMessage(
-                              type: 'Task',
-                              dateTime: selectedDate,
-                              userModel: taskUser,
-                            );
-                          }).whenComplete(() => Navigator.pop(context)),
-                          leading: CircleAvatar(
-                            radius: 30,
-                            backgroundImage: snapshot.data[index].photoUrl == null
-                                ? AssetImage("assets/images/person.png")
-                                : NetworkImage(snapshot.data[index].photoUrl),
+            return Scaffold(
+              appBar: AppBar(
+                title: Text('Assign Task To'),
+                leading: Container(),
+              ),
+              floatingActionButton: FloatingActionButton(
+                child: Icon(Icons.done_all_rounded),
+                onPressed: () {
+                  _selectDate(context).then((dataTime) {
+                    final UserModel taskUser = UserModel(username: 'All');
+                    sendMessage(
+                      dateTime: selectedDate,
+                      type: 'Task',
+                      userModel: taskUser,
+                      sendNotification: false,
+                    );
+                  }).whenComplete(() => Navigator.pop(context));
+                },
+              ),
+              body: StreamBuilder<List<UserModel>>(
+                stream: FirebaseFirestore.instance
+                    .collection('GroupChat')
+                    .doc(widget.groupName)
+                    .collection('members')
+                    .snapshots()
+                    .map(MessageGroupServices().listOfMembers),
+                builder: (context, snapshot) {
+                  return snapshot.hasData
+                      ? ListView.builder(
+                          physics: BouncingScrollPhysics(),
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (context, index) => ListTile(
+                            onTap: () => _selectDate(context).then((dataTime) {
+                              final UserModel taskUser = UserModel(
+                                id: snapshot.data[index].id,
+                                username: snapshot.data[index].username,
+                                photoUrl: snapshot.data[index].photoUrl,
+                              );
+                              sendMessage(
+                                type: 'Task',
+                                dateTime: selectedDate,
+                                userModel: taskUser,
+                                sendNotification: true,
+                              );
+                            }).whenComplete(() => Navigator.pop(context)),
+                            leading: CircleAvatar(
+                              radius: 30,
+                              backgroundImage: snapshot.data[index].photoUrl == null
+                                  ? AssetImage("assets/images/person.png")
+                                  : NetworkImage(snapshot.data[index].photoUrl),
+                            ),
+                            title: Text(snapshot?.data[index]?.username ?? 'user'),
+                            subtitle: snapshot.data[index].isHead ? Text('Head') : Text('Member'),
                           ),
-                          title: Text(snapshot?.data[index]?.username ?? 'user'),
-                          subtitle: snapshot.data[index].isHead ? Text('Head') : Text('Member'),
-                        ),
-                      )
-                    : CircularProgressIndicator();
-              },
+                        )
+                      : CircularProgressIndicator();
+                },
+              ),
             );
           },
         );

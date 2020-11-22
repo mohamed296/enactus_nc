@@ -27,7 +27,11 @@ class MessageGroupServices {
     }).then((value) => updateLastMessage(messageModel.message, messageModel.groupId));
   }
 
-  Future sendTaskMessage(MessageModel messageModel, DateTime dateTime) async {
+  Future sendTaskMessage(
+    MessageModel messageModel,
+    DateTime dateTime,
+    bool sendNotification,
+  ) async {
     final NotificationModel notificationModel = NotificationModel(
       notificationMsg: 'Task Assigned To You, DeadLine: ${dateTime.toString()}',
       receiverId: messageModel.userId,
@@ -46,7 +50,9 @@ class MessageGroupServices {
       'timestamp': DateTime.now(),
       'type': 'Task',
       'read': false,
-    }).whenComplete(() => NotificationServices().sendNotification(notificationModel, false));
+    }).whenComplete(() {
+      if (sendNotification) NotificationServices().sendNotification(notificationModel, false);
+    });
   }
 
   Future createGroupChatOrAddNewMember(String groupName, UserModel userModel) async {

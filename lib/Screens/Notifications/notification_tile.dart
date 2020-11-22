@@ -9,7 +9,7 @@ class NotificationTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: ClipRRect(
-        borderRadius: BorderRadius.circular(18.0),
+        borderRadius: BorderRadius.circular(8.0),
         child: notificationModel.senderImg != null
             ? Image.network(
                 notificationModel.senderImg,
@@ -20,7 +20,7 @@ class NotificationTile extends StatelessWidget {
                       : Center(child: CircularProgressIndicator());
                 },
               )
-            : Image.asset('assets/images/enactus.png'),
+            : Icon(Icons.calendar_today), //Image.asset('assets/images/enactus.png'),
       ),
       title: Text(notificationModel.notificationMsg),
       subtitle: Text(notificationModel.notificationTime),
