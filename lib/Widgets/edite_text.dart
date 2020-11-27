@@ -30,7 +30,7 @@ class _EditeTextState extends State<EditeText> {
         decoration: InputDecoration(
           hintText: widget.title,
           labelText: widget.title,
-          errorText: 'Error message',
+          //errorText: 'Error message',
           border: OutlineInputBorder(),
           hintStyle: TextStyle(fontSize: 18.0, color: Colors.grey, fontWeight: FontWeight.bold),
         ),

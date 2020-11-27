@@ -72,12 +72,14 @@ class _MembersState extends State<Members> {
           behavior: HitTestBehavior.opaque,
           onTap: () {
             Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => Profile(
-                          isAppBarEnabled: true,
-                          userId: snapshot.data.documents[index].data()['uid'],
-                        )));
+              context,
+              MaterialPageRoute(
+                builder: (context) => Profile(
+                  isAppBarEnabled: true,
+                  userId: snapshot.data.documents[index].data()['uid'],
+                ),
+              ),
+            );
           },
           child: Container(
             width: double.infinity,

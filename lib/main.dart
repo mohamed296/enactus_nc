@@ -1,4 +1,5 @@
 import 'package:enactusnca/Screens/Home/Home.dart';
+import 'package:enactusnca/Screens/Profile/HelpSupport.dart';
 import 'package:enactusnca/Screens/Profile/profile.dart';
 import 'package:enactusnca/Screens/chat/chat.dart';
 import 'package:enactusnca/Screens/authentication/sign_in.dart';
@@ -69,6 +70,7 @@ class _MyAppState extends State<MyApp> {
         Home.id: (context) => Home(),
         ProfileListItem.id: (context) => ProfileListItem(),
         Messages.id: (context) => Messages(),
+        HelpSupport.id: (context) => HelpSupport(),
       },
     );
   }

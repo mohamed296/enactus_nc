@@ -13,6 +13,7 @@ import 'package:enactusnca/Widgets/constants.dart';
 import 'package:enactusnca/services/auth.dart';
 import 'package:enactusnca/services/database_methods.dart';
 import 'package:enactusnca/services/user_services.dart';
+import 'package:enactusnca/wrapper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -71,7 +72,7 @@ class _ProfileState extends State<Profile> {
         leading: widget.isAppBarEnabled
             ? GestureDetector(
                 onTap: () {
-                  Navigator.of(context).pop();
+                  Navigator.pushNamed(context, Wrapper.id);
                 },
                 child: Icon(Icons.arrow_back))
             : Container(),
