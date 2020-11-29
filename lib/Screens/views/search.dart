@@ -105,7 +105,10 @@ class _SearchScreenState extends State<SearchScreen> {
               children: <Widget>[
                 Expanded(
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: KSacandColor, width: 3.0)),
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 0),
                     child: TextField(
                       controller: etcSearch,
                       style: TextStyle(color: KSacandColor),

@@ -72,11 +72,14 @@ class _MembersState extends State<Members> {
           behavior: HitTestBehavior.opaque,
           onTap: () {
             Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => Profile(
-                          userId: snapshot.data.documents[index].data()['uid'],
-                        )));
+              context,
+              MaterialPageRoute(
+                builder: (context) => Profile(
+                  isAppBarEnabled: true,
+                  userId: snapshot.data.documents[index].data()['uid'],
+                ),
+              ),
+            );
           },
           child: Container(
             width: double.infinity,
@@ -92,9 +95,12 @@ class _MembersState extends State<Members> {
                   ),
                   child: CircleAvatar(
                     radius: 30,
-                    backgroundImage: snapshot.data.documents[index].data()['photoUrl'] == null
+                    backgroundImage: snapshot.data.documents[index]
+                                .data()['photoUrl'] ==
+                            null
                         ? AssetImage("assets/images/person.png")
-                        : NetworkImage(snapshot.data.documents[index].data()['photoUrl']),
+                        : NetworkImage(
+                            snapshot.data.documents[index].data()['photoUrl']),
                   ),
                 ),
                 Text(

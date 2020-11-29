@@ -20,6 +20,17 @@ class Auth {
     }
   }
 
+  Future signInWithPhoneNumber({String phoneNumber}) async {
+    try {
+      ConfirmationResult result =
+          await _auth.signInWithPhoneNumber(phoneNumber);
+      var user = result;
+      return user;
+    } catch (ex) {
+      print("sing in issue ${ex.toString()}");
+    }
+  }
+
   Future signUpWithEmail(UserModel userModel, String password) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     try {

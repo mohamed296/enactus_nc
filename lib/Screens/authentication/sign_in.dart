@@ -8,6 +8,7 @@ import 'package:enactusnca/services/auth.dart';
 import 'package:enactusnca/services/database_methods.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../wrapper.dart';
@@ -27,6 +28,7 @@ class _SignInState extends State<SignIn> {
   bool isLoading = false;
   QuerySnapshot snapshot;
   bool isSignIn = Constants.isSignIn;
+  ProgressDialog progressDialog;
 
   signIn() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -59,10 +61,20 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
+    progressDialog = new ProgressDialog(context, showLogs: true);
+    progressDialog.style(message: 'loading...');
     return Scaffold(
       backgroundColor: Color(0xff0C1E34),
       body: SingleChildScrollView(
         child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+                'assets/images/back.jpg',
+              ),
+              fit: BoxFit.cover,
+            ),
+          ),
           margin: EdgeInsets.symmetric(vertical: 60),
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -189,6 +201,7 @@ class _SignInState extends State<SignIn> {
                                   child: IconButton(
                                     onPressed: () {
                                       signIn();
+                                      progressDialog.show();
                                     },
                                     icon: Icon(Icons.arrow_forward),
                                   ),

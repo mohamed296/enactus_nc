@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 
 class PopUpMenu {
-  static const String settings = 'Settings';
-  static const String signOut = 'SignOut';
-  static const String calendar = 'calendar';
+  //static const String calendar = 'calendar';
   static const String aboutUS = 'AboutUs';
+  static const String signOut = 'SignOut';
 
   static const List<String> choices = <String>[
-    settings,
-    signOut,
-    calendar,
+    // calendar,
     aboutUS,
+    signOut,
   ];
   static const List<Icon> icons = <Icon>[
     Icon(Icons.settings),

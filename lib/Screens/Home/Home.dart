@@ -1,10 +1,14 @@
 import 'package:enactusnca/Screens/AddNewPost/add_new_post.dart';
 import 'package:enactusnca/Screens/Events/Calendar.dart';
 import 'package:enactusnca/Screens/Home/PostsList.dart';
+import 'package:enactusnca/Screens/Profile/HelpSupport.dart';
 import 'package:enactusnca/Screens/Settings/Settings.dart';
+import 'package:enactusnca/Screens/authentication/sign_in.dart';
 import 'package:enactusnca/Widgets/PopUpMenu.dart';
 import 'package:enactusnca/services/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Home extends StatefulWidget {
   static String id = 'Home';
@@ -14,7 +18,11 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   ScrollController scrollController = ScrollController();
-  Auth auth = Auth();
+  final user = FirebaseAuth.instance.currentUser;
+  ScrollController controller = ScrollController();
+  String name, email;
+  String firstName, lastName;
+  Auth authMethods = Auth();
 
   @override
   Widget build(BuildContext context) {
@@ -68,17 +76,17 @@ class _HomeState extends State<Home> {
           ),
         ),
         actions: <Widget>[
-          /*    Hero(
+          Hero(
             tag: 'Icon1',
             child: new IconButton(
                 icon: Icon(
-                  LineAwesomeIcons.calendar,
+                  FontAwesomeIcons.calendar,
                   color: Color.fromRGBO(253, 194, 35, 1.0),
                 ),
                 onPressed: () {
                   Navigator.pushNamed(context, Calender.id);
                 }),
-          ),*/
+          ),
 
           /*  Hero(
             tag: 'Icon3',
@@ -106,24 +114,29 @@ class _HomeState extends State<Home> {
 
         // title: Text('Home',),
       ),
-      body: PostsList(),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+              'assets/images/back.jpg',
+            ),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: PostsList(),
+      ),
     );
   }
 
   void select(String choice) {
-    if (choice == PopUpMenu.settings) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Settings(),
-        ),
-      );
-    } else if (choice == PopUpMenu.signOut) {
+    if (choice == PopUpMenu.aboutUS) {
+      Navigator.pushNamed(context, HelpSupport.id);
       //  auth.signOutGoogle(context);
-    } else if (choice == PopUpMenu.calendar) {
-      Navigator.pushNamed(context, Calender.id);
-    } else if (choice == PopUpMenu.aboutUS) {
-      // Navigator.pushNamed(context, Calender.id);
+    } else if (choice == PopUpMenu.signOut) {
+      authMethods.signOut();
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => SignIn()),
+      );
     }
   }
 }
