@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Models/messages_model.dart';
 import 'package:enactusnca/Models/user_model.dart';
+import 'package:enactusnca/Screens/Profile/profile.dart';
+import 'package:enactusnca/Screens/chat/group_member.dart';
 import 'package:enactusnca/services/database_methods.dart';
 import 'package:enactusnca/services/message_group_services.dart';
 import 'package:enactusnca/services/message_services.dart';
@@ -287,23 +289,36 @@ class _MessagesState extends State<Messages> {
                 ),
               ),
               user.uid != message.userId
-                  ? Container(
-                      padding: EdgeInsets.all(12.0),
-                      height: 64,
-                      width: 64,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(34.0),
-                        child: message.userImg != null
-                            ? Image.network(
-                                message.userImg,
-                                fit: BoxFit.contain,
-                                loadingBuilder: (context, child, loadingProgress) {
-                                  return loadingProgress == null
-                                      ? child
-                                      : Center(child: CircularProgressIndicator());
-                                },
-                              )
-                            : Image.asset('assets/images/enactus.png'),
+                  ? InkWell(
+                      onTap: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Profile(
+                              isAppBarEnabled: true,
+                              userId: message.userId,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(12.0),
+                        height: 64,
+                        width: 64,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(34.0),
+                          child: message.userImg != null
+                              ? Image.network(
+                                  message.userImg,
+                                  fit: BoxFit.contain,
+                                  loadingBuilder: (context, child, loadingProgress) {
+                                    return loadingProgress == null
+                                        ? child
+                                        : Center(child: CircularProgressIndicator());
+                                  },
+                                )
+                              : Image.asset('assets/images/enactus.png'),
+                        ),
                       ),
                     )
                   : Container(),
@@ -390,6 +405,21 @@ class _MessagesState extends State<Messages> {
           ],
         ),
         leading: BackButton(),
+        actions: [
+          widget.group == true
+              ? IconButton(
+                  icon: Icon(Icons.info_outline),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => GroupMember(groupName: widget.groupName),
+                      ),
+                    );
+                  },
+                )
+              : Container()
+        ],
       ),
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),

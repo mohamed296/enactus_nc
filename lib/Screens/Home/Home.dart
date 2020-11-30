@@ -1,8 +1,7 @@
 import 'package:enactusnca/Screens/AddNewPost/add_new_post.dart';
-import 'package:enactusnca/Screens/Events/Calendar.dart';
+import 'package:enactusnca/Screens/Events/events.dart';
 import 'package:enactusnca/Screens/Home/PostsList.dart';
 import 'package:enactusnca/Screens/Profile/HelpSupport.dart';
-import 'package:enactusnca/Screens/Settings/Settings.dart';
 import 'package:enactusnca/Screens/authentication/sign_in.dart';
 import 'package:enactusnca/Widgets/PopUpMenu.dart';
 import 'package:enactusnca/services/auth.dart';
@@ -84,7 +83,7 @@ class _HomeState extends State<Home> {
                   color: Color.fromRGBO(253, 194, 35, 1.0),
                 ),
                 onPressed: () {
-                  Navigator.pushNamed(context, Calender.id);
+                  Navigator.pushNamed(context, Events.id);
                 }),
           ),
 
