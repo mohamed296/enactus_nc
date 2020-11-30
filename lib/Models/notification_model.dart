@@ -1,4 +1,4 @@
-import 'package:enactusnca/Models/event.dart';
+import 'package:enactusnca/Models/event_model.dart';
 import 'package:enactusnca/Models/post.dart';
 
 class NotificationModel {

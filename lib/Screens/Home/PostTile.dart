@@ -4,9 +4,7 @@ import 'package:enactusnca/Helpers/helperfunction.dart';
 import 'package:enactusnca/Models/post.dart';
 import 'package:enactusnca/Models/user_model.dart';
 import 'package:enactusnca/Screens/Post/OpenPost.dart';
-import 'package:enactusnca/Screens/Profile/ProfilePostTile.dart';
 import 'package:enactusnca/Screens/Profile/profile.dart';
-import 'package:enactusnca/Widgets/PopUpMenu.dart';
 import 'package:enactusnca/Widgets/constants.dart';
 import 'package:enactusnca/Widgets/post_image.dart';
 import 'package:flutter/material.dart';
@@ -210,9 +208,7 @@ class _PostTileState extends State<PostTile> {
               //  style: TextStyle(color: KMainColor)
             ),
           ),
-          widget.post.mediaUrl != null
-              ? PostImage(imageUrl: widget.post.mediaUrl)
-              : Container(),
+          widget.post.mediaUrl != null ? PostImage(imageUrl: widget.post.mediaUrl) : Container(),
         ],
       ),
     );

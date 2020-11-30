@@ -3,7 +3,7 @@ import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Helpers/helperfunction.dart';
 import 'package:enactusnca/Models/post.dart';
 import 'package:enactusnca/Models/user_model.dart';
-import 'package:enactusnca/Screens/Events/Calendar.dart';
+import 'package:enactusnca/Screens/Events/events.dart';
 import 'package:enactusnca/Screens/Profile/HelpSupport.dart';
 import 'package:enactusnca/Screens/Profile/ProfilePostTile.dart';
 import 'package:enactusnca/Screens/Profile/edit_profile_screen.dart';
@@ -29,12 +29,7 @@ class Profile extends StatefulWidget {
   final Post post;
 
   Profile(
-      {this.postUserId,
-      this.isAppBarEnabled,
-      this.username,
-      this.userId,
-      this.post,
-      this.email});
+      {this.postUserId, this.isAppBarEnabled, this.username, this.userId, this.post, this.email});
 
   @override
   _ProfileState createState() => _ProfileState();
@@ -50,9 +45,7 @@ class _ProfileState extends State<Profile> {
   @override
   void initState() {
     super.initState();
-    widget.isAppBarEnabled == null
-        ? widget.isAppBarEnabled = false
-        : widget.isAppBarEnabled = true;
+    widget.isAppBarEnabled == null ? widget.isAppBarEnabled = false : widget.isAppBarEnabled = true;
     getUserInfo();
   }
 
@@ -159,16 +152,12 @@ class _ProfileState extends State<Profile> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    EditProfilScreen(userModel: userModel)),
+                                builder: (context) => EditProfilScreen(userModel: userModel)),
                           );
                         } else {
                           String roomId = createChatRoomId(
-                              snapshot.data.email.toLowerCase(),
-                              user.email.toLowerCase());
-                          DatabaseMethods()
-                              .getChatRooByRoomId(roomId: roomId)
-                              .then((value) {
+                              snapshot.data.email.toLowerCase(), user.email.toLowerCase());
+                          DatabaseMethods().getChatRooByRoomId(roomId: roomId).then((value) {
                             QuerySnapshot roomSnapShoot = value;
                             if (roomSnapShoot.docs.isEmpty) {
                               print('creating a room');
@@ -188,9 +177,7 @@ class _ProfileState extends State<Profile> {
                                 "lastTime": null,
                                 "chatroomid": roomId,
                               };
-                              DatabaseMethods()
-                                  .createChatRoom(roomId, chatRoomMap)
-                                  .then((val) {
+                              DatabaseMethods().createChatRoom(roomId, chatRoomMap).then((val) {
                                 print('room created');
                                 navigateToMessagesScreen(
                                     context: context,
@@ -213,8 +200,7 @@ class _ProfileState extends State<Profile> {
                         height: kSpacingUnit.w * 4,
                         width: kSpacingUnit.w * 20,
                         decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.circular(kSpacingUnit.w * 3),
+                          borderRadius: BorderRadius.circular(kSpacingUnit.w * 3),
                           color: Theme.of(context).accentColor,
                         ),
                         child: Center(
@@ -229,7 +215,7 @@ class _ProfileState extends State<Profile> {
                     SizedBox(height: kSpacingUnit.w * 5),
                     GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(context, Calender.id);
+                        Navigator.pushNamed(context, Events.id);
                       },
                       child: ProfileListItem(
                         icon: LineAwesomeIcons.user_shield,
@@ -273,10 +259,7 @@ class _ProfileState extends State<Profile> {
 }
 
 navigateToMessagesScreen(
-    {BuildContext context,
-    String roomId,
-    snapshot,
-    QuerySnapshot roomSnapShoot}) {
+    {BuildContext context, String roomId, snapshot, QuerySnapshot roomSnapShoot}) {
   Navigator.push(
     context,
     MaterialPageRoute(
@@ -284,9 +267,7 @@ navigateToMessagesScreen(
         group: false,
         chatRoomId: roomId,
         imageUrl: snapshot.data.photoUrl,
-        lastSender: roomSnapShoot.docs.isEmpty
-            ? null
-            : roomSnapShoot.docs[0].data()['lastSender'],
+        lastSender: roomSnapShoot.docs.isEmpty ? null : roomSnapShoot.docs[0].data()['lastSender'],
         username: '${snapshot.data.firstName} ${snapshot.data.lastName}',
       ),
     ),

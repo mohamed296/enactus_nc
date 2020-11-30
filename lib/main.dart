@@ -12,9 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Screens/AddNewPost/add_new_post.dart';
-import 'Screens/Events/Calendar.dart';
-import 'Screens/Events/addEvent.dart';
-import 'Screens/Events/view_Event.dart';
+import 'Screens/Events/events.dart';
 import 'Screens/Profile/ProfilePostTile.dart';
 
 Future<void> main() async {
@@ -64,9 +62,9 @@ class _MyAppState extends State<MyApp> {
         AddNewPost.id: (context) => AddNewPost(),
         Profile.id: (context) => Profile(),
         Chat.id: (context) => Chat(),
-        Calender.id: (context) => Calender(),
-        AddEventPage.id: (context) => AddEventPage(),
-        EventDetailsPage.id: (context) => EventDetailsPage(),
+        Events.id: (context) => Events(),
+        // AddEventPage.id: (context) => AddEventPage(),
+        // EventDetailsPage.id: (context) => EventDetailsPage(),
         Home.id: (context) => Home(),
         ProfileListItem.id: (context) => ProfileListItem(),
         Messages.id: (context) => Messages(),
