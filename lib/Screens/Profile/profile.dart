@@ -132,6 +132,8 @@ class _ProfileState extends State<Profile> {
                         style: kTitleTextStyle),
                     SizedBox(height: kSpacingUnit.w * 0.5),
                     Text(snapshot.data.email, style: kCaptionTextStyle),
+                    SizedBox(height: kSpacingUnit.w * 0.5),
+                    Text(snapshot.data.community, style: kCaptionTextStyle),
                     SizedBox(height: kSpacingUnit.w * 2),
                     GestureDetector(
                       onTap: () {
