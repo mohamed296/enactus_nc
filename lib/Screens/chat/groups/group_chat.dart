@@ -20,7 +20,7 @@ class GroupChat extends StatelessWidget {
           .map(UserServices().userData),
       builder: (context, snapshot) {
         return snapshot.hasData
-            ? snapshot.data.isHead == true
+            ? snapshot.data.isAdmin == true
                 ? AdminGroups(userModel: snapshot.data)
                 : MemberGroups(userModel: snapshot.data)
             : Center(child: CircularProgressIndicator());

@@ -141,7 +141,7 @@ class _RecentChatState extends State<RecentChat> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          list[1] != user.uid ? list[0] : list[1],
+                          list[0] == user.uid ? list[1] : list[0],
                           style: TextStyle(
                             color: Colors.grey.shade200,
                             fontSize: 15.0,
@@ -251,10 +251,8 @@ class _RecentChatState extends State<RecentChat> {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        //   color: Constants.midBlue,
         child: Container(
           decoration: BoxDecoration(
-            //   color: Constants.darkBlue,
             borderRadius: BorderRadius.only(
               topRight: Radius.circular(30),
             ),

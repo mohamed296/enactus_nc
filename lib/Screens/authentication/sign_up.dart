@@ -51,8 +51,6 @@ class _SignUpState extends State<SignUp> {
       department: department,
       joiningDate: Timestamp.now(),
       username: '${tecFirstName.text}${tecLastName.text}',
-      isActive: false,
-      isHead: false,
     );
     Auth().signUpWithEmail(userModel, tecPasswordUp.text).then((value) {
       if (value == 'success') {

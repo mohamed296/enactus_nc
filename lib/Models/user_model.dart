@@ -12,6 +12,7 @@ class UserModel {
   final Timestamp joiningDate;
   final bool isActive;
   final bool isHead;
+  final bool isAdmin;
 
   UserModel({
     this.id,
@@ -25,5 +26,6 @@ class UserModel {
     this.joiningDate,
     this.isActive,
     this.isHead,
+    this.isAdmin,
   });
 }

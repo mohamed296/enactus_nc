@@ -73,7 +73,10 @@ class _OpenPostState extends State<OpenPost> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => Profile(postUserId: widget.post.ownerId),
+            builder: (context) => Profile(
+              userId: widget.post.ownerId,
+              isAppBarEnabled: true,
+            ),
           ),
         );
       },

@@ -355,7 +355,7 @@ class _MessagesState extends State<Messages> {
                         ),
                       ),
                     ),
-                    snapshot.data.isHead && widget.groupName != null
+                    snapshot.data.isHead && snapshot.data.isAdmin && widget.groupName != null
                         ? IconButton(
                             icon: Icon(Icons.table_chart),
                             color: Constants.yellow,

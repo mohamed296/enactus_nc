@@ -9,10 +9,11 @@ class DatabaseMethods {
       "department": userModel.department,
       "community": userModel.community,
       "email": userModel.email,
-      "photoUrl": null,
+      "photoUrl": userModel.photoUrl,
       "uid": uid,
       "isActive": false,
       "isHead": false,
+      'isAdmin': false,
       "joiningDate": DateTime.now(),
       'userName': '${userModel.firstName}${userModel.lastName}',
     }).catchError((e) {

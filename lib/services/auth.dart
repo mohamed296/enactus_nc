@@ -52,8 +52,6 @@ class Auth {
         department: userModel.department,
         joiningDate: userModel.joiningDate,
         username: userModel.username,
-        isActive: userModel.isActive,
-        isHead: userModel.isHead,
       );
       await DatabaseMethods()
           .uploadUserInfo(userModel: authUser, uid: firebaseUser.uid)
@@ -70,7 +68,6 @@ class Auth {
       return 'success';
     } catch (ex) {
       return ex.toString();
-      // print("sing up issue ${ex.toString()}");
     }
   }
 
