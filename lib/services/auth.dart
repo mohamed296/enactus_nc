@@ -9,30 +9,29 @@ import 'database_methods.dart';
 class Auth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future signInWithEmail({String email, String password}) async {
+  Future<String> signInWithEmail({String email, String password}) async {
     try {
       UserCredential result =
           await _auth.signInWithEmailAndPassword(email: email, password: password);
       User user = result.user;
-      return user;
+      String id = user.uid;
+      return DatabaseMethods().checkUserActivate(id);
     } catch (ex) {
-      print("sing in issue ${ex.toString()}");
+      return ex.toString();
     }
   }
 
   Future signInWithPhoneNumber({String phoneNumber}) async {
     try {
-      ConfirmationResult result =
-          await _auth.signInWithPhoneNumber(phoneNumber);
+      ConfirmationResult result = await _auth.signInWithPhoneNumber(phoneNumber);
       var user = result;
       return user;
     } catch (ex) {
-      print("sing in issue ${ex.toString()}");
+      return ex.toString();
     }
   }
 
-  Future signUpWithEmail(UserModel userModel, String password) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  Future<String> signUpWithEmail(UserModel userModel, String password) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
         email: userModel.email,
@@ -53,8 +52,6 @@ class Auth {
         department: userModel.department,
         joiningDate: userModel.joiningDate,
         username: userModel.username,
-        isActive: userModel.isActive,
-        isHead: userModel.isHead,
       );
       await DatabaseMethods()
           .uploadUserInfo(userModel: authUser, uid: firebaseUser.uid)
@@ -65,13 +62,12 @@ class Auth {
         }
         MessageGroupServices().createGroupChatOrAddNewMember('Enactus NC', authUser);
       });
-      sharedPreferences.setString('user', authUser.email);
       HelperFunction.setUserEmail(authUser.email);
       HelperFunction.setUsername('${authUser.firstName} ${authUser.lastName}');
 
-      return firebaseUser;
+      return 'success';
     } catch (ex) {
-      print("sing up issue ${ex.toString()}");
+      return ex.toString();
     }
   }
 

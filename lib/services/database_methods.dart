@@ -9,15 +9,29 @@ class DatabaseMethods {
       "department": userModel.department,
       "community": userModel.community,
       "email": userModel.email,
-      "photoUrl": null,
+      "photoUrl": userModel.photoUrl,
       "uid": uid,
       "isActive": false,
       "isHead": false,
+      'isAdmin': false,
       "joiningDate": DateTime.now(),
       'userName': '${userModel.firstName}${userModel.lastName}',
     }).catchError((e) {
       print("Uploading error " + e.toString());
     });
+  }
+
+  Future<String> checkUserActivate(String id) async {
+    final path = FirebaseFirestore.instance.collection("Users").doc(id);
+    final user = await path.get();
+
+    if (user.exists == true) {
+      bool isActive = await user.data()['isActive'];
+      if (isActive) return 'Active';
+      return 'Please Wait while you approved!';
+    } else {
+      return 'this user does not exist';
+    }
   }
 
   Future getUserData(String id) async {

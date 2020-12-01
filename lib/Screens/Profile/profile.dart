@@ -97,7 +97,7 @@ class _ProfileState extends State<Profile> {
                           children: <Widget>[
                             CircleAvatar(
                               radius: kSpacingUnit.w * 5,
-                              child: (snapshot.data.photoUrl != null)
+                              child: (snapshot?.data?.photoUrl != null)
                                   ? Image.network(snapshot.data.photoUrl)
                                   : Image.asset('assets/images/enactus.png'),
                             ),
@@ -128,16 +128,16 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
                     SizedBox(height: kSpacingUnit.w * 2),
-                    Text('${snapshot.data.firstName} ${snapshot.data.lastName}',
+                    Text('${snapshot?.data?.firstName} ${snapshot?.data?.lastName}',
                         style: kTitleTextStyle),
                     SizedBox(height: kSpacingUnit.w * 0.5),
-                    Text(snapshot.data.email, style: kCaptionTextStyle),
+                    Text(snapshot?.data?.email, style: kCaptionTextStyle),
                     SizedBox(height: kSpacingUnit.w * 0.5),
-                    Text(snapshot.data.community, style: kCaptionTextStyle),
+                    Text(snapshot?.data?.community, style: kCaptionTextStyle),
                     SizedBox(height: kSpacingUnit.w * 2),
                     GestureDetector(
                       onTap: () {
-                        if (snapshot.data.email == user.email) {
+                        if (snapshot?.data?.email == user.email) {
                           UserModel userModel = UserModel(
                             id: snapshot.data.id,
                             firstName: snapshot.data.firstName,
@@ -220,8 +220,8 @@ class _ProfileState extends State<Profile> {
                         Navigator.pushNamed(context, Events.id);
                       },
                       child: ProfileListItem(
-                        icon: LineAwesomeIcons.user_shield,
-                        text: 'Calender',
+                        icon: LineAwesomeIcons.calendar,
+                        text: 'Events',
                       ),
                     ),
                     GestureDetector(

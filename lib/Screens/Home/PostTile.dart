@@ -141,14 +141,15 @@ class _PostTileState extends State<PostTile> {
           ),
         ),
       ),
-      //title: Text(post.postId),
-      // title: Text(user == null ? post.postId : ''),
       title: GestureDetector(
         onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => Profile(postUserId: widget.post.ownerId),
+              builder: (context) => Profile(
+                userId: widget.post.ownerId,
+                isAppBarEnabled: true,
+              ),
             ),
           );
         },
@@ -157,7 +158,6 @@ class _PostTileState extends State<PostTile> {
           // style: TextStyle(color: KMainColor),
         ),
       ),
-
       subtitle: Text(
         widget.post.timeStamp,
         //  style: TextStyle(color: Colors.black),

@@ -98,6 +98,7 @@ class MessageGroupServices {
       'userName': userModel.username,
       'isActive': userModel.isActive,
       'isHead': userModel.isHead,
+      'isAdmin': userModel.isAdmin,
       'email': userModel.email,
       'photoUrl': userModel.photoUrl,
       'groupName': groupName,
