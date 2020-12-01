@@ -13,6 +13,7 @@ class EditProfilScreen extends StatefulWidget {
   final UserModel userModel;
 
   const EditProfilScreen({this.userModel});
+
   @override
   _EditProfilScreenState createState() => _EditProfilScreenState();
 }
@@ -40,7 +41,8 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
   }
 
   Future getImage() async {
-    final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
+    final pickedFile =
+        await ImagePicker().getImage(source: ImageSource.gallery);
     setState(() {
       _imgURL = pickedFile.hashCode.toString();
       _image = File(pickedFile.path);
@@ -104,23 +106,25 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
     );
   }
 
-  void onSave() {
+  void onSave() async {
     setState(() => loading = true);
-    UserModel userModel = UserModel(
-      firstName: firstName ?? widget.userModel.firstName,
-      lastName: lastName ?? widget.userModel.lastName,
-      photoUrl: _imgURL ?? widget.userModel.photoUrl,
-      email: email ?? widget.userModel.email,
-      community: community ?? widget.userModel.community,
-      department: community == communities[0] || community == communities[1]
-          ? department ?? widget.userModel.department
-          : department = null,
-    );
-    uploadImage(context)
-        .whenComplete(() => UserServices().updateUserData(userModel).whenComplete(() {
-              setState(() => loading = false);
-              Navigator.pop(context);
-            }).catchError((e) => print(e)));
+
+    await uploadImage(context).whenComplete(() {
+      UserModel userModel = UserModel(
+        firstName: firstName ?? widget.userModel.firstName,
+        lastName: lastName ?? widget.userModel.lastName,
+        photoUrl: _imgURL ?? widget.userModel.photoUrl,
+        email: email ?? widget.userModel.email,
+        community: community ?? widget.userModel.community,
+        department: community == communities[0] || community == communities[1]
+            ? department ?? widget.userModel.department
+            : department = null,
+      );
+      UserServices().updateUserData(userModel);
+    }).whenComplete(() {
+      setState(() => loading = false);
+      Navigator.pop(context);
+    }).catchError((e) => print(e));
   }
 
   @override
@@ -180,7 +184,8 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
                                 width: 40,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  border: Border.all(width: 2, color: Colors.white),
+                                  border:
+                                      Border.all(width: 2, color: Colors.white),
                                   color: Theme.of(context).accentColor,
                                 ),
                                 child: IconButton(
@@ -195,7 +200,8 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 35.0),
                       child: TextField(
-                        onChanged: (String val) => setState(() => firstName = val),
+                        onChanged: (String val) =>
+                            setState(() => firstName = val),
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.only(bottom: 3),
                           labelText: 'FirstName',
@@ -212,7 +218,8 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 35.0),
                       child: TextField(
-                        onChanged: (String val) => setState(() => lastName = val),
+                        onChanged: (String val) =>
+                            setState(() => lastName = val),
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.only(bottom: 3),
                           labelText: 'lastName',
@@ -250,12 +257,14 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
                         dropDown(list: communities, dropdownValue: community),
                       ],
                     ),
-                    community == communities.elementAt(0) || community == communities.elementAt(1)
+                    community == communities.elementAt(0) ||
+                            community == communities.elementAt(1)
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text("department "),
-                              dropDown(list: secondList, dropdownValue: department),
+                              dropDown(
+                                  list: secondList, dropdownValue: department),
                             ],
                           )
                         : Container(),

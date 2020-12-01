@@ -87,14 +87,14 @@ class _OpenPostState extends State<OpenPost> {
           Expanded(
             flex: 1,
             child: IconButton(
-              icon: Icon(FontAwesomeIcons.thumbsUp),
+              icon: Icon(FontAwesomeIcons.heart),
               onPressed: () {},
             ),
           ),
           Expanded(
             flex: 1,
             child: IconButton(
-              icon: Icon(FontAwesomeIcons.comments),
+              icon: Icon(FontAwesomeIcons.comment),
               onPressed: () async {},
             ),
           )

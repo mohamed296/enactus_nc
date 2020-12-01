@@ -1,3 +1,4 @@
+import 'package:enactusnca/Helpers/helperfunction.dart';
 import 'package:enactusnca/Models/user_model.dart';
 import 'package:enactusnca/services/message_group_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,6 +20,17 @@ class Auth {
     }
   }
 
+  Future signInWithPhoneNumber({String phoneNumber}) async {
+    try {
+      ConfirmationResult result =
+          await _auth.signInWithPhoneNumber(phoneNumber);
+      var user = result;
+      return user;
+    } catch (ex) {
+      print("sing in issue ${ex.toString()}");
+    }
+  }
+
   Future signUpWithEmail(UserModel userModel, String password) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     try {
@@ -30,17 +42,32 @@ class Auth {
         displayName: '${userModel.firstName} ${userModel.lastName}',
         photoURL: userModel.photoUrl,
       );
-      User firebaseUser = result.user;
+      final User firebaseUser = result.user;
+      final UserModel authUser = UserModel(
+        id: firebaseUser.uid,
+        firstName: userModel.firstName,
+        lastName: userModel.lastName,
+        photoUrl: userModel.photoUrl,
+        email: userModel.email,
+        community: userModel.community,
+        department: userModel.department,
+        joiningDate: userModel.joiningDate,
+        username: userModel.username,
+        isActive: userModel.isActive,
+        isHead: userModel.isHead,
+      );
       await DatabaseMethods()
-          .uploadUserInfo(userModel: userModel, uid: firebaseUser.uid)
+          .uploadUserInfo(userModel: authUser, uid: firebaseUser.uid)
           .then((value) {
-        MessageGroupServices().createGroupChatOrAddNewMember(userModel.community, userModel);
+        MessageGroupServices().createGroupChatOrAddNewMember(authUser.community, authUser);
         if (userModel.department != null) {
-          MessageGroupServices().createGroupChatOrAddNewMember(userModel.department, userModel);
+          MessageGroupServices().createGroupChatOrAddNewMember(authUser.department, authUser);
         }
-        MessageGroupServices().createGroupChatOrAddNewMember('Enactus NC', userModel);
+        MessageGroupServices().createGroupChatOrAddNewMember('Enactus NC', authUser);
       });
-      sharedPreferences.setString('user', userModel.email);
+      sharedPreferences.setString('user', authUser.email);
+      HelperFunction.setUserEmail(authUser.email);
+      HelperFunction.setUsername('${authUser.firstName} ${authUser.lastName}');
 
       return firebaseUser;
     } catch (ex) {

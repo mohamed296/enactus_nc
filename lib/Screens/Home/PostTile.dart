@@ -5,10 +5,10 @@ import 'package:enactusnca/Models/post.dart';
 import 'package:enactusnca/Models/user_model.dart';
 import 'package:enactusnca/Screens/Post/OpenPost.dart';
 import 'package:enactusnca/Screens/Profile/profile.dart';
-import 'package:enactusnca/Widgets/PopUpMenu.dart';
 import 'package:enactusnca/Widgets/constants.dart';
 import 'package:enactusnca/Widgets/post_image.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 class PostTile extends StatefulWidget {
@@ -131,11 +131,14 @@ class _PostTileState extends State<PostTile> {
 
   ListTile userInfo(BuildContext context) {
     return ListTile(
-      leading: CircleAvatar(
-        radius: 34.0,
-        backgroundImage: NetworkImage(
-          widget?.post?.userProfileImg ??
-              'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png',
+      leading: GestureDetector(
+        onTap: () => Profile(postUserId: widget.post.ownerId),
+        child: CircleAvatar(
+          radius: 34.0,
+          backgroundImage: NetworkImage(
+            widget?.post?.userProfileImg ??
+                'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png',
+          ),
         ),
       ),
       //title: Text(post.postId),
@@ -167,29 +170,13 @@ class _PostTileState extends State<PostTile> {
           ),
         );
       },*/
-      /* trailing: IconButton(
+      /*   trailing: IconButton(
         onPressed: () => print('edit'),
         icon: Icon(
-          LineAwesomeIcons.user_edit,
-          color: KMainColor,
+          Icons.delete,
+          color: KSacandColor,
         ),
-      ),*/
-      trailing: Padding(
-        padding: EdgeInsets.only(
-          right: 2.0,
-        ),
-        child: PopupMenuButton(
-          onSelected: select,
-          itemBuilder: (context) {
-            return PopUpMenu.choices.map((String choice) {
-              return PopupMenuItem(
-                child: Text(choice),
-                value: choice,
-              );
-            }).toList();
-          },
-        ),
-      ),
+      ), */
     );
   }
 
@@ -248,7 +235,7 @@ class _PostTileState extends State<PostTile> {
             GestureDetector(
               //  onTap: () => Navigator.pushNamed(context, CommentCard.id),
               child: Icon(
-                LineAwesomeIcons.comment,
+                FontAwesomeIcons.comment,
                 //   color: KMainColor,
                 size: 18.0,
               ),
@@ -273,7 +260,7 @@ class _PostTileState extends State<PostTile> {
     );
   }
 
-  void select(String choice) {
+  /* void select(String choice) {
     if (choice == PopUpMenu.settings) {
       // Navigator.push(
       //   context,
@@ -284,5 +271,5 @@ class _PostTileState extends State<PostTile> {
     } else if (choice == PopUpMenu.signOut) {
       //  auth.signOutGoogle(context);
     }
-  }
+  } */
 }

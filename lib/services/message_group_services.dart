@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enactusnca/Models/list_of_groups.dart';
 import 'package:enactusnca/Models/messages_model.dart';
+import 'package:enactusnca/Models/notification_model.dart';
 import 'package:enactusnca/Models/user_model.dart';
+import 'package:enactusnca/services/notification_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class MessageGroupServices {
@@ -20,10 +22,37 @@ class MessageGroupServices {
       'userName': user.displayName,
       'message': messageModel.message,
       'timestamp': DateTime.now(),
-      'type': messageModel.type,
+      'type': 'message',
       'read': false,
-      'isLiked': false,
     }).then((value) => updateLastMessage(messageModel.message, messageModel.groupId));
+  }
+
+  Future sendTaskMessage(
+    MessageModel messageModel,
+    DateTime dateTime,
+    bool sendNotification,
+  ) async {
+    final NotificationModel notificationModel = NotificationModel(
+      notificationMsg: 'Task Assigned To You, DeadLine: ${dateTime.toString()}',
+      receiverId: messageModel.userId,
+    );
+    return await FirebaseFirestore.instance
+        .collection('GroupChat')
+        .doc(messageModel.groupId)
+        .collection(messageModel.groupId)
+        .doc()
+        .set({
+      'groupId': messageModel.groupId,
+      'userId': messageModel.userId,
+      'userImg': messageModel.userImg,
+      'userName': messageModel.userName,
+      'message': dateTime.toString(),
+      'timestamp': DateTime.now(),
+      'type': 'Task',
+      'read': false,
+    }).whenComplete(() {
+      if (sendNotification) NotificationServices().sendNotification(notificationModel, false);
+    });
   }
 
   Future createGroupChatOrAddNewMember(String groupName, UserModel userModel) async {
@@ -63,7 +92,7 @@ class MessageGroupServices {
         .collection('GroupChat')
         .doc(groupName)
         .collection('members')
-        .doc()
+        .doc(userModel.id)
         .set({
       'id': userModel.id,
       'userName': userModel.username,
@@ -87,7 +116,6 @@ class MessageGroupServices {
             userId: message.data()['userId'],
             userImg: message.data()['userImg'],
             userName: message.data()['userName'],
-            isLiked: message.data()['isLiked'],
             read: message.data()['read'],
           ),
         )
@@ -110,6 +138,22 @@ class MessageGroupServices {
         .toList();
 
     return listOfGroups;
+  }
+
+  List<UserModel> listOfMembers(QuerySnapshot snapshot) {
+    var listOfMembers = snapshot.docs
+        .map(
+          (member) => UserModel(
+            id: member.id,
+            photoUrl: member.data()['photoUrl'],
+            email: member.data()['email'],
+            username: member.data()['userName'],
+            isHead: member.data()['isHead'],
+          ),
+        )
+        .toList();
+
+    return listOfMembers;
   }
 
   Stream<List<ListOfGroups>> get getGroupsList {

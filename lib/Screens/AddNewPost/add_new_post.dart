@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:enactusnca/Models/post.dart';
+import 'package:enactusnca/Widgets/constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -43,8 +44,8 @@ class _AddNewPostState extends State<AddNewPost> {
 
   handleTakePhoto() async {
     Navigator.pop(context);
-    File file =
-        await ImagePicker.pickImage(source: ImageSource.camera, maxHeight: 675, maxWidth: 960);
+    File file = await ImagePicker.pickImage(
+        source: ImageSource.camera, maxHeight: 675, maxWidth: 960);
     setState(() {
       this.file = file;
     });
@@ -52,8 +53,8 @@ class _AddNewPostState extends State<AddNewPost> {
 
   handleChoosePhoto() async {
     Navigator.pop(context);
-    File file =
-        await ImagePicker.pickImage(source: ImageSource.gallery, maxHeight: 675, maxWidth: 960);
+    File file = await ImagePicker.pickImage(
+        source: ImageSource.gallery, maxHeight: 675, maxWidth: 960);
     setState(() {
       this.file = file;
     });
@@ -93,7 +94,7 @@ class _AddNewPostState extends State<AddNewPost> {
       body: SafeArea(
         child: ListView(
           children: <Widget>[
-            userInfo(context),
+            //  userInfo(context),
             Column(
               children: <Widget>[
                 SizedBox(height: 12.0),
@@ -111,7 +112,7 @@ class _AddNewPostState extends State<AddNewPost> {
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
                         borderSide: BorderSide(
-                          width: 1,
+                          width: 2,
                           color: Theme.of(context).accentColor,
                         ),
                       ),
@@ -133,14 +134,16 @@ class _AddNewPostState extends State<AddNewPost> {
       ),
       floatingActionButton: FloatingActionButton(
         child: showLoadingPost == false
-            ? Icon(Icons.add, color: Colors.white)
-            : SpinKitFoldingCube(color: Colors.white, size: 12.0),
+            ? Icon(Icons.add, color: KMainColor)
+            : SpinKitFoldingCube(color: KMainColor, size: 12.0),
         onPressed: () async {
           if (newPost != null) {
             setState(() => showLoadingPost = true);
             if (imageUrl != null) {
               await uploadImage().then((onComplet) async {
-                await post.addNewPost(description: newPost, mediaUrl: imageUrl).then((onComplete) {
+                await post
+                    .addNewPost(description: newPost, mediaUrl: imageUrl)
+                    .then((onComplete) {
                   setState(() => showLoadingPost = false);
                   Fluttertoast.showToast(msg: 'Post add Successfuly.');
                 });
@@ -159,7 +162,7 @@ class _AddNewPostState extends State<AddNewPost> {
     );
   }
 
-  userInfo(BuildContext context) {
+/*   userInfo(BuildContext context) {
     //final _user = Provider.of<User>(context);
     // final _user = User;
     return Container(
@@ -168,6 +171,7 @@ class _AddNewPostState extends State<AddNewPost> {
         children: [
           CircleAvatar(
             radius: 16.0,
+
             /*   backgroundImage: NetworkImage(
              _user?.photoUrl ??
                   'https://fakeimg.pl/350x200/?text=World&font=lobster',
@@ -184,7 +188,7 @@ class _AddNewPostState extends State<AddNewPost> {
         ],
       ),
     );
-  }
+  } */
 
   addImage(BuildContext context) {
     return FlatButton(
@@ -200,22 +204,27 @@ class _AddNewPostState extends State<AddNewPost> {
                     width: double.infinity,
                   )
                 : (showLoadingImage == false)
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(
-                            Icons.add,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                          SizedBox(width: 4.0),
-                          Text(
-                            'Add Photo',
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
+                    ? Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(
+                              Icons.camera_alt,
+                              color: Theme.of(context).accentColor,
                             ),
-                          ),
-                        ],
+                            SizedBox(width: 4.0),
+                            Text(
+                              'Add Photo',
+                              style: TextStyle(
+                                color: Theme.of(context).accentColor,
+                              ),
+                            ),
+                          ],
+                        ),
                       )
                     : SpinKitFoldingCube(color: Theme.of(context).primaryColor),
           ),

@@ -1,8 +1,13 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Helpers/helperfunction.dart';
 import 'package:enactusnca/Screens/chat/messages/messages.dart';
+import 'package:enactusnca/Widgets/constants.dart';
 import 'package:enactusnca/services/database_methods.dart';
+import 'package:enactusnca/wrapper.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -31,6 +36,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 lastName: searchSnapshot.docs[index].data()["lastName"],
                 userEmail: searchSnapshot.docs[index].data()["email"],
                 userId: searchSnapshot.docs[index].data()["teamId"],
+                imgUrl: searchSnapshot.docs[index].data()["photoUrl"],
               );
             },
           )
@@ -75,17 +81,21 @@ class _SearchScreenState extends State<SearchScreen> {
             IconButton(
               icon: Icon(
                 Icons.arrow_back,
-                color: Colors.white,
+                color: KSacandColor,
               ),
               onPressed: () {
                 /*  Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => HomeScreen()));*/
-                Navigator.pop(context);
+                // Navigator.pop(context);
+                Navigator.pushNamed(context, Wrapper.id);
               },
             ),
           ],
         ),
-        title: Text("Search"),
+        title: Text(
+          "Search",
+          style: TextStyle(color: KSacandColor),
+        ),
       ),
       body: Container(
         //  color: Constants.darkBlue,
@@ -95,10 +105,13 @@ class _SearchScreenState extends State<SearchScreen> {
               children: <Widget>[
                 Expanded(
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: KSacandColor, width: 3.0)),
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 0),
                     child: TextField(
                       controller: etcSearch,
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: KSacandColor),
                       decoration: InputDecoration(
                         hintText: "Email",
                         hintStyle: TextStyle(color: Colors.grey.shade200),
@@ -121,7 +134,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         //   backgroundColor: Constants.darkBlue,
                         child: Icon(
                       Icons.search,
-                      color: Colors.white,
+                      color: KSacandColor,
                     )),
                   ),
                 ),
@@ -136,9 +149,10 @@ class _SearchScreenState extends State<SearchScreen> {
 }
 
 class SearchTitle extends StatelessWidget {
-  final String fistName, lastName, userEmail, userId;
+  final String fistName, lastName, userEmail, userId, imgUrl;
 
-  SearchTitle({this.fistName, this.lastName, this.userEmail, this.userId});
+  SearchTitle(
+      {this.fistName, this.lastName, this.userEmail, this.userId, this.imgUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -177,7 +191,10 @@ class SearchTitle extends StatelessWidget {
           GestureDetector(
             onTap: () {
               createChatRoomAndStartConversation(
-                  context: context, userID: userEmail.trim(), userName: '$fistName $lastName');
+                  context: context,
+                  userID: userEmail.trim(),
+                  imgUrl: imgUrl,
+                  userName: '$fistName $lastName');
             },
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -198,36 +215,53 @@ class SearchTitle extends StatelessWidget {
 }
 
 getChatRoomId(String a, String b) {
-  if (a.substring(0, 1).codeUnitAt(0) < b.substring(0, 1).codeUnitAt(0)) {
+  if (a.length > b.length)
     return "$b\_$a";
-  } else {
+  else
     return "$a\_$b";
-  }
 }
 
-createChatRoomAndStartConversation({String userID, String userName, BuildContext context}) {
+createChatRoomAndStartConversation(
+    {String userID, String userName, BuildContext context, String imgUrl}) {
   if (_userEmail != Constants.myEmail) {
     String chatRoomId = getChatRoomId(_userEmail, _myEmail);
-    List<String> users = [userName, _myName];
-    List<String> emails = [userID.toLowerCase(), _myEmail.toLowerCase()];
-    Map<String, dynamic> chatRoomMap = {
-      "users": users,
-      "emails": emails,
-      "lastMessage": "",
-      "isRead": false,
-      "lastTime": null,
-      "chatroomid": chatRoomId,
-    };
-    DatabaseMethods().createChatRoom(chatRoomId, chatRoomMap);
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => Messages(
-          username: userName,
-          chatRoomId: chatRoomId,
-        ),
-      ),
-    );
+
+    DatabaseMethods().getChatRooByRoomId(roomId: chatRoomId).then((value) {
+      QuerySnapshot roomSnapShoot = value;
+
+      if (roomSnapShoot.docs.isEmpty) {
+        print('creating a room');
+        User user = FirebaseAuth.instance.currentUser;
+        List<String> users = [userName, user.displayName];
+        List<String> emails = [userID.toLowerCase(), user.email.toLowerCase()];
+
+        Map<String, dynamic> chatRoomMap = {
+          "users": users,
+          "emails": emails,
+          "lastMessage": "",
+          "isRead": false,
+          "lastTime": null,
+          "chatroomid": chatRoomId,
+        };
+        DatabaseMethods().createChatRoom(chatRoomId, chatRoomMap).then((val) {
+          print('room created');
+          navigateToMessagesScreen(
+              context: context,
+              roomId: chatRoomId,
+              imgUrl: imgUrl,
+              name: userName,
+              roomSnapShoot: roomSnapShoot);
+        });
+      } else {
+        print("the room exists");
+        navigateToMessagesScreen(
+            context: context,
+            roomId: chatRoomId,
+            imgUrl: imgUrl,
+            name: userName,
+            roomSnapShoot: roomSnapShoot);
+      }
+    });
   } else {
     Fluttertoast.showToast(
         msg: "You can't text yourself :(\n يامتوحد",
@@ -238,4 +272,26 @@ createChatRoomAndStartConversation({String userID, String userName, BuildContext
         textColor: Colors.black,
         fontSize: 16.0);
   }
+}
+
+navigateToMessagesScreen(
+    {BuildContext context,
+    String roomId,
+    String imgUrl,
+    String name,
+    QuerySnapshot roomSnapShoot}) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => Messages(
+        group: false,
+        chatRoomId: roomId,
+        imageUrl: imgUrl,
+        lastSender: roomSnapShoot.docs.isEmpty
+            ? null
+            : roomSnapShoot.docs[0].data()['lastSender'],
+        username: name,
+      ),
+    ),
+  );
 }

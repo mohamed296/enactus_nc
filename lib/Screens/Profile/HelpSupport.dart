@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HelpSupport extends StatefulWidget {
+  static String id = 'HelpSupport';
   @override
   _HelpSupportState createState() => _HelpSupportState();
 }

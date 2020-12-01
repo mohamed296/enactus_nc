@@ -25,7 +25,9 @@ class NotificationServices {
   }
 
   Future sendNotification(NotificationModel notificationModel, bool like) async {
-    String notificationMessage = notificationMsg(notificationModel, like);
+    String notificationMessage = notificationModel.notificationPost != null
+        ? notificationMsg(notificationModel, like)
+        : notificationModel.notificationMsg;
     String notificationTime = formatDate(
       DateTime.now(),
       [yyyy, '-', mm, '-', dd, ' ', HH, ':', nn],
