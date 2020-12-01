@@ -20,6 +20,19 @@ class DatabaseMethods {
     });
   }
 
+  Future<String> checkUserActivate(String id) async {
+    final path = FirebaseFirestore.instance.collection("Users").doc(id);
+    final user = await path.get();
+
+    if (user.exists == true) {
+      bool isActive = await user.data()['isActive'];
+      if (isActive) return 'Active';
+      return 'Please Wait while you approved!';
+    } else {
+      return 'this user does not exist';
+    }
+  }
+
   Future getUserData(String id) async {
     return await FirebaseFirestore.instance.collection("Users").doc(id).get();
   }
