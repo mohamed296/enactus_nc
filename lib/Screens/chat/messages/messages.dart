@@ -335,40 +335,47 @@ class _MessagesState extends State<Messages> {
           .map(UserServices().userData),
       builder: (context, snapshot) {
         return snapshot.hasData
-            ? Container(
-                height: 80.0,
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Expanded(
-                      child: TextField(
-                        controller: tecMessage,
-                        textCapitalization: TextCapitalization.sentences,
-                        style: TextStyle(color: Colors.white),
-                        onChanged: (value) {},
-                        decoration: InputDecoration.collapsed(
-                          hintStyle: TextStyle(
-                            color: Colors.grey.shade100,
+            ? Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Divider(color: Colors.yellow, height: 1.0, thickness: 0.5),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Expanded(
+                          child: TextField(
+                            controller: tecMessage,
+                            textCapitalization: TextCapitalization.sentences,
+                            scrollPhysics: BouncingScrollPhysics(),
+                            style: TextStyle(color: Colors.white),
+                            maxLines: 6,
+                            minLines: 1,
+                            keyboardType: TextInputType.text,
+                            onChanged: (value) {},
+                            decoration: InputDecoration.collapsed(
+                              hintStyle: TextStyle(color: Colors.grey.shade100),
+                              hintText: "Type a message...",
+                            ),
                           ),
-                          hintText: "Send a message..",
                         ),
-                      ),
+                        snapshot.data.isHead || snapshot.data.isAdmin && widget.groupName != null
+                            ? IconButton(
+                                icon: Icon(Icons.table_chart),
+                                color: Constants.yellow,
+                                onPressed: () => showGroupMembers(context),
+                              )
+                            : Container(),
+                        IconButton(
+                          icon: Icon(Icons.send),
+                          color: Constants.yellow,
+                          onPressed: () => sendMessage(type: 'Message'),
+                        )
+                      ],
                     ),
-                    snapshot.data.isHead && snapshot.data.isAdmin && widget.groupName != null
-                        ? IconButton(
-                            icon: Icon(Icons.table_chart),
-                            color: Constants.yellow,
-                            onPressed: () => showGroupMembers(context),
-                          )
-                        : Container(),
-                    IconButton(
-                      icon: Icon(Icons.send),
-                      color: Constants.yellow,
-                      onPressed: () => sendMessage(type: 'Message'),
-                    )
-                  ],
-                ),
+                  ),
+                ],
               )
             : CircularProgressIndicator();
       },
@@ -421,54 +428,51 @@ class _MessagesState extends State<Messages> {
               : Container()
         ],
       ),
-      body: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: StreamBuilder<List<MessageModel>>(
-                stream: widget.group == true
-                    ? FirebaseFirestore.instance
-                        .collection('GroupChat')
-                        .doc(widget.groupName)
-                        .collection(widget.groupName)
-                        .orderBy("timestamp", descending: true)
-                        .snapshots()
-                        .map(MessageServices().listOfMessages)
-                    : FirebaseFirestore.instance
-                        .collection("chatRoom")
-                        .doc(widget.chatRoomId)
-                        .collection("chats")
-                        .orderBy("timestamp", descending: true)
-                        .snapshots()
-                        .map(MessageServices().listOfMessages),
-                builder: (context, snapShot) {
-                  return snapShot.hasData
-                      ? ListView.builder(
-                          reverse: true,
-                          padding: EdgeInsets.only(top: 15.0),
-                          itemCount: snapShot.data.length,
-                          itemBuilder: (context, index) {
-                            MessageModel message = MessageModel(
-                              groupId: snapShot.data[index].groupId,
-                              type: snapShot.data[index].type,
-                              userId: snapShot.data[index].userId,
-                              userImg: snapShot.data[index].userImg,
-                              message: snapShot.data[index].message,
-                              userName: snapShot.data[index].userName,
-                              timestamp: snapShot.data[index].timestamp,
-                              read: snapShot.data[index].read,
-                              messageId: snapShot.data[index].messageId,
-                            );
-                            return _buildMessage(message);
-                          })
-                      : Center(child: CircularProgressIndicator());
-                },
-              ),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: StreamBuilder<List<MessageModel>>(
+              stream: widget.group == true
+                  ? FirebaseFirestore.instance
+                      .collection('GroupChat')
+                      .doc(widget.groupName)
+                      .collection(widget.groupName)
+                      .orderBy("timestamp", descending: true)
+                      .snapshots()
+                      .map(MessageServices().listOfMessages)
+                  : FirebaseFirestore.instance
+                      .collection("chatRoom")
+                      .doc(widget.chatRoomId)
+                      .collection("chats")
+                      .orderBy("timestamp", descending: true)
+                      .snapshots()
+                      .map(MessageServices().listOfMessages),
+              builder: (context, snapShot) {
+                return snapShot.hasData
+                    ? ListView.builder(
+                        reverse: true,
+                        padding: EdgeInsets.only(top: 15.0),
+                        itemCount: snapShot.data.length,
+                        itemBuilder: (context, index) {
+                          MessageModel message = MessageModel(
+                            groupId: snapShot.data[index].groupId,
+                            type: snapShot.data[index].type,
+                            userId: snapShot.data[index].userId,
+                            userImg: snapShot.data[index].userImg,
+                            message: snapShot.data[index].message,
+                            userName: snapShot.data[index].userName,
+                            timestamp: snapShot.data[index].timestamp,
+                            read: snapShot.data[index].read,
+                            messageId: snapShot.data[index].messageId,
+                          );
+                          return _buildMessage(message);
+                        })
+                    : Center(child: CircularProgressIndicator());
+              },
             ),
-            _buildMessageComposer(),
-          ],
-        ),
+          ),
+          _buildMessageComposer(),
+        ],
       ),
     );
   }

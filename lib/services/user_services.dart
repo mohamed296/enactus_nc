@@ -26,10 +26,8 @@ class UserServices {
           ),
         )
         .whenComplete(() {
-          MessageGroupServices()
-              .createGroupChatOrAddNewMember(userModel.community, userModel);
-          MessageGroupServices()
-              .createGroupChatOrAddNewMember(userModel.department, userModel);
+          MessageGroupServices().createGroupChatOrAddNewMember(userModel.community, userModel);
+          MessageGroupServices().createGroupChatOrAddNewMember(userModel.department, userModel);
         });
   }
 
@@ -46,6 +44,7 @@ class UserServices {
       department: snapshot.data()['department'],
       isActive: snapshot.data()['isActive'],
       isHead: snapshot.data()['isHead'],
+      isAdmin: snapshot.data()['isAdmin'],
     );
   }
 }
