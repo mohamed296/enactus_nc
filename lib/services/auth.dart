@@ -52,6 +52,9 @@ class Auth {
         department: userModel.department,
         joiningDate: userModel.joiningDate,
         username: userModel.username,
+        isActive: false,
+        isHead: false,
+        isAdmin: false,
       );
       await DatabaseMethods()
           .uploadUserInfo(userModel: authUser, uid: firebaseUser.uid)

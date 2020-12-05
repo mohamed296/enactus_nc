@@ -150,6 +150,7 @@ class MessageGroupServices {
             email: member.data()['email'],
             username: member.data()['userName'],
             isHead: member.data()['isHead'],
+            isAdmin: member.data()['isAdmin'],
           ),
         )
         .toList();

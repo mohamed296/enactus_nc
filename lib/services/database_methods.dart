@@ -28,7 +28,7 @@ class DatabaseMethods {
     if (user.exists == true) {
       bool isActive = await user.data()['isActive'];
       if (isActive) return 'Active';
-      return 'Please Wait while you approved!';
+      return 'Your account still pending Approval';
     } else {
       return 'this user does not exist';
     }
