@@ -132,7 +132,17 @@ class _PostTileState extends State<PostTile> {
   ListTile userInfo(BuildContext context) {
     return ListTile(
       leading: GestureDetector(
-        onTap: () => Profile(postUserId: widget.post.ownerId),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Profile(
+                userId: widget.post.ownerId,
+                isAppBarEnabled: true,
+              ),
+            ),
+          );
+        },
         child: CircleAvatar(
           radius: 34.0,
           backgroundImage: NetworkImage(
@@ -208,7 +218,9 @@ class _PostTileState extends State<PostTile> {
               //  style: TextStyle(color: KMainColor)
             ),
           ),
-          widget.post.mediaUrl != null ? PostImage(imageUrl: widget.post.mediaUrl) : Container(),
+          widget.post.mediaUrl != null
+              ? PostImage(imageUrl: widget.post.mediaUrl)
+              : Container(),
         ],
       ),
     );
