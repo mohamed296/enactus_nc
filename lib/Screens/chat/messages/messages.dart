@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Models/messages_model.dart';
@@ -9,7 +11,9 @@ import 'package:enactusnca/services/message_group_services.dart';
 import 'package:enactusnca/services/message_services.dart';
 import 'package:enactusnca/services/user_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Messages extends StatefulWidget {
   static String id = 'messages';
@@ -40,6 +44,12 @@ class _MessagesState extends State<Messages> {
   final user = FirebaseAuth.instance.currentUser;
   Stream conversationStream;
   DateTime selectedDate = DateTime.now();
+
+  File _image;
+  String _imgURL;
+  String senimage = '';
+  bool sendim = false;
+
   @override
   void initState() {
     super.initState();
@@ -48,6 +58,35 @@ class _MessagesState extends State<Messages> {
         databaseMethods.markMessageAsSeen(widget.chatRoomId);
       }
     }
+  }
+
+  Future getImage() async {
+    final pickedFile =
+        await ImagePicker().getImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _imgURL = pickedFile.hashCode.toString();
+        _image = File(pickedFile.path);
+      });
+    }
+
+    return _image;
+  }
+
+  Future uploadImage(BuildContext context) async {
+    try {
+      StorageReference ref = FirebaseStorage.instance.ref().child(_imgURL);
+      StorageUploadTask storageUploadTask = ref.putFile(_image);
+      StorageTaskSnapshot taskSnapshot = await storageUploadTask.onComplete;
+
+      String url = await taskSnapshot.ref.getDownloadURL();
+      setState(() {
+        _imgURL = url;
+        senimage = url;
+        sendim = true;
+      });
+      return url;
+    } catch (ex) {}
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -63,27 +102,41 @@ class _MessagesState extends State<Messages> {
     }
   }
 
-  sendMessage({String type, DateTime dateTime, UserModel userModel, bool sendNotification}) async {
+  sendMessage(
+      {String type,
+      DateTime dateTime,
+      UserModel userModel,
+      bool sendNotification}) async {
     MessageModel messageModel = MessageModel(
       userId: type == 'Task' ? userModel.id : null,
       userImg: userModel?.photoUrl ?? null,
       userName: userModel?.username ?? null,
       groupId: widget.group == true ? widget.groupName : widget.chatRoomId,
-      message: type == 'Message' ? tecMessage.text : dateTime.toString(),
+      type: type,
+      message: type == 'Message'
+          ? tecMessage.text
+          : type == 'Task'
+              ? dateTime.toString()
+              : type == 'image'
+                  ? senimage
+                  : null,
     );
     widget.group == true
         ? type == 'Task'
             ? MessageGroupServices()
                 .sendTaskMessage(messageModel, dateTime, sendNotification)
-                .catchError((error) => print("getConversationErrors : ${error.toString()}"))
+                .catchError((error) =>
+                    print("getConversationErrors : ${error.toString()}"))
                 .whenComplete(() => tecMessage.clear())
             : MessageGroupServices()
                 .sendGroupMessage(messageModel)
-                .catchError((error) => print("getConversationErrors : ${error.toString()}"))
+                .catchError((error) =>
+                    print("getConversationErrors : ${error.toString()}"))
                 .whenComplete(() => tecMessage.clear())
         : MessageServices()
             .sendMessage(messageModel)
-            .catchError((error) => print("getConversationErrors : ${error.toString()}"))
+            .catchError(
+                (error) => print("getConversationErrors : ${error.toString()}"))
             .whenComplete(() => tecMessage.clear());
   }
 
@@ -147,12 +200,16 @@ class _MessagesState extends State<Messages> {
                             }).whenComplete(() => Navigator.pop(context)),
                             leading: CircleAvatar(
                               radius: 30,
-                              backgroundImage: snapshot.data[index].photoUrl == null
+                              backgroundImage: snapshot.data[index].photoUrl ==
+                                      null
                                   ? AssetImage("assets/images/person.png")
                                   : NetworkImage(snapshot.data[index].photoUrl),
                             ),
-                            title: Text(snapshot?.data[index]?.username ?? 'user'),
-                            subtitle: snapshot.data[index].isHead ? Text('Head') : Text('Member'),
+                            title:
+                                Text(snapshot?.data[index]?.username ?? 'user'),
+                            subtitle: snapshot.data[index].isHead
+                                ? Text('Head')
+                                : Text('Member'),
                           ),
                         )
                       : CircularProgressIndicator();
@@ -212,8 +269,9 @@ class _MessagesState extends State<Messages> {
             ),
           )
         : Row(
-            mainAxisAlignment:
-                user.uid == message.userId ? MainAxisAlignment.end : MainAxisAlignment.start,
+            mainAxisAlignment: user.uid == message.userId
+                ? MainAxisAlignment.end
+                : MainAxisAlignment.start,
             children: [
               user.uid == message.userId
                   ? Container(
@@ -226,10 +284,12 @@ class _MessagesState extends State<Messages> {
                             ? Image.network(
                                 message.userImg,
                                 fit: BoxFit.contain,
-                                loadingBuilder: (context, child, loadingProgress) {
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
                                   return loadingProgress == null
                                       ? child
-                                      : Center(child: CircularProgressIndicator());
+                                      : Center(
+                                          child: CircularProgressIndicator());
                                 },
                               )
                             : Image.asset('assets/images/enactus.png'),
@@ -239,7 +299,9 @@ class _MessagesState extends State<Messages> {
               Container(
                 width: MediaQuery.of(context).size.width * 0.75,
                 decoration: BoxDecoration(
-                  color: user.uid != message.userId ? Constants.lightBlue : Constants.midBlue,
+                  color: user.uid != message.userId
+                      ? Constants.lightBlue
+                      : Constants.midBlue,
                   borderRadius: user.uid == message.userId
                       ? BorderRadius.only(
                           topLeft: Radius.circular(15.0),
@@ -268,14 +330,16 @@ class _MessagesState extends State<Messages> {
                           )
                         : Container(),
                     SizedBox(height: 8.0),
-                    Text(
-                      message.message,
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.blueGrey.shade100,
-                      ),
-                    ),
+                    (sendim == true)
+                        ? Image.network(senimage)
+                        : Text(
+                            message.message,
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.blueGrey.shade100,
+                            ),
+                          ),
                     SizedBox(height: 8.0),
                     Text(
                       '${message.timestamp.toDate().hour.toString()}/${message.timestamp.toDate().minute.toString()}/${message.timestamp.toDate().second.toString()}',
@@ -311,10 +375,12 @@ class _MessagesState extends State<Messages> {
                               ? Image.network(
                                   message.userImg,
                                   fit: BoxFit.contain,
-                                  loadingBuilder: (context, child, loadingProgress) {
+                                  loadingBuilder:
+                                      (context, child, loadingProgress) {
                                     return loadingProgress == null
                                         ? child
-                                        : Center(child: CircularProgressIndicator());
+                                        : Center(
+                                            child: CircularProgressIndicator());
                                   },
                                 )
                               : Image.asset('assets/images/enactus.png'),
@@ -344,6 +410,18 @@ class _MessagesState extends State<Messages> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
+                        IconButton(
+                            icon: Icon(
+                              Icons.image,
+                              color: Colors.yellow,
+                            ),
+                            onPressed: () async {
+                              getImage();
+
+                              await uploadImage(context).then(
+                                (url) => sendMessage(type: 'image'),
+                              );
+                            }),
                         Expanded(
                           child: TextField(
                             controller: tecMessage,
@@ -360,7 +438,9 @@ class _MessagesState extends State<Messages> {
                             ),
                           ),
                         ),
-                        snapshot.data.isHead || snapshot.data.isAdmin && widget.groupName != null
+                        snapshot.data.isHead ||
+                                snapshot.data.isAdmin &&
+                                    widget.groupName != null
                             ? IconButton(
                                 icon: Icon(Icons.table_chart),
                                 color: Constants.yellow,
@@ -420,7 +500,8 @@ class _MessagesState extends State<Messages> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => GroupMember(groupName: widget.groupName),
+                        builder: (context) =>
+                            GroupMember(groupName: widget.groupName),
                       ),
                     );
                   },
