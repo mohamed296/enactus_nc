@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'groups/group_chat.dart';
 import 'members/members.dart' as contactsScreen;
-import 'messages/recent_screen.dart' as recentScreen;
+import 'messages/recent_chats.dart';
 
 class Chat extends StatefulWidget {
   static String id = 'chat';
@@ -67,7 +67,7 @@ class _ChatState extends State<Chat> with SingleTickerProviderStateMixin {
           body: TabBarView(
             controller: controller,
             children: [
-              recentScreen.RecentScreen(),
+              RecentChat(),
               GroupChat(),
               contactsScreen.Members(),
             ],
