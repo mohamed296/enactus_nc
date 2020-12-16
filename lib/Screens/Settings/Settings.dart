@@ -1,4 +1,4 @@
-import 'package:enactusnca/utilts/app_theme_provider.dart';
+import 'package:enactusnca/utilts/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,17 +27,17 @@ class _SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
-    var changeTheme = Provider.of<AppThemeProvider>(context, listen: false);
+    var changeTheme = Provider.of<AppTheme>(context, listen: false);
     void switchChange(bool value) async {
       SharedPreferences pref = await SharedPreferences.getInstance();
       if (isSwitched == false) {
-        changeTheme.setTheme(AppThemeProvider.darkTheme);
+        changeTheme.setTheme(AppTheme.darkTheme);
         setState(() {
           isSwitched = true;
           pref.setBool('darkTheme', true);
         });
       } else {
-        changeTheme.setTheme(AppThemeProvider.lightTheme);
+        changeTheme.setTheme(AppTheme.lightTheme);
         setState(() {
           isSwitched = false;
           pref.setBool('darkTheme', false);

@@ -4,8 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class NotificationManager {
+  FirebaseMessaging firebaseMessaging = FirebaseMessaging();
   void registerNotification(String email) {
-    FirebaseMessaging firebaseMessaging = FirebaseMessaging();
     firebaseMessaging.requestNotificationPermissions();
 
     firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) {
@@ -23,6 +23,15 @@ class NotificationManager {
     firebaseMessaging.getToken().then((token) {
       print('token: $token');
       FirebaseFirestore.instance.collection('users').doc(email).update({'pushToken': token});
+    }).catchError((err) {
+      print(err.message.toString());
+    });
+  }
+
+  getAndSaveToken(String id) async {
+    firebaseMessaging.getToken().then((token) {
+      print('token: $token');
+      FirebaseFirestore.instance.collection('Users').doc(id).update({'Token': token});
     }).catchError((err) {
       print(err.message.toString());
     });

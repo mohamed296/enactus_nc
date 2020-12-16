@@ -4,11 +4,10 @@ import 'package:enactusnca/Screens/Profile/profile.dart';
 import 'package:enactusnca/Screens/chat/chat.dart';
 import 'package:enactusnca/Screens/authentication/sign_in.dart';
 import 'package:enactusnca/Screens/chat/messages/messages.dart';
-import 'package:enactusnca/utilts/app_theme_provider.dart';
+import 'package:enactusnca/utilts/app_theme.dart';
 import 'package:enactusnca/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Screens/AddNewPost/add_new_post.dart';
@@ -20,18 +19,8 @@ Future<void> main() async {
   await Firebase.initializeApp();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var user = prefs.getString('user');
-  var theme = prefs.getBool('darkTheme');
   print(user);
-  runApp(
-    ChangeNotifierProvider<AppThemeProvider>(
-      create: (context) => AppThemeProvider(
-        themeData: theme == null || theme == false
-            ? AppThemeProvider.darkTheme
-            : AppThemeProvider.lightTheme,
-      ),
-      child: MyApp(user: user),
-    ),
-  );
+  runApp(MyApp(user: user));
 }
 
 class MyApp extends StatefulWidget {
@@ -46,15 +35,9 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    final theme = Provider.of<AppThemeProvider>(context);
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: theme.getTheme(),
-      /**
-       * initialRoute has been changed to HomeScreen if the user has
-       * signed in once before.
-       * */
+      theme: AppTheme.darkTheme,
       initialRoute: widget.user != null ? Wrapper.id : SignIn.id,
       routes: {
         SignIn.id: (context) => SignIn(),
@@ -63,8 +46,6 @@ class _MyAppState extends State<MyApp> {
         Profile.id: (context) => Profile(),
         Chat.id: (context) => Chat(),
         Events.id: (context) => Events(),
-        // AddEventPage.id: (context) => AddEventPage(),
-        // EventDetailsPage.id: (context) => EventDetailsPage(),
         Home.id: (context) => Home(),
         ProfileListItem.id: (context) => ProfileListItem(),
         Messages.id: (context) => Messages(),
