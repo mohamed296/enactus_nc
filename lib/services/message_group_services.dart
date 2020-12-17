@@ -24,8 +24,12 @@ class MessageGroupServices {
       'timestamp': DateTime.now(),
       'type': messageModel.type,
       'read': false,
-    }).then((value) =>
-            updateLastMessage(messageModel.message, messageModel.groupId));
+    }).then(
+      (value) {
+        if (messageModel.type == 'image') updateLastMessage('Image', messageModel.groupId);
+        updateLastMessage(messageModel.message, messageModel.groupId);
+      },
+    );
   }
 
   Future sendTaskMessage(
@@ -52,17 +56,12 @@ class MessageGroupServices {
       'type': 'Task',
       'read': false,
     }).whenComplete(() {
-      if (sendNotification)
-        NotificationServices().sendNotification(notificationModel, false);
+      if (sendNotification) NotificationServices().sendNotification(notificationModel, false);
     });
   }
 
-  Future createGroupChatOrAddNewMember(
-      String groupName, UserModel userModel) async {
-    var groupData = await FirebaseFirestore.instance
-        .collection('GroupChat')
-        .doc(groupName)
-        .get();
+  Future createGroupChatOrAddNewMember(String groupName, UserModel userModel) async {
+    var groupData = await FirebaseFirestore.instance.collection('GroupChat').doc(groupName).get();
 
     if (groupData.exists) {
       addNewMemberToGroupChat(groupName, userModel);
@@ -74,10 +73,7 @@ class MessageGroupServices {
   }
 
   Future getGroupData(String groupName) async {
-    return await FirebaseFirestore.instance
-        .collection('GroupChat')
-        .doc(groupName)
-        .get();
+    return await FirebaseFirestore.instance.collection('GroupChat').doc(groupName).get();
   }
 
   Future updateLastMessage(String lastMessage, String groupName) async {
@@ -88,10 +84,7 @@ class MessageGroupServices {
   }
 
   Future createNewGroupChat(String groupName) async {
-    return await FirebaseFirestore.instance
-        .collection('GroupChat')
-        .doc(groupName)
-        .set({
+    return await FirebaseFirestore.instance.collection('GroupChat').doc(groupName).set({
       'groupId': groupName,
       'groupName': groupName,
       'groupImg': null,
@@ -171,9 +164,6 @@ class MessageGroupServices {
   }
 
   Stream<List<ListOfGroups>> get getGroupsList {
-    return FirebaseFirestore.instance
-        .collection('GroupChat')
-        .snapshots()
-        .map(listOfGroups);
+    return FirebaseFirestore.instance.collection('GroupChat').snapshots().map(listOfGroups);
   }
 }

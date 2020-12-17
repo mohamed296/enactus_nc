@@ -76,14 +76,11 @@ class _MemberGroupsState extends State<MemberGroups> {
                       ),
                     ),
                     title: Text('Enactus NC'),
-                    subtitle: Text('${enactusData['lastMessage']}'),
+                    subtitle: Text('${enactusData['lastMessage']}', maxLines: 1),
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Messages(
-                          group: true,
-                          groupName: 'Enactus NC',
-                        ),
+                        builder: (context) => Messages(group: true, groupName: 'Enactus NC'),
                       ),
                     ),
                   ),
@@ -115,7 +112,7 @@ class _MemberGroupsState extends State<MemberGroups> {
                       ),
                     ),
                     title: Text(widget.userModel.community),
-                    subtitle: Text('${communityData['lastMessage']}'),
+                    subtitle: Text('${communityData['lastMessage']}', maxLines: 1),
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -155,7 +152,7 @@ class _MemberGroupsState extends State<MemberGroups> {
                             ),
                           ),
                           title: Text(widget.userModel.department),
-                          subtitle: Text('${departmentData['lastMessage']}'),
+                          subtitle: Text('${departmentData['lastMessage']}', maxLines: 1),
                           onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(

@@ -5,7 +5,7 @@ import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Models/messages_model.dart';
 import 'package:enactusnca/Models/user_model.dart';
 import 'package:enactusnca/Screens/chat/group_member.dart';
-import 'package:enactusnca/Screens/chat/messages/text_widget.dart';
+import 'package:enactusnca/Screens/chat/messages/task_widget.dart';
 import 'package:enactusnca/services/database_methods.dart';
 import 'package:enactusnca/services/message_group_services.dart';
 import 'package:enactusnca/services/message_services.dart';
@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'image_widget.dart';
-import 'message_widget.dart';
+import 'text_widget.dart';
 
 class Messages extends StatefulWidget {
   static String id = 'messages';
@@ -238,10 +238,7 @@ class _MessagesState extends State<Messages> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         IconButton(
-                          icon: Icon(
-                            Icons.image,
-                            color: Colors.yellow,
-                          ),
+                          icon: Icon(Icons.image, color: Colors.yellow),
                           onPressed: () async {
                             await getImage().then(
                               (value) => uploadImage(context).then(
@@ -256,10 +253,10 @@ class _MessagesState extends State<Messages> {
                             textCapitalization: TextCapitalization.sentences,
                             scrollPhysics: BouncingScrollPhysics(),
                             style: TextStyle(color: Colors.white),
-                            maxLines: 6,
+                            maxLines: 5,
                             minLines: 1,
-                            keyboardType: TextInputType.text,
                             onChanged: (value) {},
+                            textInputAction: TextInputAction.newline,
                             decoration: InputDecoration.collapsed(
                               hintStyle: TextStyle(color: Colors.grey.shade100),
                               hintText: "Type a message...",

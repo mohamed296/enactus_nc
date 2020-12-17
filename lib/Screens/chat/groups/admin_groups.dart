@@ -41,12 +41,12 @@ class AdminGroups extends StatelessWidget {
                         height: 35,
                         width: 35,
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(34.0),
+                          borderRadius: BorderRadius.circular(35.0),
                           child: Image.asset('assets/images/enactus.png'),
                         ),
                       ),
                       title: Text(snapshot.data[index].groupName),
-                      subtitle: Text('${snapshot.data[index].lastMessage}'),
+                      subtitle: Text('${snapshot.data[index].lastMessage}', maxLines: 1),
                       onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(

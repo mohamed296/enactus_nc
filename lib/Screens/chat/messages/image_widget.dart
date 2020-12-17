@@ -26,7 +26,7 @@ class ImageWidget extends StatelessWidget {
                   child: message.userImg != null
                       ? Image.network(
                           message.userImg,
-                          fit: BoxFit.contain,
+                          fit: BoxFit.cover,
                           loadingBuilder: (context, child, loadingProgress) {
                             return loadingProgress == null
                                 ? child
@@ -65,7 +65,7 @@ class ImageWidget extends StatelessWidget {
               ),
               SizedBox(height: 8.0),
               Text(
-                '${message.userName} - ${message.timestamp.toDate().hour.toString()}:${message.timestamp.toDate().minute.toString()}',
+                '${message.userName} . ${message.timestamp.toDate().hour.toString()}:${message.timestamp.toDate().minute.toString()}',
                 style: TextStyle(
                   fontSize: 12.0,
                   fontWeight: FontWeight.w200,

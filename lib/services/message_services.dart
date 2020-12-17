@@ -33,9 +33,12 @@ class MessageServices {
   }
 
   Future updateLastMessage(MessageModel messageModel) async {
+    String lastMessage;
+    if (messageModel.type == 'image') lastMessage = 'Image';
+    lastMessage = messageModel.message;
     Map<String, dynamic> chatRoomData = {
       "lastSender": user.displayName,
-      "lastMessage": messageModel.message,
+      "lastMessage": lastMessage,
       "isRead": false,
       "lastTime": DateTime.now().millisecondsSinceEpoch,
       "chatroomid": messageModel.groupId,
