@@ -35,7 +35,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 fistName: searchSnapshot.docs[index].data()["firstName"],
                 lastName: searchSnapshot.docs[index].data()["lastName"],
                 userEmail: searchSnapshot.docs[index].data()["email"],
-                userId: searchSnapshot.docs[index].data()["teamId"],
+                userId: searchSnapshot.docs[index].data()["uid"],
                 imgUrl: searchSnapshot.docs[index].data()["photoUrl"],
               );
             },
@@ -151,14 +151,12 @@ class _SearchScreenState extends State<SearchScreen> {
 class SearchTitle extends StatelessWidget {
   final String fistName, lastName, userEmail, userId, imgUrl;
 
-  SearchTitle(
-      {this.fistName, this.lastName, this.userEmail, this.userId, this.imgUrl});
+  SearchTitle({this.fistName, this.lastName, this.userEmail, this.userId, this.imgUrl});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        //   color: Constants.lightBlue,
         borderRadius: BorderRadius.circular(20),
       ),
       margin: EdgeInsets.all(15.0),
@@ -191,10 +189,12 @@ class SearchTitle extends StatelessWidget {
           GestureDetector(
             onTap: () {
               createChatRoomAndStartConversation(
-                  context: context,
-                  userID: userEmail.trim(),
-                  imgUrl: imgUrl,
-                  userName: '$fistName $lastName');
+                context: context,
+                userEmail: userEmail.trim(),
+                imgUrl: imgUrl,
+                userName: '$fistName $lastName',
+                userId: userId,
+              );
             },
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -221,8 +221,13 @@ getChatRoomId(String a, String b) {
     return "$a\_$b";
 }
 
-createChatRoomAndStartConversation(
-    {String userID, String userName, BuildContext context, String imgUrl}) {
+createChatRoomAndStartConversation({
+  String userEmail,
+  String userName,
+  BuildContext context,
+  String imgUrl,
+  String userId,
+}) {
   if (_userEmail != Constants.myEmail) {
     String chatRoomId = getChatRoomId(_userEmail, _myEmail);
 
@@ -233,11 +238,13 @@ createChatRoomAndStartConversation(
         print('creating a room');
         User user = FirebaseAuth.instance.currentUser;
         List<String> users = [userName, user.displayName];
-        List<String> emails = [userID.toLowerCase(), user.email.toLowerCase()];
+        List<String> ids = [userId, user.uid];
+        List<String> emails = [userEmail.toLowerCase(), user.email.toLowerCase()];
 
         Map<String, dynamic> chatRoomMap = {
           "users": users,
           "emails": emails,
+          'ids': ids,
           "lastMessage": "",
           "isRead": false,
           "lastTime": null,
@@ -246,40 +253,47 @@ createChatRoomAndStartConversation(
         DatabaseMethods().createChatRoom(chatRoomId, chatRoomMap).then((val) {
           print('room created');
           navigateToMessagesScreen(
-              context: context,
-              roomId: chatRoomId,
-              imgUrl: imgUrl,
-              name: userName,
-              roomSnapShoot: roomSnapShoot);
-        });
-      } else {
-        print("the room exists");
-        navigateToMessagesScreen(
             context: context,
             roomId: chatRoomId,
             imgUrl: imgUrl,
             name: userName,
-            roomSnapShoot: roomSnapShoot);
+            userId: userId,
+            roomSnapShoot: roomSnapShoot,
+          );
+        });
+      } else {
+        print("the room exists");
+        navigateToMessagesScreen(
+          context: context,
+          roomId: chatRoomId,
+          imgUrl: imgUrl,
+          name: userName,
+          userId: userId,
+          roomSnapShoot: roomSnapShoot,
+        );
       }
     });
   } else {
     Fluttertoast.showToast(
-        msg: "You can't text yourself :(\n يامتوحد",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIos: 1,
-        backgroundColor: Colors.yellow,
-        textColor: Colors.black,
-        fontSize: 16.0);
+      msg: "You can't text yourself :(\n يامتوحد",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIos: 1,
+      backgroundColor: Colors.yellow,
+      textColor: Colors.black,
+      fontSize: 16.0,
+    );
   }
 }
 
-navigateToMessagesScreen(
-    {BuildContext context,
-    String roomId,
-    String imgUrl,
-    String name,
-    QuerySnapshot roomSnapShoot}) {
+navigateToMessagesScreen({
+  BuildContext context,
+  String roomId,
+  String imgUrl,
+  String name,
+  String userId,
+  QuerySnapshot roomSnapShoot,
+}) {
   Navigator.push(
     context,
     MaterialPageRoute(
@@ -287,9 +301,8 @@ navigateToMessagesScreen(
         group: false,
         chatRoomId: roomId,
         imageUrl: imgUrl,
-        lastSender: roomSnapShoot.docs.isEmpty
-            ? null
-            : roomSnapShoot.docs[0].data()['lastSender'],
+        userId: userId,
+        lastSender: roomSnapShoot.docs.isEmpty ? null : roomSnapShoot.docs[0].data()['lastSender'],
         username: name,
       ),
     ),

@@ -52,6 +52,7 @@ class AdminGroups extends StatelessWidget {
                         MaterialPageRoute(
                           builder: (context) => Messages(
                             group: true,
+                            userId: snapshot.data[index].groupName,
                             groupName: snapshot.data[index].groupName,
                           ),
                         ),

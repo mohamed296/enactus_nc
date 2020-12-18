@@ -80,7 +80,11 @@ class _MemberGroupsState extends State<MemberGroups> {
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Messages(group: true, groupName: 'Enactus NC'),
+                        builder: (context) => Messages(
+                          group: true,
+                          groupName: 'Enactus NC',
+                          userId: widget.userModel.department,
+                        ),
                       ),
                     ),
                   ),
@@ -118,6 +122,7 @@ class _MemberGroupsState extends State<MemberGroups> {
                       MaterialPageRoute(
                         builder: (context) => Messages(
                           group: true,
+                          userId: widget.userModel.department,
                           groupName: widget.userModel.community,
                         ),
                       ),
@@ -158,6 +163,7 @@ class _MemberGroupsState extends State<MemberGroups> {
                             MaterialPageRoute(
                               builder: (context) => Messages(
                                 group: true,
+                                userId: widget.userModel.department,
                                 groupName: widget.userModel.department,
                               ),
                             ),

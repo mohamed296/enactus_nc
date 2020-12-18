@@ -62,9 +62,10 @@ class _RecentChatState extends State<RecentChat> {
       shrinkWrap: true,
       itemCount: snapshot.data.documents.length,
       itemBuilder: (context, index) {
-        List list = snapshot.data.documents[index].data()["users"];
+        List users = snapshot.data.documents[index].data()["users"];
         String roomID = snapshot.data.documents[index].data()["chatroomid"];
         List emails = snapshot.data.documents[index].data()['emails'];
+        List ids = snapshot.data.documents[index].data()['ids'];
         String imgURL;
         return GestureDetector(
           onTap: () {
@@ -75,8 +76,9 @@ class _RecentChatState extends State<RecentChat> {
                   group: false,
                   chatRoomId: roomID,
                   imageUrl: imgURL,
+                  userId: ids[0] == user.uid ? ids[1] : ids[0],
                   lastSender: snapshot.data.documents[index].data()["lastSender"],
-                  username: list[1] == user.displayName ? list[0] : list[1],
+                  username: users[1] == user.displayName ? users[0] : users[1],
                 ),
               ),
             );
@@ -130,7 +132,7 @@ class _RecentChatState extends State<RecentChat> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          list[0] == user.uid ? list[1] : list[0],
+                          users[0] == user.uid ? users[1] : users[0],
                           style: TextStyle(
                             color: Colors.grey.shade200,
                             fontSize: 15.0,
@@ -228,21 +230,17 @@ class _RecentChatState extends State<RecentChat> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(30),
-            ),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(30),
-            ),
-            child: createChatContacts(),
-          ),
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(30),
         ),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(30),
+        ),
+        child: createChatContacts(),
       ),
     );
   }

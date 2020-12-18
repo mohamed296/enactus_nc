@@ -10,6 +10,15 @@ class MessageGroupServices {
   final user = FirebaseAuth.instance.currentUser;
 
   Future sendGroupMessage(MessageModel messageModel) async {
+    MessageModel message = MessageModel(
+      senderId: user.uid,
+      receverId: messageModel.receverId,
+      userImg: user.photoURL,
+      userName: user.displayName,
+      groupId: messageModel.groupId,
+      type: messageModel.type,
+      message: messageModel.message,
+    );
     return await FirebaseFirestore.instance
         .collection('GroupChat')
         .doc(messageModel.groupId)
@@ -17,7 +26,8 @@ class MessageGroupServices {
         .doc()
         .set({
       'groupId': messageModel.groupId,
-      'userId': user.uid,
+      'senderId': user.uid,
+      'receverId': messageModel.receverId,
       'userImg': user.photoURL,
       'userName': user.displayName,
       'message': messageModel.message,
@@ -26,8 +36,12 @@ class MessageGroupServices {
       'read': false,
     }).then(
       (value) {
-        if (messageModel.type == 'image') updateLastMessage('Image', messageModel.groupId);
-        updateLastMessage(messageModel.message, messageModel.groupId);
+        NotificationServices().sendGetnotificationGroup(message);
+        if (message.type == 'Task' || message.type == 'Message') {
+          updateLastMessage(message.message, message.groupId);
+        } else {
+          updateLastMessage('Image', message.groupId);
+        }
       },
     );
   }
@@ -39,7 +53,7 @@ class MessageGroupServices {
   ) async {
     final NotificationModel notificationModel = NotificationModel(
       notificationMsg: 'Task Assigned To You, DeadLine: ${dateTime.toString()}',
-      receiverId: messageModel.userId,
+      receiverId: messageModel.senderId,
     );
     return await FirebaseFirestore.instance
         .collection('GroupChat')
@@ -48,7 +62,8 @@ class MessageGroupServices {
         .doc()
         .set({
       'groupId': messageModel.groupId,
-      'userId': messageModel.userId,
+      'senderId': messageModel.senderId,
+      'receverId': messageModel.receverId,
       'userImg': messageModel.userImg,
       'userName': messageModel.userName,
       'message': dateTime.toString(),
@@ -119,7 +134,8 @@ class MessageGroupServices {
             message: message.data()['message'],
             timestamp: message.data()['timestamp'],
             type: message.data()['type'],
-            userId: message.data()['userId'],
+            senderId: message.data()['senderId'],
+            receverId: message.data()['receverId'],
             userImg: message.data()['userImg'],
             userName: message.data()['userName'],
             read: message.data()['read'],

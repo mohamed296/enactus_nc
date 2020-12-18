@@ -26,10 +26,12 @@ class Messages extends StatefulWidget {
   final bool group;
   final String chatRoomId;
   final String lastSender;
+  final String userId;
   final String imageUrl;
   Messages({
     this.username,
     this.imageUrl,
+    this.userId,
     this.chatRoomId,
     this.lastSender,
     this.groupName,
@@ -106,9 +108,7 @@ class _MessagesState extends State<Messages> {
     String url,
   }) async {
     MessageModel messageModel = MessageModel(
-      userId: type == 'Task' ? userModel.id : null,
-      userImg: userModel?.photoUrl ?? null,
-      userName: userModel?.username ?? null,
+      receverId: widget.userId,
       groupId: widget.group == true ? widget.groupName : widget.chatRoomId,
       type: type,
       message: type == 'Message'
@@ -360,7 +360,8 @@ class _MessagesState extends State<Messages> {
                           MessageModel message = MessageModel(
                             groupId: snapShot.data[index].groupId,
                             type: snapShot.data[index].type,
-                            userId: snapShot.data[index].userId,
+                            receverId: snapShot.data[index].receverId,
+                            senderId: snapShot.data[index].senderId,
                             userImg: snapShot.data[index].userImg,
                             message: snapShot.data[index].message,
                             userName: snapShot.data[index].userName,
