@@ -59,15 +59,14 @@ class _ProfileState extends State<Profile> {
     ScreenUtil.init(context, height: 896, width: 414, allowFontScaling: true);
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(
-          color: Colors.amber, //change your color here
-        ),
+        iconTheme: IconThemeData(color: Colors.amber),
         leading: widget.isAppBarEnabled
             ? GestureDetector(
                 onTap: () {
                   Navigator.pushNamed(context, Wrapper.id);
                 },
-                child: Icon(Icons.arrow_back))
+                child: Icon(Icons.arrow_back),
+              )
             : Container(),
       ),
       body: StreamBuilder<UserModel>(
@@ -101,28 +100,6 @@ class _ProfileState extends State<Profile> {
                                   ? Image.network(snapshot.data.photoUrl)
                                   : Image.asset('assets/images/enactus.png'),
                             ),
-                            // Align(
-                            //   alignment: Alignment.bottomRight,
-                            //   child: snapshot.data.email == user.email
-                            //       ? Container(
-                            //           height: kSpacingUnit.w * 2.5,
-                            //           width: kSpacingUnit.w * 2.5,
-                            //           decoration: BoxDecoration(
-                            //             color: Theme.of(context).accentColor,
-                            //             shape: BoxShape.circle,
-                            //           ),
-                            //           child: Center(
-                            //             heightFactor: kSpacingUnit.w * 1.5,
-                            //             widthFactor: kSpacingUnit.w * 1.5,
-                            //             child: Icon(
-                            //               LineAwesomeIcons.pen,
-                            //               color: kDarkPrimaryColor,
-                            //               size: ScreenUtil().setSp(kSpacingUnit.w * 1.5),
-                            //             ),
-                            //           ),
-                            //         )
-                            //       : Container(),
-                            // ),
                           ],
                         ),
                       ),
@@ -162,7 +139,7 @@ class _ProfileState extends State<Profile> {
                           DatabaseMethods().getChatRooByRoomId(roomId: roomId).then((value) {
                             QuerySnapshot roomSnapShoot = value;
                             if (roomSnapShoot.docs.isEmpty) {
-                              print('creating a room');
+                              List<String> ids = [snapshot.data.id, user.uid];
                               List<String> users = [
                                 '${snapshot.data.firstName} ${snapshot.data.lastName}',
                                 user.displayName
@@ -174,6 +151,7 @@ class _ProfileState extends State<Profile> {
                               Map<String, dynamic> chatRoomMap = {
                                 "users": users,
                                 "emails": emails,
+                                'ids': ids,
                                 "lastMessage": "",
                                 "isRead": false,
                                 "lastTime": null,
@@ -269,6 +247,7 @@ navigateToMessagesScreen(
         group: false,
         chatRoomId: roomId,
         imageUrl: snapshot.data.photoUrl,
+        userId: snapshot.data.id,
         lastSender: roomSnapShoot.docs.isEmpty ? null : roomSnapShoot.docs[0].data()['lastSender'],
         username: '${snapshot.data.firstName} ${snapshot.data.lastName}',
       ),

@@ -62,9 +62,10 @@ class _RecentChatState extends State<RecentChat> {
       shrinkWrap: true,
       itemCount: snapshot.data.documents.length,
       itemBuilder: (context, index) {
-        List list = snapshot.data.documents[index].data()["users"];
+        List users = snapshot.data.documents[index].data()["users"];
         String roomID = snapshot.data.documents[index].data()["chatroomid"];
         List emails = snapshot.data.documents[index].data()['emails'];
+        List ids = snapshot.data.documents[index].data()['ids'];
         String imgURL;
         return GestureDetector(
           onTap: () {
@@ -75,37 +76,25 @@ class _RecentChatState extends State<RecentChat> {
                   group: false,
                   chatRoomId: roomID,
                   imageUrl: imgURL,
-                  lastSender:
-                      snapshot.data.documents[index].data()["lastSender"],
-                  username: list[1] == user.displayName ? list[0] : list[1],
+                  userId: ids[0] == user.uid ? ids[1] : ids[0],
+                  lastSender: snapshot.data.documents[index].data()["lastSender"],
+                  username: users[1] == user.displayName ? users[0] : users[1],
                 ),
               ),
             );
           },
           child: Container(
-            margin: EdgeInsets.only(
-              top: 5.0,
-              bottom: 5.0,
-              right: 20.0,
-            ),
-            padding: EdgeInsets.symmetric(
-              vertical: 10.0,
-              horizontal: 20.0,
-            ),
+            margin: EdgeInsets.only(top: 5.0, bottom: 5.0, right: 20.0),
+            padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
             decoration: BoxDecoration(
-              color: snapshot.data.documents[index].data()["lastSender"] !=
-                      user.displayName
+              color: snapshot.data.documents[index].data()["lastSender"] != user.displayName
                   ? !snapshot.data.documents[index].data()["isRead"]
                       ? Constants.midBlue
                       : Constants.darkBlue
                   : Constants.darkBlue,
               borderRadius: BorderRadius.only(
-                topRight: Radius.circular(
-                  20,
-                ),
-                bottomRight: Radius.circular(
-                  20,
-                ),
+                topRight: Radius.circular(20),
+                bottomRight: Radius.circular(20),
               ),
             ),
             child: Row(
@@ -127,7 +116,7 @@ class _RecentChatState extends State<RecentChat> {
                               backgroundImage: imgURL == null
                                   ? AssetImage('assets/images/person.png')
                                   : NetworkImage(imgURL),
-                              radius: 35.0,
+                              radius: 34.0,
                             );
                           case ConnectionState.active:
                             return CircularProgressIndicator();
@@ -143,7 +132,7 @@ class _RecentChatState extends State<RecentChat> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          list[0] == user.uid ? list[1] : list[0],
+                          users[0] == user.uid ? users[1] : users[0],
                           style: TextStyle(
                             color: Colors.grey.shade200,
                             fontSize: 15.0,
@@ -153,15 +142,13 @@ class _RecentChatState extends State<RecentChat> {
                         Container(
                           width: MediaQuery.of(context).size.width * 0.35,
                           child: Text(
-                            snapshot.data.documents[index]
-                                        .data()["lastMessage"] ==
-                                    null
+                            snapshot.data.documents[index].data()["lastMessage"] == null
                                 ? ""
-                                : snapshot.data.documents[index]
-                                            .data()["lastSender"] ==
+                                : snapshot.data.documents[index].data()["lastSender"] ==
                                         user.displayName
                                     ? 'You: ${snapshot.data.documents[index].data()["lastMessage"]}'
                                     : '${snapshot.data.documents[index].data()["lastMessage"]}',
+                            maxLines: 1,
                             style: TextStyle(
                               color: Colors.blueGrey.shade200,
                               fontSize: 15.0,
@@ -179,8 +166,7 @@ class _RecentChatState extends State<RecentChat> {
                   children: <Widget>[
                     Text(
                       Functions.readTimestamp(
-                        snapshot.data.documents[index].data()["lastTime"] ==
-                                null
+                        snapshot.data.documents[index].data()["lastTime"] == null
                             ? 0
                             : snapshot.data.documents[index].data()["lastTime"],
                       ),
@@ -190,16 +176,11 @@ class _RecentChatState extends State<RecentChat> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(
-                      height: 4.0,
-                    ),
+                    SizedBox(height: 4.0),
                     Container(
-                      child: snapshot.data.documents[index].data()["isRead"] ==
-                              null
+                      child: snapshot.data.documents[index].data()["isRead"] == null
                           ? false
-                          : snapshot.data.documents[index]
-                                      .data()["lastSender"] !=
-                                  user.displayName
+                          : snapshot.data.documents[index].data()["lastSender"] != user.displayName
                               ? !snapshot.data.documents[index].data()["isRead"]
                                   ? Container(
                                       alignment: Alignment.center,
@@ -208,10 +189,7 @@ class _RecentChatState extends State<RecentChat> {
                                         horizontal: 8,
                                       ),
                                       decoration: BoxDecoration(
-                                        //   color: Constants.yellow,
-                                        borderRadius: BorderRadius.circular(
-                                          30,
-                                        ),
+                                        borderRadius: BorderRadius.circular(30),
                                       ),
                                       child: Text(
                                         "NEW",
@@ -244,13 +222,7 @@ class _RecentChatState extends State<RecentChat> {
               return Center(child: CircularProgressIndicator());
               break;
             default:
-              return snapshot.hasData
-                  ? contactsList(snapshot)
-                  : Center(
-                      child: Center(
-                        child: emptyView(),
-                      ),
-                    );
+              return snapshot.hasData ? contactsList(snapshot) : emptyView();
               break;
           }
         });
@@ -258,21 +230,17 @@ class _RecentChatState extends State<RecentChat> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(30),
-            ),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(30),
-            ),
-            child: createChatContacts(),
-          ),
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(30),
         ),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(30),
+        ),
+        child: createChatContacts(),
       ),
     );
   }

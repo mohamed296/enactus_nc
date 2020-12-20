@@ -1,6 +1,7 @@
 import 'package:enactusnca/Helpers/helperfunction.dart';
 import 'package:enactusnca/Models/user_model.dart';
 import 'package:enactusnca/services/message_group_services.dart';
+import 'package:enactusnca/services/notification_manager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,6 +16,7 @@ class Auth {
           await _auth.signInWithEmailAndPassword(email: email, password: password);
       User user = result.user;
       String id = user.uid;
+      NotificationManager().getAndSaveToken(id);
       return DatabaseMethods().checkUserActivate(id);
     } catch (ex) {
       return ex.toString();
@@ -67,6 +69,7 @@ class Auth {
       });
       HelperFunction.setUserEmail(authUser.email);
       HelperFunction.setUsername('${authUser.firstName} ${authUser.lastName}');
+      NotificationManager().getAndSaveToken(firebaseUser.uid);
 
       return 'success';
     } catch (ex) {

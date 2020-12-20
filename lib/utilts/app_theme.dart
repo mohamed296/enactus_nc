@@ -1,10 +1,10 @@
 import 'package:enactusnca/Widgets/constants.dart';
 import 'package:flutter/material.dart';
 
-class AppThemeProvider extends ChangeNotifier {
+class AppTheme extends ChangeNotifier {
   ThemeData themeData;
 
-  AppThemeProvider({this.themeData});
+  AppTheme({this.themeData});
 
   getTheme() => themeData;
 

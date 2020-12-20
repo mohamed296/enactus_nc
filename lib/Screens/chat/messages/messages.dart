@@ -5,7 +5,7 @@ import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Models/messages_model.dart';
 import 'package:enactusnca/Models/user_model.dart';
 import 'package:enactusnca/Screens/chat/group_member.dart';
-import 'package:enactusnca/Screens/chat/messages/text_widget.dart';
+import 'package:enactusnca/Screens/chat/messages/task_widget.dart';
 import 'package:enactusnca/services/database_methods.dart';
 import 'package:enactusnca/services/message_group_services.dart';
 import 'package:enactusnca/services/message_services.dart';
@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'image_widget.dart';
-import 'message_widget.dart';
+import 'text_widget.dart';
 
 class Messages extends StatefulWidget {
   static String id = 'messages';
@@ -26,10 +26,12 @@ class Messages extends StatefulWidget {
   final bool group;
   final String chatRoomId;
   final String lastSender;
+  final String userId;
   final String imageUrl;
   Messages({
     this.username,
     this.imageUrl,
+    this.userId,
     this.chatRoomId,
     this.lastSender,
     this.groupName,
@@ -106,9 +108,7 @@ class _MessagesState extends State<Messages> {
     String url,
   }) async {
     MessageModel messageModel = MessageModel(
-      userId: type == 'Task' ? userModel.id : null,
-      userImg: userModel?.photoUrl ?? null,
-      userName: userModel?.username ?? null,
+      receverId: widget.userId,
       groupId: widget.group == true ? widget.groupName : widget.chatRoomId,
       type: type,
       message: type == 'Message'
@@ -238,10 +238,7 @@ class _MessagesState extends State<Messages> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         IconButton(
-                          icon: Icon(
-                            Icons.image,
-                            color: Colors.yellow,
-                          ),
+                          icon: Icon(Icons.image, color: Colors.yellow),
                           onPressed: () async {
                             await getImage().then(
                               (value) => uploadImage(context).then(
@@ -256,10 +253,10 @@ class _MessagesState extends State<Messages> {
                             textCapitalization: TextCapitalization.sentences,
                             scrollPhysics: BouncingScrollPhysics(),
                             style: TextStyle(color: Colors.white),
-                            maxLines: 6,
+                            maxLines: 5,
                             minLines: 1,
-                            keyboardType: TextInputType.text,
                             onChanged: (value) {},
+                            textInputAction: TextInputAction.newline,
                             decoration: InputDecoration.collapsed(
                               hintStyle: TextStyle(color: Colors.grey.shade100),
                               hintText: "Type a message...",
@@ -363,7 +360,8 @@ class _MessagesState extends State<Messages> {
                           MessageModel message = MessageModel(
                             groupId: snapShot.data[index].groupId,
                             type: snapShot.data[index].type,
-                            userId: snapShot.data[index].userId,
+                            receverId: snapShot.data[index].receverId,
+                            senderId: snapShot.data[index].senderId,
                             userImg: snapShot.data[index].userImg,
                             message: snapShot.data[index].message,
                             userName: snapShot.data[index].userName,
