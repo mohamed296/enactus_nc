@@ -3,7 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class MessageModel {
   final String messageId;
   final String groupId;
-  final String userId;
+  final String senderId;
+  final String receverId;
   final String userImg;
   final String userName;
   final String message;
@@ -14,7 +15,8 @@ class MessageModel {
   MessageModel({
     this.messageId,
     this.groupId,
-    this.userId,
+    this.senderId,
+    this.receverId,
     this.userImg,
     this.userName,
     this.message,

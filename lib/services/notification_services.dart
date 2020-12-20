@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
+import 'package:enactusnca/Models/messages_model.dart';
 import 'package:enactusnca/Models/notification_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart ' as http;
 
 class NotificationServices {
+  var url = 'http://www.enactusnewcairo.org/api/ncaapp/notifications/group/?';
   final user = FirebaseAuth.instance.currentUser;
 
   String notificationMsg(NotificationModel notificationModel, bool like) {
@@ -93,5 +96,39 @@ class NotificationServices {
         .collection('Notification')
         .snapshots()
         .map(listOfNotification);
+  }
+
+  sendGetNotificationOto(MessageModel messageModel) async {
+    var url;
+    try {
+      if (messageModel.type == 'Task' || messageModel.type == 'Message') {
+        url =
+            'http://www.enactusnewcairo.org/api/ncaapp/notifications/group/?auth-token=2d041ds81dsa5641dsa5611d6as5&senderid=${messageModel.senderId}&recid=${messageModel.receverId}&body=${messageModel.message}&notification-type=oto';
+      } else {
+        url =
+            'http://www.enactusnewcairo.org/api/ncaapp/notifications/group/?auth-token=2d041ds81dsa5641dsa5611d6as5&senderid=${messageModel.senderId}&recid=${messageModel.receverId}&body=$Image&notification-type=oto';
+      }
+      var responce = await http.get(url);
+      print(responce.body);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  sendGetnotificationGroup(MessageModel messageModel) async {
+    var url;
+    try {
+      if (messageModel.type == 'Task' || messageModel.type == 'Message') {
+        url =
+            'http://www.enactusnewcairo.org/api/ncaapp/notifications/group/?auth-token=2d041ds81dsa5641dsa5611d6as5&senderid=${messageModel.senderId}&groupname=${messageModel.groupId}&body=${messageModel.message}&notification-type=group';
+      } else {
+        url =
+            'http://www.enactusnewcairo.org/api/ncaapp/notifications/group/?auth-token=2d041ds81dsa5641dsa5611d6as5&senderid=${messageModel.senderId}&groupname=${messageModel.groupId}&body=$Image&notification-type=group';
+      }
+      var responce = await http.get(url);
+      print(responce.body);
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }

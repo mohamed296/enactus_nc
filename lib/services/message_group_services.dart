@@ -10,6 +10,15 @@ class MessageGroupServices {
   final user = FirebaseAuth.instance.currentUser;
 
   Future sendGroupMessage(MessageModel messageModel) async {
+    MessageModel message = MessageModel(
+      senderId: user.uid,
+      receverId: messageModel.receverId,
+      userImg: user.photoURL,
+      userName: user.displayName,
+      groupId: messageModel.groupId,
+      type: messageModel.type,
+      message: messageModel.message,
+    );
     return await FirebaseFirestore.instance
         .collection('GroupChat')
         .doc(messageModel.groupId)
@@ -17,15 +26,24 @@ class MessageGroupServices {
         .doc()
         .set({
       'groupId': messageModel.groupId,
-      'userId': user.uid,
+      'senderId': user.uid,
+      'receverId': messageModel.receverId,
       'userImg': user.photoURL,
       'userName': user.displayName,
       'message': messageModel.message,
       'timestamp': DateTime.now(),
       'type': messageModel.type,
       'read': false,
-    }).then((value) =>
-            updateLastMessage(messageModel.message, messageModel.groupId));
+    }).then(
+      (value) {
+        NotificationServices().sendGetnotificationGroup(message);
+        if (message.type == 'Task' || message.type == 'Message') {
+          updateLastMessage(message.message, message.groupId);
+        } else {
+          updateLastMessage('Image', message.groupId);
+        }
+      },
+    );
   }
 
   Future sendTaskMessage(
@@ -35,7 +53,7 @@ class MessageGroupServices {
   ) async {
     final NotificationModel notificationModel = NotificationModel(
       notificationMsg: 'Task Assigned To You, DeadLine: ${dateTime.toString()}',
-      receiverId: messageModel.userId,
+      receiverId: messageModel.senderId,
     );
     return await FirebaseFirestore.instance
         .collection('GroupChat')
@@ -44,7 +62,8 @@ class MessageGroupServices {
         .doc()
         .set({
       'groupId': messageModel.groupId,
-      'userId': messageModel.userId,
+      'senderId': messageModel.senderId,
+      'receverId': messageModel.receverId,
       'userImg': messageModel.userImg,
       'userName': messageModel.userName,
       'message': dateTime.toString(),
@@ -52,17 +71,12 @@ class MessageGroupServices {
       'type': 'Task',
       'read': false,
     }).whenComplete(() {
-      if (sendNotification)
-        NotificationServices().sendNotification(notificationModel, false);
+      if (sendNotification) NotificationServices().sendNotification(notificationModel, false);
     });
   }
 
-  Future createGroupChatOrAddNewMember(
-      String groupName, UserModel userModel) async {
-    var groupData = await FirebaseFirestore.instance
-        .collection('GroupChat')
-        .doc(groupName)
-        .get();
+  Future createGroupChatOrAddNewMember(String groupName, UserModel userModel) async {
+    var groupData = await FirebaseFirestore.instance.collection('GroupChat').doc(groupName).get();
 
     if (groupData.exists) {
       addNewMemberToGroupChat(groupName, userModel);
@@ -74,10 +88,7 @@ class MessageGroupServices {
   }
 
   Future getGroupData(String groupName) async {
-    return await FirebaseFirestore.instance
-        .collection('GroupChat')
-        .doc(groupName)
-        .get();
+    return await FirebaseFirestore.instance.collection('GroupChat').doc(groupName).get();
   }
 
   Future updateLastMessage(String lastMessage, String groupName) async {
@@ -88,10 +99,7 @@ class MessageGroupServices {
   }
 
   Future createNewGroupChat(String groupName) async {
-    return await FirebaseFirestore.instance
-        .collection('GroupChat')
-        .doc(groupName)
-        .set({
+    return await FirebaseFirestore.instance.collection('GroupChat').doc(groupName).set({
       'groupId': groupName,
       'groupName': groupName,
       'groupImg': null,
@@ -126,7 +134,8 @@ class MessageGroupServices {
             message: message.data()['message'],
             timestamp: message.data()['timestamp'],
             type: message.data()['type'],
-            userId: message.data()['userId'],
+            senderId: message.data()['senderId'],
+            receverId: message.data()['receverId'],
             userImg: message.data()['userImg'],
             userName: message.data()['userName'],
             read: message.data()['read'],
@@ -171,9 +180,6 @@ class MessageGroupServices {
   }
 
   Stream<List<ListOfGroups>> get getGroupsList {
-    return FirebaseFirestore.instance
-        .collection('GroupChat')
-        .snapshots()
-        .map(listOfGroups);
+    return FirebaseFirestore.instance.collection('GroupChat').snapshots().map(listOfGroups);
   }
 }

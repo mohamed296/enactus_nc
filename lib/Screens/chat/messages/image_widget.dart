@@ -14,9 +14,9 @@ class ImageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment:
-          user.uid == message.userId ? MainAxisAlignment.end : MainAxisAlignment.start,
+          user.uid == message.senderId ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
-        user.uid == message.userId
+        user.uid == message.senderId
             ? Container(
                 padding: EdgeInsets.all(12.0),
                 height: 64,
@@ -26,7 +26,7 @@ class ImageWidget extends StatelessWidget {
                   child: message.userImg != null
                       ? Image.network(
                           message.userImg,
-                          fit: BoxFit.contain,
+                          fit: BoxFit.cover,
                           loadingBuilder: (context, child, loadingProgress) {
                             return loadingProgress == null
                                 ? child
@@ -38,13 +38,13 @@ class ImageWidget extends StatelessWidget {
               )
             : Container(),
         Container(
-          margin: user.uid == message.userId
+          margin: user.uid == message.senderId
               ? EdgeInsets.only(top: 8.0, bottom: 8.0)
               : EdgeInsets.only(top: 8.0, bottom: 8.0),
           padding: EdgeInsets.all(6.0),
           decoration: BoxDecoration(
-            color: user.uid != message.userId ? Constants.lightBlue : Constants.midBlue,
-            borderRadius: user.uid == message.userId
+            color: user.uid != message.senderId ? Constants.lightBlue : Constants.midBlue,
+            borderRadius: user.uid == message.senderId
                 ? BorderRadius.only(
                     topLeft: Radius.circular(15.0),
                     bottomLeft: Radius.circular(15.0),
@@ -57,7 +57,7 @@ class ImageWidget extends StatelessWidget {
           width: MediaQuery.of(context).size.width * 0.75,
           child: Column(
             mainAxisAlignment:
-                user.uid == message.userId ? MainAxisAlignment.end : MainAxisAlignment.start,
+                user.uid == message.senderId ? MainAxisAlignment.end : MainAxisAlignment.start,
             children: [
               ClipRRect(
                 child: Image.network(message.message),
@@ -65,7 +65,7 @@ class ImageWidget extends StatelessWidget {
               ),
               SizedBox(height: 8.0),
               Text(
-                '${message.userName} - ${message.timestamp.toDate().hour.toString()}:${message.timestamp.toDate().minute.toString()}',
+                '${message.userName} . ${message.timestamp.toDate().hour.toString()}:${message.timestamp.toDate().minute.toString()}',
                 style: TextStyle(
                   fontSize: 12.0,
                   fontWeight: FontWeight.w200,
@@ -75,7 +75,7 @@ class ImageWidget extends StatelessWidget {
             ],
           ),
         ),
-        user.uid != message.userId
+        user.uid != message.senderId
             ? InkWell(
                 onTap: () {
                   Navigator.pushReplacement(
@@ -83,7 +83,7 @@ class ImageWidget extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (context) => Profile(
                         isAppBarEnabled: true,
-                        userId: message.userId,
+                        userId: message.senderId,
                       ),
                     ),
                   );

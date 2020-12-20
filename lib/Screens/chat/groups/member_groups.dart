@@ -76,13 +76,14 @@ class _MemberGroupsState extends State<MemberGroups> {
                       ),
                     ),
                     title: Text('Enactus NC'),
-                    subtitle: Text('${enactusData['lastMessage']}'),
+                    subtitle: Text('${enactusData['lastMessage']}', maxLines: 1),
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => Messages(
                           group: true,
                           groupName: 'Enactus NC',
+                          userId: widget.userModel.department,
                         ),
                       ),
                     ),
@@ -115,12 +116,13 @@ class _MemberGroupsState extends State<MemberGroups> {
                       ),
                     ),
                     title: Text(widget.userModel.community),
-                    subtitle: Text('${communityData['lastMessage']}'),
+                    subtitle: Text('${communityData['lastMessage']}', maxLines: 1),
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => Messages(
                           group: true,
+                          userId: widget.userModel.department,
                           groupName: widget.userModel.community,
                         ),
                       ),
@@ -155,12 +157,13 @@ class _MemberGroupsState extends State<MemberGroups> {
                             ),
                           ),
                           title: Text(widget.userModel.department),
-                          subtitle: Text('${departmentData['lastMessage']}'),
+                          subtitle: Text('${departmentData['lastMessage']}', maxLines: 1),
                           onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => Messages(
                                 group: true,
+                                userId: widget.userModel.department,
                                 groupName: widget.userModel.department,
                               ),
                             ),
