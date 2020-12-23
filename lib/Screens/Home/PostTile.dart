@@ -7,6 +7,7 @@ import 'package:enactusnca/Screens/Post/OpenPost.dart';
 import 'package:enactusnca/Screens/Profile/profile.dart';
 import 'package:enactusnca/Widgets/constants.dart';
 import 'package:enactusnca/Widgets/post_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -114,6 +115,8 @@ class _PostTileState extends State<PostTile> {
     }
   }
 
+  final user = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
     isLiked = false;
@@ -180,13 +183,20 @@ class _PostTileState extends State<PostTile> {
           ),
         );
       },*/
-      /*   trailing: IconButton(
-        onPressed: () => print('edit'),
-        icon: Icon(
-          Icons.delete,
-          color: KSacandColor,
-        ),
-      ), */
+      trailing: user.uid == widget.post.ownerId
+          ? IconButton(
+              onPressed: () {
+                FirebaseFirestore.instance
+                    .collection('Posts')
+                    .doc(widget.post.postId)
+                    .delete();
+              },
+              icon: Icon(
+                Icons.delete,
+                color: KSacandColor,
+              ),
+            )
+          : null,
     );
   }
 

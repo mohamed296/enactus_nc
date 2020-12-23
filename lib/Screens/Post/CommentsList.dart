@@ -98,7 +98,7 @@ class _CommentsListState extends State<CommentsList> {
               Container(
                 margin: EdgeInsets.all(8.0),
                 child: Text(
-                  'Comments',
+                  'Swipe Up For Comments ',
                   style: TextStyle(
                     color: Theme.of(context).accentColor,
                     fontSize: 16.0,
@@ -162,19 +162,24 @@ class _CommentsListState extends State<CommentsList> {
                   child: IconButton(
                     icon: showLoading == false
                         ? Icon(Icons.send, color: Colors.white)
-                        : SpinKitChasingDots(color: Theme.of(context).accentColor),
+                        : SpinKitChasingDots(
+                            color: Theme.of(context).accentColor),
                     onPressed: () async {
                       setState(() => showLoading = true);
                       await comment
-                          .addNewComment(postId: widget.thisPost.postId, comment: newComment)
+                          .addNewComment(
+                              postId: widget.thisPost.postId,
+                              comment: newComment)
                           .then(
                         (done) {
-                          NotificationModel notificationModel = NotificationModel(
+                          NotificationModel notificationModel =
+                              NotificationModel(
                             receiverId: widget.thisPost.ownerId,
                             notificationPost: widget.thisPost,
                             notificationEvent: null,
                           );
-                          NotificationServices().sendNotification(notificationModel, false);
+                          NotificationServices()
+                              .sendNotification(notificationModel, false);
                           setState(() => showLoading = false);
                           _key.currentState.reset();
                         },
