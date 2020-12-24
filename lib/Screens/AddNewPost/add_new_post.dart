@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:enactusnca/Models/post.dart';
+import 'package:enactusnca/Screens/Home/Home.dart';
 import 'package:enactusnca/Widgets/constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -157,6 +158,7 @@ class _AddNewPostState extends State<AddNewPost> {
           } else {
             Fluttertoast.showToast(msg: 'Please Type Something');
           }
+          Navigator.of(context).pushNamed(Home.id);
         },
       ),
     );

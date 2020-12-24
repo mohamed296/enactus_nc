@@ -65,7 +65,8 @@ class _MessagesState extends State<Messages> {
   }
 
   Future getImage() async {
-    final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
+    final pickedFile =
+        await ImagePicker().getImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         _imgURL = pickedFile.hashCode.toString();
@@ -121,15 +122,18 @@ class _MessagesState extends State<Messages> {
         ? type == 'Task'
             ? MessageGroupServices()
                 .sendTaskMessage(messageModel, dateTime, sendNotification)
-                .catchError((error) => print("getConversationErrors : ${error.toString()}"))
+                .catchError((error) =>
+                    print("getConversationErrors : ${error.toString()}"))
                 .whenComplete(() => tecMessage.clear())
             : MessageGroupServices()
                 .sendGroupMessage(messageModel)
-                .catchError((error) => print("getConversationErrors : ${error.toString()}"))
+                .catchError((error) =>
+                    print("getConversationErrors : ${error.toString()}"))
                 .whenComplete(() => tecMessage.clear())
         : MessageServices()
             .sendMessage(messageModel)
-            .catchError((error) => print("getConversationErrors : ${error.toString()}"))
+            .catchError(
+                (error) => print("getConversationErrors : ${error.toString()}"))
             .whenComplete(() => tecMessage.clear());
   }
 
@@ -193,12 +197,16 @@ class _MessagesState extends State<Messages> {
                             }).whenComplete(() => Navigator.pop(context)),
                             leading: CircleAvatar(
                               radius: 30,
-                              backgroundImage: snapshot.data[index].photoUrl == null
+                              backgroundImage: snapshot.data[index].photoUrl ==
+                                      null
                                   ? AssetImage("assets/images/person.png")
                                   : NetworkImage(snapshot.data[index].photoUrl),
                             ),
-                            title: Text(snapshot?.data[index]?.username ?? 'user'),
-                            subtitle: snapshot.data[index].isHead ? Text('Head') : Text('Member'),
+                            title:
+                                Text(snapshot?.data[index]?.username ?? 'user'),
+                            subtitle: snapshot.data[index].isHead
+                                ? Text('Head')
+                                : Text('Member'),
                           ),
                         )
                       : CircularProgressIndicator();
@@ -240,11 +248,13 @@ class _MessagesState extends State<Messages> {
                         IconButton(
                           icon: Icon(Icons.image, color: Colors.yellow),
                           onPressed: () async {
-                            await getImage().then(
-                              (value) => uploadImage(context).then(
+                            await getImage();
+                            if (_image != null) {
+                              await uploadImage(context).then(
                                 (url) => sendMessage(type: 'image', url: url),
-                              ),
-                            );
+                              );
+                              _image = null;
+                            }
                           },
                         ),
                         Expanded(
@@ -263,7 +273,9 @@ class _MessagesState extends State<Messages> {
                             ),
                           ),
                         ),
-                        snapshot.data.isHead || snapshot.data.isAdmin && widget.groupName != null
+                        snapshot.data.isHead ||
+                                snapshot.data.isAdmin &&
+                                    widget.groupName != null
                             ? IconButton(
                                 icon: Icon(Icons.table_chart),
                                 color: Constants.yellow,
@@ -323,7 +335,8 @@ class _MessagesState extends State<Messages> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => GroupMember(groupName: widget.groupName),
+                        builder: (context) =>
+                            GroupMember(groupName: widget.groupName),
                       ),
                     );
                   },
