@@ -18,46 +18,52 @@ class ImageWidget extends StatelessWidget {
           ? MainAxisAlignment.end
           : MainAxisAlignment.start,
       children: [
-        user.uid == message.senderId
-            ? Container(
-                padding: EdgeInsets.all(12.0),
-                height: 64,
-                width: 64,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(34.0),
-                  child: message.userImg != null
-                      ? Image.network(
-                          message.userImg,
-                          fit: BoxFit.cover,
-                          loadingBuilder: (context, child, loadingProgress) {
-                            return loadingProgress == null
-                                ? child
-                                : Center(child: CircularProgressIndicator());
-                          },
-                        )
-                      : Image.asset('assets/images/enactus.png'),
+        user.uid != message.senderId
+            ? InkWell(
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Profile(
+                        isAppBarEnabled: true,
+                        userId: message.senderId,
+                      ),
+                    ),
+                  );
+                },
+                child: Container(
+                  padding: EdgeInsets.all(12.0),
+                  height: 64,
+                  width: 64,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(34.0),
+                    child: message.userImg != null
+                        ? Image.network(
+                            message.userImg,
+                            fit: BoxFit.cover,
+                            loadingBuilder: (context, child, loadingProgress) {
+                              return loadingProgress == null
+                                  ? child
+                                  : Center(child: CircularProgressIndicator());
+                            },
+                          )
+                        : Image.asset('assets/images/enactus.png'),
+                  ),
                 ),
               )
             : Container(),
         Container(
           margin: user.uid == message.senderId
-              ? EdgeInsets.only(top: 8.0, bottom: 8.0)
+              ? EdgeInsets.only(top: 8.0, bottom: 8.0, right: 10.0)
               : EdgeInsets.only(top: 8.0, bottom: 8.0),
           padding: EdgeInsets.all(6.0),
           decoration: BoxDecoration(
-            color: user.uid != message.senderId
-                ? Constants.lightBlue
-                : Constants.midBlue,
-            borderRadius: user.uid == message.senderId
-                ? BorderRadius.only(
-                    topLeft: Radius.circular(15.0),
-                    bottomLeft: Radius.circular(15.0),
-                  )
-                : BorderRadius.only(
-                    topRight: Radius.circular(15.0),
-                    bottomRight: Radius.circular(15.0),
-                  ),
-          ),
+              color: user.uid != message.senderId
+                  ? Constants.lightBlue
+                  : Constants.midBlue,
+              borderRadius: user.uid == message.senderId
+                  ? BorderRadius.circular(15)
+                  : BorderRadius.circular(15)),
           width: MediaQuery.of(context).size.width * 0.75,
           child: InkWell(
             onTap: () {
@@ -93,40 +99,6 @@ class ImageWidget extends StatelessWidget {
             ),
           ),
         ),
-        user.uid != message.senderId
-            ? InkWell(
-                onTap: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Profile(
-                        isAppBarEnabled: true,
-                        userId: message.senderId,
-                      ),
-                    ),
-                  );
-                },
-                child: Container(
-                  padding: EdgeInsets.all(12.0),
-                  height: 64,
-                  width: 64,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(34.0),
-                    child: message.userImg != null
-                        ? Image.network(
-                            message.userImg,
-                            fit: BoxFit.contain,
-                            loadingBuilder: (context, child, loadingProgress) {
-                              return loadingProgress == null
-                                  ? child
-                                  : Center(child: CircularProgressIndicator());
-                            },
-                          )
-                        : Image.asset('assets/images/enactus.png'),
-                  ),
-                ),
-              )
-            : Container(),
       ],
     );
   }

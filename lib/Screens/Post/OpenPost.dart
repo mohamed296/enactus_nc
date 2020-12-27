@@ -46,11 +46,6 @@ class _OpenPostState extends State<OpenPost> {
                       // style: TextStyle(fontSize: 16.0, color: blackColor),
                     ),
                   ),
-                  buttons(),
-                  Container(
-                    // color: backgroundColor,
-                    height: MediaQuery.of(context).size.height * 0.2,
-                  ),
                 ],
               ),
             ),
@@ -83,35 +78,12 @@ class _OpenPostState extends State<OpenPost> {
     );
   }
 
-  buttons() {
-    return Container(
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            flex: 1,
-            child: IconButton(
-              icon: Icon(FontAwesomeIcons.heart),
-              onPressed: () {},
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: IconButton(
-              icon: Icon(FontAwesomeIcons.comment),
-              onPressed: () async {},
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
   commentsSection() {
     return SizedBox.expand(
       child: DraggableScrollableSheet(
         minChildSize: 0.2,
         maxChildSize: 1.0,
-        initialChildSize: 0.2,
+        initialChildSize: 0.4,
         builder: (context, scrollController) {
           return CommentsList(
             thisPost: widget.post,

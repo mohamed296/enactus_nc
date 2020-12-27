@@ -147,7 +147,7 @@ class _PostTileState extends State<PostTile> {
           );
         },
         child: CircleAvatar(
-          radius: 34.0,
+          radius: 20.0,
           backgroundImage: NetworkImage(
             widget?.post?.userProfileImg ??
                 'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png',
@@ -168,12 +168,20 @@ class _PostTileState extends State<PostTile> {
         },
         child: Text(
           widget.post.name,
-          // style: TextStyle(color: KMainColor),
+          style: TextStyle(
+            fontSize: 13,
+            color: Colors.amber[300],
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       subtitle: Text(
         widget.post.timeStamp,
-        //  style: TextStyle(color: Colors.black),
+        style: TextStyle(
+          fontSize: 12,
+          color: Colors.amber[100],
+          fontWeight: FontWeight.bold,
+        ),
       ),
       /*  onTap: () {
         Navigator.push(
@@ -201,8 +209,8 @@ class _PostTileState extends State<PostTile> {
   }
 
   postSection(BuildContext context) {
-    return FlatButton(
-      onPressed: () {
+    return InkWell(
+      onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -224,7 +232,10 @@ class _PostTileState extends State<PostTile> {
               maxLines: 5,
               softWrap: true,
               overflow: TextOverflow.fade,
-              // style: Theme.of(context).textTheme.bodyText2,
+              style: TextStyle(
+                color: Colors.amber[300],
+                fontWeight: FontWeight.bold,
+              ),
               //  style: TextStyle(color: KMainColor)
             ),
           ),
@@ -243,23 +254,33 @@ class _PostTileState extends State<PostTile> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Padding(padding: EdgeInsets.only(top: 40, left: 20)),
-            GestureDetector(
+            /*  GestureDetector(
               onTap: () {
                 likePost();
               },
               child: Icon(
                 isLiked ? LineAwesomeIcons.heart_1 : LineAwesomeIcons.heart,
                 // color: KMainColor,
-                size: 18.0,
+                size: 25,
               ),
             ),
-            Padding(padding: EdgeInsets.only(right: 20)),
-            GestureDetector(
-              //  onTap: () => Navigator.pushNamed(context, CommentCard.id),
+            Padding(padding: EdgeInsets.only(right: 25)),*/
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => OpenPost(
+                      post: widget.post,
+                      focus: false,
+                    ),
+                  ),
+                );
+              },
               child: Icon(
                 FontAwesomeIcons.comment,
                 //   color: KMainColor,
-                size: 18.0,
+                size: 25,
               ),
             ),
           ],

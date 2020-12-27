@@ -33,26 +33,18 @@ class _PostsListState extends State<PostsList> {
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, index) {
                     // return PostTile(post: snapshot.data[index]);
-                    return Padding(
-                      padding: EdgeInsets.all(5.0),
-                      child: Material(
-                        borderRadius: BorderRadius.circular(15.0),
-                        elevation: 15.0,
-                        shadowColor: KSacandColor.withOpacity(0.2),
-                        // shadowColor: KMainColor,
-                        child: Container(
-                          // width: double.infinity,
-                          //  padding: EdgeInsets.all(5.0),
-                          decoration: BoxDecoration(
-                            border:
-                                Border.all(color: Colors.blueGrey, width: 1),
-                            borderRadius: BorderRadius.circular(15.0),
-                            //  color: Color.fromRGBO(20, 69, 131, 1.0),
-                            //   color: Colors.white70
-                            color: Color(0xff17335B),
+                    return Container(
+                      padding: EdgeInsets.all(10),
+                      child: Card(
+                        elevation: 15,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(20),
+                            bottomLeft: Radius.circular(20),
                           ),
-                          child: PostTile(post: snapshot.data[index]),
                         ),
+                        color: Color(0x8022417A),
+                        child: PostTile(post: snapshot.data[index]),
                       ),
                     );
                   },
