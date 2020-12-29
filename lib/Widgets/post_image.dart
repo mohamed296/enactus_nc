@@ -11,9 +11,8 @@ class PostImage extends StatelessWidget {
       height: 300.0,
       width: double.infinity,
       // decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.0)),
-      margin: EdgeInsets.symmetric(horizontal: 1.0),
+
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(5.0),
         child: Image.network(
           imageUrl,
           fit: BoxFit.cover,

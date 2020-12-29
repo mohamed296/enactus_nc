@@ -236,61 +236,59 @@ class _MessagesState extends State<Messages> {
           .map(UserServices().userData),
       builder: (context, snapshot) {
         return snapshot.hasData
-            ? Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Divider(color: Colors.yellow, height: 1.0, thickness: 0.5),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        IconButton(
-                          icon: Icon(Icons.image, color: Colors.yellow),
-                          onPressed: () async {
-                            await getImage();
-                            if (_image != null) {
-                              await uploadImage(context).then(
-                                (url) => sendMessage(type: 'image', url: url),
-                              );
-                              _image = null;
-                            }
-                          },
-                        ),
-                        Expanded(
-                          child: TextField(
-                            controller: tecMessage,
-                            textCapitalization: TextCapitalization.sentences,
-                            scrollPhysics: BouncingScrollPhysics(),
-                            style: TextStyle(color: Colors.white),
-                            maxLines: 5,
-                            minLines: 1,
-                            onChanged: (value) {},
-                            textInputAction: TextInputAction.newline,
-                            decoration: InputDecoration.collapsed(
-                              hintStyle: TextStyle(color: Colors.grey.shade100),
-                              hintText: "Type a message...",
-                            ),
-                          ),
-                        ),
-                        snapshot.data.isHead ||
-                                snapshot.data.isAdmin &&
-                                    widget.groupName != null
-                            ? IconButton(
-                                icon: Icon(Icons.table_chart),
-                                color: Constants.yellow,
-                                onPressed: () => showGroupMembers(context),
-                              )
-                            : Container(),
-                        IconButton(
-                          icon: Icon(Icons.send),
-                          color: Constants.yellow,
-                          onPressed: () => sendMessage(type: 'Message'),
-                        )
-                      ],
+            ? Container(
+                margin: EdgeInsets.all(10),
+                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(40),
+                  color: Color(0x8022417A),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    IconButton(
+                      icon: Icon(Icons.image, color: Colors.yellow),
+                      onPressed: () async {
+                        await getImage();
+                        if (_image != null) {
+                          await uploadImage(context).then(
+                            (url) => sendMessage(type: 'image', url: url),
+                          );
+                          _image = null;
+                        }
+                      },
                     ),
-                  ),
-                ],
+                    Expanded(
+                      child: TextField(
+                        controller: tecMessage,
+                        textCapitalization: TextCapitalization.sentences,
+                        scrollPhysics: BouncingScrollPhysics(),
+                        style: TextStyle(color: Colors.white),
+                        maxLines: 5,
+                        minLines: 1,
+                        onChanged: (value) {},
+                        textInputAction: TextInputAction.newline,
+                        decoration: InputDecoration.collapsed(
+                          hintStyle: TextStyle(color: Colors.grey.shade100),
+                          hintText: "Type a message...",
+                        ),
+                      ),
+                    ),
+                    snapshot.data.isHead ||
+                            snapshot.data.isAdmin && widget.groupName != null
+                        ? IconButton(
+                            icon: Icon(Icons.table_chart),
+                            color: Constants.yellow,
+                            onPressed: () => showGroupMembers(context),
+                          )
+                        : Container(),
+                    IconButton(
+                      icon: Icon(Icons.send),
+                      color: Constants.yellow,
+                      onPressed: () => sendMessage(type: 'Message'),
+                    )
+                  ],
+                ),
               )
             : CircularProgressIndicator();
       },
@@ -299,98 +297,110 @@ class _MessagesState extends State<Messages> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              height: 35,
-              width: 35,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(34.0),
-                child: widget.imageUrl != null
-                    ? Image.network(
-                        widget.imageUrl,
-                        fit: BoxFit.contain,
-                        loadingBuilder: (context, child, loadingProgress) {
-                          return loadingProgress == null
-                              ? child
-                              : Center(child: CircularProgressIndicator());
-                        },
-                      )
-                    : Image.asset('assets/images/enactus.png'),
-              ),
-            ),
-            SizedBox(width: 12.0),
-            Text(widget.group == true ? widget.groupName : widget.username),
-          ],
+    return Stack(
+      children: [
+        Image.asset(
+          'assets/images/back.jpg',
+          height: double.infinity,
+          width: double.infinity,
+          fit: BoxFit.cover,
         ),
-        leading: BackButton(),
-        actions: [
-          widget.group == true
-              ? IconButton(
-                  icon: Icon(Icons.info_outline),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            GroupMember(groupName: widget.groupName),
-                      ),
-                    );
-                  },
-                )
-              : Container()
-        ],
-      ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: StreamBuilder<List<MessageModel>>(
-              stream: widget.group == true
-                  ? FirebaseFirestore.instance
-                      .collection('GroupChat')
-                      .doc(widget.groupName)
-                      .collection(widget.groupName)
-                      .orderBy("timestamp", descending: true)
-                      .snapshots()
-                      .map(MessageServices().listOfMessages)
-                  : FirebaseFirestore.instance
-                      .collection("chatRoom")
-                      .doc(widget.chatRoomId)
-                      .collection("chats")
-                      .orderBy("timestamp", descending: true)
-                      .snapshots()
-                      .map(MessageServices().listOfMessages),
-              builder: (context, snapShot) {
-                return snapShot.hasData
-                    ? ListView.builder(
-                        reverse: true,
-                        padding: EdgeInsets.only(top: 15.0),
-                        itemCount: snapShot.data.length,
-                        itemBuilder: (context, index) {
-                          MessageModel message = MessageModel(
-                            groupId: snapShot.data[index].groupId,
-                            type: snapShot.data[index].type,
-                            receverId: snapShot.data[index].receverId,
-                            senderId: snapShot.data[index].senderId,
-                            userImg: snapShot.data[index].userImg,
-                            message: snapShot.data[index].message,
-                            userName: snapShot.data[index].userName,
-                            timestamp: snapShot.data[index].timestamp,
-                            read: snapShot.data[index].read,
-                            messageId: snapShot.data[index].messageId,
-                          );
-                          return _buildMessage(message);
-                        })
-                    : Center(child: CircularProgressIndicator());
-              },
+        Scaffold(
+          backgroundColor: Colors.white.withOpacity(0),
+          appBar: AppBar(
+            backgroundColor: Colors.white.withOpacity(0),
+            title: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  height: 35,
+                  width: 35,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(34.0),
+                    child: widget.imageUrl != null
+                        ? Image.network(
+                            widget.imageUrl,
+                            fit: BoxFit.contain,
+                            loadingBuilder: (context, child, loadingProgress) {
+                              return loadingProgress == null
+                                  ? child
+                                  : Center(child: CircularProgressIndicator());
+                            },
+                          )
+                        : Image.asset('assets/images/enactus.png'),
+                  ),
+                ),
+                SizedBox(width: 12.0),
+                Text(widget.group == true ? widget.groupName : widget.username),
+              ],
             ),
+            leading: BackButton(),
+            actions: [
+              widget.group == true
+                  ? IconButton(
+                      icon: Icon(Icons.info_outline),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                GroupMember(groupName: widget.groupName),
+                          ),
+                        );
+                      },
+                    )
+                  : Container()
+            ],
           ),
-          _buildMessageComposer(),
-        ],
-      ),
+          body: Column(
+            children: <Widget>[
+              Expanded(
+                child: StreamBuilder<List<MessageModel>>(
+                  stream: widget.group == true
+                      ? FirebaseFirestore.instance
+                          .collection('GroupChat')
+                          .doc(widget.groupName)
+                          .collection(widget.groupName)
+                          .orderBy("timestamp", descending: true)
+                          .snapshots()
+                          .map(MessageServices().listOfMessages)
+                      : FirebaseFirestore.instance
+                          .collection("chatRoom")
+                          .doc(widget.chatRoomId)
+                          .collection("chats")
+                          .orderBy("timestamp", descending: true)
+                          .snapshots()
+                          .map(MessageServices().listOfMessages),
+                  builder: (context, snapShot) {
+                    return snapShot.hasData
+                        ? ListView.builder(
+                            reverse: true,
+                            padding: EdgeInsets.only(top: 15.0),
+                            itemCount: snapShot.data.length,
+                            itemBuilder: (context, index) {
+                              MessageModel message = MessageModel(
+                                groupId: snapShot.data[index].groupId,
+                                type: snapShot.data[index].type,
+                                receverId: snapShot.data[index].receverId,
+                                senderId: snapShot.data[index].senderId,
+                                userImg: snapShot.data[index].userImg,
+                                message: snapShot.data[index].message,
+                                userName: snapShot.data[index].userName,
+                                timestamp: snapShot.data[index].timestamp,
+                                read: snapShot.data[index].read,
+                                messageId: snapShot.data[index].messageId,
+                              );
+                              return _buildMessage(message);
+                            })
+                        : Center(child: CircularProgressIndicator());
+                  },
+                ),
+              ),
+              _buildMessageComposer(),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

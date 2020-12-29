@@ -37,78 +37,82 @@ class _HomeState extends State<Home> {
         builder: (context, snapshot) {
           return !snapshot.hasData
               ? Center(child: CircularProgressIndicator())
-              : Scaffold(
-                  floatingActionButton: snapshot.data.isAdmin || snapshot.data.isHead
-                      ? FloatingActionButton(
-                          child: Icon(Icons.add),
-                          onPressed: () => Navigator.pushNamed(context, AddNewPost.id),
-                        )
-                      : Container(),
-                  appBar: AppBar(
-                    leading: Center(
-                      child: Container(
-                        padding: EdgeInsets.only(left: 5),
-                        height: 100,
-                        child: Center(
-                          child: Image(
-                            image: AssetImage(
-                              'assets/images/logo.png',
+              : Stack(
+                  children: [
+                    Image.asset(
+                      'assets/images/back.jpg',
+                      height: double.infinity,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+                    Scaffold(
+                      backgroundColor: Colors.transparent,
+                      floatingActionButton: snapshot.data.isAdmin ||
+                              snapshot.data.isHead
+                          ? FloatingActionButton(
+                              child: Icon(Icons.add),
+                              onPressed: () =>
+                                  Navigator.pushNamed(context, AddNewPost.id),
+                            )
+                          : Container(),
+                      appBar: AppBar(
+                        backgroundColor: Colors.transparent,
+                        leading: Center(
+                          child: Container(
+                            padding: EdgeInsets.only(left: 5),
+                            height: 100,
+                            child: Center(
+                              child: Image(
+                                image: AssetImage(
+                                  'assets/images/logo.png',
+                                ),
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                            fit: BoxFit.cover,
                           ),
                         ),
-                      ),
-                    ),
-                    actions: <Widget>[
-                      Hero(
-                        tag: 'Icon1',
-                        child: new IconButton(
-                            icon: Icon(
-                              FontAwesomeIcons.calendar,
-                              color: Color.fromRGBO(253, 194, 35, 1.0),
-                            ),
-                            onPressed: () {
-                              Navigator.pushNamed(context, Events.id);
-                            }),
-                      ),
+                        actions: <Widget>[
+                          Hero(
+                            tag: 'Icon1',
+                            child: new IconButton(
+                                icon: Icon(
+                                  FontAwesomeIcons.calendar,
+                                  color: Color.fromRGBO(253, 194, 35, 1.0),
+                                ),
+                                onPressed: () {
+                                  Navigator.pushNamed(context, Events.id);
+                                }),
+                          ),
 
-                      /*  Hero(
-                tag: 'Icon3',
-                child: new IconButton(
-                    icon: Icon(
-                      FontAwesomeIcons.edit,
-                      color: Color.fromRGBO(253, 194, 35, 1.0),
-                    ),
-                    onPressed: () {
-                      Navigator.pushNamed(context, EditPost.id);
-                    }),
-              ),*/
-                      PopupMenuButton(
-                        onSelected: select,
-                        itemBuilder: (context) {
-                          return PopUpMenu.choices.map((String choice) {
-                            return PopupMenuItem(
-                              child: Text(choice),
-                              value: choice,
-                            );
-                          }).toList();
-                        },
-                      ),
-                    ],
-
-                    // title: Text('Home',),
-                  ),
-                  body: Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(
-                          'assets/images/back.jpg',
+                          /*  Hero(
+                    tag: 'Icon3',
+                    child: new IconButton(
+                        icon: Icon(
+                          FontAwesomeIcons.edit,
+                          color: Color.fromRGBO(253, 194, 35, 1.0),
                         ),
-                        fit: BoxFit.cover,
+                        onPressed: () {
+                          Navigator.pushNamed(context, EditPost.id);
+                        }),
+                  ),*/
+                          PopupMenuButton(
+                            onSelected: select,
+                            itemBuilder: (context) {
+                              return PopUpMenu.choices.map((String choice) {
+                                return PopupMenuItem(
+                                  child: Text(choice),
+                                  value: choice,
+                                );
+                              }).toList();
+                            },
+                          ),
+                        ],
+
+                        // title: Text('Home',),
                       ),
+                      body: PostsList(),
                     ),
-                    child: PostsList(),
-                  ),
+                  ],
                 );
         });
   }
