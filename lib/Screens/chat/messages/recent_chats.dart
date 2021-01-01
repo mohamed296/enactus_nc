@@ -132,7 +132,7 @@ class _RecentChatState extends State<RecentChat> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          users[0] == user.uid ? users[1] : users[0],
+                          users[0] == user.displayName ? users[1] : users[0],
                           style: TextStyle(
                             color: Colors.grey.shade200,
                             fontSize: 15.0,
