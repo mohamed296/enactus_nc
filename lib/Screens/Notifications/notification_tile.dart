@@ -20,7 +20,7 @@ class NotificationTile extends StatelessWidget {
                       : Center(child: CircularProgressIndicator());
                 },
               )
-            : Icon(Icons.calendar_today), //Image.asset('assets/images/enactus.png'),
+            : Icon(Icons.calendar_today),
       ),
       title: Text(notificationModel.notificationMsg),
       subtitle: Text(notificationModel.notificationTime),

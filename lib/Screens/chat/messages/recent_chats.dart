@@ -60,6 +60,7 @@ class _RecentChatState extends State<RecentChat> {
     return ListView.builder(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
+      physics: BouncingScrollPhysics(),
       itemCount: snapshot.data.documents.length,
       itemBuilder: (context, index) {
         List users = snapshot.data.documents[index].data()["users"];

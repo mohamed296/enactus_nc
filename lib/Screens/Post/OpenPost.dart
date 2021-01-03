@@ -2,7 +2,6 @@ import 'package:enactusnca/Models/post.dart';
 import 'package:enactusnca/Screens/Profile/profile.dart';
 import 'package:enactusnca/Widgets/post_image.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'CommentsList.dart';
 
@@ -16,7 +15,6 @@ class OpenPost extends StatefulWidget {
 }
 
 class _OpenPostState extends State<OpenPost> {
-  // CommentModel _commentModel = CommentModel();
   bool showLoading = false;
   String comment;
 

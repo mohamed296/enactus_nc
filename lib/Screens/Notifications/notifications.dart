@@ -14,18 +14,17 @@ class Notifications extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         centerTitle: true,
-        title: Text('Notifications',
-            style: TextStyle(fontSize: 20.0, color: KSacandColor)),
+        title: Text('Notifications', style: TextStyle(fontSize: 20.0, color: KSacandColor)),
       ),
       body: StreamBuilder<List<NotificationModel>>(
         stream: NotificationServices().getNotificationList,
         builder: (context, snapshot) {
           return snapshot.hasData
               ? ListView.builder(
+                  physics: BouncingScrollPhysics(),
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, index) {
-                    return NotificationTile(
-                        notificationModel: snapshot.data[index]);
+                    return NotificationTile(notificationModel: snapshot.data[index]);
                   },
                 )
               : CircularProgressIndicator();

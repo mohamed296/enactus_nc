@@ -20,7 +20,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 class Profile extends StatefulWidget {
-  static String id = 'Profile';
   final String postUserId;
   bool isAppBarEnabled;
   final String username;
@@ -62,178 +61,176 @@ class _ProfileState extends State<Profile> {
         iconTheme: IconThemeData(color: Colors.amber),
         leading: widget.isAppBarEnabled
             ? GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, Wrapper.id);
-                },
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Wrapper()),
+                ),
                 child: Icon(Icons.arrow_back),
               )
             : Container(),
       ),
       body: StreamBuilder<UserModel>(
-          stream: widget.userId != null
-              ? FirebaseFirestore.instance
-                  .collection("Users")
-                  .doc(widget.userId)
-                  .snapshots(includeMetadataChanges: false)
-                  .map(UserServices().userData)
-              : FirebaseFirestore.instance
-                  .collection("Users")
-                  .doc(user.uid)
-                  .snapshots(includeMetadataChanges: false)
-                  .map(UserServices().userData),
-          builder: (context, snapshot) {
-            return Scaffold(
-              body: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Center(
-                      child: Container(
-                        height: kSpacingUnit.w * 10,
-                        width: kSpacingUnit.w * 10,
-                        margin: EdgeInsets.only(top: kSpacingUnit.w * 10),
-                        child: Stack(
-                          children: <Widget>[
-                            CircleAvatar(
-                              radius: kSpacingUnit.w * 5,
-                              child: (snapshot?.data?.photoUrl != null)
-                                  ? Image.network(snapshot.data.photoUrl)
-                                  : Image.asset('assets/images/enactus.png'),
-                            ),
-                          ],
+        stream: FirebaseFirestore.instance
+            .collection("Users")
+            .doc(widget.userId != null ? widget.userId : user.uid)
+            .snapshots(includeMetadataChanges: false)
+            .map(UserServices().userData),
+        builder: (context, snapshot) {
+          return !snapshot.hasData
+              ? Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      CircleAvatar(
+                        radius: kSpacingUnit.w * 5,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(kSpacingUnit.w * 5),
+                          child: (snapshot?.data?.photoUrl != null)
+                              ? Image.network(snapshot.data.photoUrl)
+                              : Image.asset('assets/images/enactus.png'),
                         ),
                       ),
-                    ),
-                    SizedBox(height: kSpacingUnit.w * 2),
-                    Text('${snapshot?.data?.firstName} ${snapshot?.data?.lastName}',
-                        style: kTitleTextStyle),
-                    SizedBox(height: kSpacingUnit.w * 0.5),
-                    Text(snapshot?.data?.email, style: kCaptionTextStyle),
-                    SizedBox(height: kSpacingUnit.w * 0.5),
-                    Text(snapshot?.data?.community, style: kCaptionTextStyle),
-                    SizedBox(height: kSpacingUnit.w * 2),
-                    GestureDetector(
-                      onTap: () {
-                        if (snapshot?.data?.email == user.email) {
-                          UserModel userModel = UserModel(
-                            id: snapshot.data.id,
-                            firstName: snapshot.data.firstName,
-                            lastName: snapshot.data.lastName,
-                            photoUrl: snapshot.data.photoUrl,
-                            email: snapshot.data.email,
-                            community: snapshot.data.community,
-                            department: snapshot.data.department,
-                            joiningDate: snapshot.data.joiningDate,
-                            username: snapshot.data.username,
-                            isActive: snapshot.data.isActive,
-                            isHead: snapshot.data.isHead,
-                          );
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => EditProfilScreen(userModel: userModel)),
-                          );
-                        } else {
-                          String roomId = createChatRoomId(
-                              snapshot.data.email.toLowerCase(), user.email.toLowerCase());
-                          DatabaseMethods().getChatRooByRoomId(roomId: roomId).then((value) {
-                            QuerySnapshot roomSnapShoot = value;
-                            if (roomSnapShoot.docs.isEmpty) {
-                              List<String> ids = [snapshot.data.id, user.uid];
-                              List<String> users = [
-                                '${snapshot.data.firstName} ${snapshot.data.lastName}',
-                                user.displayName
-                              ];
-                              List<String> emails = [
-                                snapshot.data.email.toLowerCase(),
-                                user.email.toLowerCase()
-                              ];
-                              Map<String, dynamic> chatRoomMap = {
-                                "users": users,
-                                "emails": emails,
-                                'ids': ids,
-                                "lastMessage": "",
-                                "isRead": false,
-                                "lastTime": null,
-                                "chatroomid": roomId,
-                              };
-                              DatabaseMethods().createChatRoom(roomId, chatRoomMap).then((val) {
-                                print('room created');
-                                navigateToMessagesScreen(
+                      SizedBox(height: kSpacingUnit.w * 2),
+                      Text(
+                        '${snapshot?.data?.firstName} ${snapshot?.data?.lastName}',
+                        style: kTitleTextStyle,
+                      ),
+                      SizedBox(height: kSpacingUnit.w * 0.5),
+                      Text(snapshot?.data?.email, style: kCaptionTextStyle),
+                      SizedBox(height: kSpacingUnit.w * 0.5),
+                      Text(snapshot?.data?.community, style: kCaptionTextStyle),
+                      SizedBox(height: kSpacingUnit.w * 2),
+                      GestureDetector(
+                        onTap: () {
+                          if (snapshot?.data?.email == user.email) {
+                            UserModel userModel = UserModel(
+                              id: snapshot.data.id,
+                              firstName: snapshot.data.firstName,
+                              lastName: snapshot.data.lastName,
+                              photoUrl: snapshot.data.photoUrl,
+                              email: snapshot.data.email,
+                              community: snapshot.data.community,
+                              department: snapshot.data.department,
+                              joiningDate: snapshot.data.joiningDate,
+                              username: snapshot.data.username,
+                              isActive: snapshot.data.isActive,
+                              isHead: snapshot.data.isHead,
+                            );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditProfilScreen(userModel: userModel),
+                              ),
+                            );
+                          } else {
+                            String roomId = createChatRoomId(
+                              snapshot.data.email.toLowerCase(),
+                              user.email.toLowerCase(),
+                            );
+                            DatabaseMethods().getChatRooByRoomId(roomId: roomId).then(
+                              (value) {
+                                QuerySnapshot roomSnapShoot = value;
+                                if (roomSnapShoot.docs.isEmpty) {
+                                  List<String> ids = [snapshot.data.id, user.uid];
+                                  List<String> users = [
+                                    '${snapshot.data.firstName} ${snapshot.data.lastName}',
+                                    user.displayName
+                                  ];
+                                  List<String> emails = [
+                                    snapshot.data.email.toLowerCase(),
+                                    user.email.toLowerCase()
+                                  ];
+                                  Map<String, dynamic> chatRoomMap = {
+                                    "users": users,
+                                    "emails": emails,
+                                    'ids': ids,
+                                    "lastMessage": "",
+                                    "isRead": false,
+                                    "lastTime": null,
+                                    "chatroomid": roomId,
+                                  };
+                                  DatabaseMethods().createChatRoom(roomId, chatRoomMap).then((val) {
+                                    print('room created');
+                                    navigateToMessagesScreen(
+                                        context: context,
+                                        roomId: roomId,
+                                        snapshot: snapshot,
+                                        roomSnapShoot: roomSnapShoot);
+                                  });
+                                } else {
+                                  print("the room exists");
+                                  navigateToMessagesScreen(
                                     context: context,
                                     roomId: roomId,
                                     snapshot: snapshot,
-                                    roomSnapShoot: roomSnapShoot);
-                              });
-                            } else {
-                              print("the room exists");
-                              navigateToMessagesScreen(
-                                  context: context,
-                                  roomId: roomId,
-                                  snapshot: snapshot,
-                                  roomSnapShoot: roomSnapShoot);
-                            }
-                          });
-                        }
-                      },
-                      child: Container(
-                        height: kSpacingUnit.w * 4,
-                        width: kSpacingUnit.w * 20,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(kSpacingUnit.w * 3),
-                          color: Theme.of(context).accentColor,
-                        ),
-                        child: Center(
-                          child: Text(
+                                    roomSnapShoot: roomSnapShoot,
+                                  );
+                                }
+                              },
+                            );
+                          }
+                        },
+                        child: Container(
+                          height: kSpacingUnit.w * 4,
+                          width: kSpacingUnit.w * 20,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(kSpacingUnit.w * 3),
+                            color: Theme.of(context).accentColor,
+                          ),
+                          child: Center(
+                            child: Text(
                               snapshot.data.email == Constants.myEmail
                                   ? 'Edit Profile'
                                   : 'Send a message',
-                              style: kButtonTextStyle),
+                              style: kButtonTextStyle,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: kSpacingUnit.w * 5),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, Events.id);
-                      },
-                      child: ProfileListItem(
-                        icon: LineAwesomeIcons.calendar,
-                        text: 'Events',
+                      SizedBox(height: kSpacingUnit.w * 5),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Events()),
+                          );
+                        },
+                        child: ProfileListItem(
+                          icon: LineAwesomeIcons.calendar,
+                          text: 'Events',
+                        ),
                       ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => HelpSupport(),
-                          ),
-                        );
-                      },
-                      child: ProfileListItem(
-                        icon: LineAwesomeIcons.question_circle,
-                        text: 'Help & Support',
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => HelpSupport()),
+                          );
+                        },
+                        child: ProfileListItem(
+                          icon: LineAwesomeIcons.question_circle,
+                          text: 'Help & Support',
+                        ),
                       ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        authMethods.signOut();
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) => SignIn()),
-                        );
-                      },
-                      child: ProfileListItem(
-                        icon: LineAwesomeIcons.alternate_sign_out,
-                        text: 'Logout',
-                        hasNavigation: false,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            );
-          }),
+                      GestureDetector(
+                        onTap: () {
+                          authMethods.signOut();
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (context) => SignIn()),
+                          );
+                        },
+                        child: ProfileListItem(
+                          icon: LineAwesomeIcons.alternate_sign_out,
+                          text: 'Logout',
+                          hasNavigation: false,
+                        ),
+                      )
+                    ],
+                  ),
+                );
+        },
+      ),
     );
   }
 }

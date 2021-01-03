@@ -14,7 +14,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:auto_direction/auto_direction.dart';
 import 'image_widget.dart';
 import 'text_widget.dart';
 
@@ -50,6 +50,8 @@ class _MessagesState extends State<Messages> {
 
   Stream conversationStream;
   DateTime selectedDate = DateTime.now();
+  bool isRTL = false;
+  String text = "";
 
   File _image;
   String _imgURL;
@@ -65,8 +67,7 @@ class _MessagesState extends State<Messages> {
   }
 
   Future getImage() async {
-    final pickedFile =
-        await ImagePicker().getImage(source: ImageSource.gallery);
+    final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         _imgURL = pickedFile.hashCode.toString();
@@ -122,18 +123,15 @@ class _MessagesState extends State<Messages> {
         ? type == 'Task'
             ? MessageGroupServices()
                 .sendTaskMessage(messageModel, dateTime, sendNotification)
-                .catchError((error) =>
-                    print("getConversationErrors : ${error.toString()}"))
+                .catchError((error) => print("getConversationErrors : ${error.toString()}"))
                 .whenComplete(() => tecMessage.clear())
             : MessageGroupServices()
                 .sendGroupMessage(messageModel)
-                .catchError((error) =>
-                    print("getConversationErrors : ${error.toString()}"))
+                .catchError((error) => print("getConversationErrors : ${error.toString()}"))
                 .whenComplete(() => tecMessage.clear())
         : MessageServices()
             .sendMessage(messageModel)
-            .catchError(
-                (error) => print("getConversationErrors : ${error.toString()}"))
+            .catchError((error) => print("getConversationErrors : ${error.toString()}"))
             .whenComplete(() => tecMessage.clear());
   }
 
@@ -197,16 +195,12 @@ class _MessagesState extends State<Messages> {
                             }).whenComplete(() => Navigator.pop(context)),
                             leading: CircleAvatar(
                               radius: 30,
-                              backgroundImage: snapshot.data[index].photoUrl ==
-                                      null
+                              backgroundImage: snapshot.data[index].photoUrl == null
                                   ? AssetImage("assets/images/person.png")
                                   : NetworkImage(snapshot.data[index].photoUrl),
                             ),
-                            title:
-                                Text(snapshot?.data[index]?.username ?? 'user'),
-                            subtitle: snapshot.data[index].isHead
-                                ? Text('Head')
-                                : Text('Member'),
+                            title: Text(snapshot?.data[index]?.username ?? 'user'),
+                            subtitle: snapshot.data[index].isHead ? Text('Head') : Text('Member'),
                           ),
                         )
                       : CircularProgressIndicator();
@@ -259,23 +253,26 @@ class _MessagesState extends State<Messages> {
                       },
                     ),
                     Expanded(
-                      child: TextField(
-                        controller: tecMessage,
-                        textCapitalization: TextCapitalization.sentences,
-                        scrollPhysics: BouncingScrollPhysics(),
-                        style: TextStyle(color: Colors.white),
-                        maxLines: 5,
-                        minLines: 1,
-                        onChanged: (value) {},
-                        textInputAction: TextInputAction.newline,
-                        decoration: InputDecoration.collapsed(
-                          hintStyle: TextStyle(color: Colors.grey.shade100),
-                          hintText: "Type a message...",
+                      child: AutoDirection(
+                        text: text,
+                        onDirectionChange: (isRTL) => setState(() => this.isRTL = isRTL),
+                        child: TextField(
+                          controller: tecMessage,
+                          textCapitalization: TextCapitalization.sentences,
+                          scrollPhysics: BouncingScrollPhysics(),
+                          style: TextStyle(color: Colors.white),
+                          maxLines: 4,
+                          minLines: 1,
+                          onChanged: (value) => setState(() => text = value),
+                          textInputAction: TextInputAction.newline,
+                          decoration: InputDecoration.collapsed(
+                            hintStyle: TextStyle(color: Colors.grey.shade100),
+                            hintText: "Type a message..",
+                          ),
                         ),
                       ),
                     ),
-                    snapshot.data.isHead ||
-                            snapshot.data.isAdmin && widget.groupName != null
+                    snapshot.data.isHead || snapshot.data.isAdmin && widget.groupName != null
                         ? IconButton(
                             icon: Icon(Icons.table_chart),
                             color: Constants.yellow,
@@ -343,8 +340,7 @@ class _MessagesState extends State<Messages> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                GroupMember(groupName: widget.groupName),
+                            builder: (context) => GroupMember(groupName: widget.groupName),
                           ),
                         );
                       },
@@ -356,26 +352,19 @@ class _MessagesState extends State<Messages> {
             children: <Widget>[
               Expanded(
                 child: StreamBuilder<List<MessageModel>>(
-                  stream: widget.group == true
-                      ? FirebaseFirestore.instance
-                          .collection('GroupChat')
-                          .doc(widget.groupName)
-                          .collection(widget.groupName)
-                          .orderBy("timestamp", descending: true)
-                          .snapshots()
-                          .map(MessageServices().listOfMessages)
-                      : FirebaseFirestore.instance
-                          .collection("chatRoom")
-                          .doc(widget.chatRoomId)
-                          .collection("chats")
-                          .orderBy("timestamp", descending: true)
-                          .snapshots()
-                          .map(MessageServices().listOfMessages),
+                  stream: FirebaseFirestore.instance
+                      .collection(widget.group == true ? 'GroupChat' : "chatRoom")
+                      .doc(widget.group == true ? widget.groupName : widget.chatRoomId)
+                      .collection(widget.group == true ? widget.groupName : "chats")
+                      .orderBy("timestamp", descending: true)
+                      .snapshots()
+                      .map(MessageServices().listOfMessages),
                   builder: (context, snapShot) {
                     return snapShot.hasData
                         ? ListView.builder(
                             reverse: true,
                             padding: EdgeInsets.only(top: 15.0),
+                            physics: BouncingScrollPhysics(),
                             itemCount: snapShot.data.length,
                             itemBuilder: (context, index) {
                               MessageModel message = MessageModel(

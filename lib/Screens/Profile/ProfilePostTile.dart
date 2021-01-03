@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 class ProfileListItem extends StatelessWidget {
-  static String id = 'ProfileListItem';
   final IconData icon;
   final String text;
   final bool hasNavigation;
@@ -46,7 +45,6 @@ class ProfileListItem extends StatelessWidget {
             ),
           ),
           Spacer(),
-          //if (this.hasNavigation)
           Icon(
             LineAwesomeIcons.angle_right,
             size: kSpacingUnit.w * 2.5,

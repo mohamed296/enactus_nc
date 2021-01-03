@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditProfilScreen extends StatefulWidget {
-  static String id = 'editProfilScreen';
   final UserModel userModel;
 
   const EditProfilScreen({this.userModel});
@@ -41,8 +40,7 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
   }
 
   Future getImage() async {
-    final pickedFile =
-        await ImagePicker().getImage(source: ImageSource.gallery);
+    final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
     setState(() {
       _imgURL = pickedFile.hashCode.toString();
       _image = File(pickedFile.path);
@@ -184,8 +182,7 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
                                 width: 40,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  border:
-                                      Border.all(width: 2, color: Colors.white),
+                                  border: Border.all(width: 2, color: Colors.white),
                                   color: Theme.of(context).accentColor,
                                 ),
                                 child: IconButton(
@@ -200,8 +197,7 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 35.0),
                       child: TextField(
-                        onChanged: (String val) =>
-                            setState(() => firstName = val),
+                        onChanged: (String val) => setState(() => firstName = val),
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.only(bottom: 3),
                           labelText: 'FirstName',
@@ -218,8 +214,7 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 35.0),
                       child: TextField(
-                        onChanged: (String val) =>
-                            setState(() => lastName = val),
+                        onChanged: (String val) => setState(() => lastName = val),
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.only(bottom: 3),
                           labelText: 'lastName',
@@ -257,14 +252,12 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
                         dropDown(list: communities, dropdownValue: community),
                       ],
                     ),
-                    community == communities.elementAt(0) ||
-                            community == communities.elementAt(1)
+                    community == communities.elementAt(0) || community == communities.elementAt(1)
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text("department "),
-                              dropDown(
-                                  list: secondList, dropdownValue: department),
+                              dropDown(list: secondList, dropdownValue: department),
                             ],
                           )
                         : Container(),
@@ -332,12 +325,6 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
         _imgURL = url;
       });
       return url;
-    } catch (ex) {
-      // Scaffold.of(context).showSnackBar(
-      //   SnackBar(
-      //     content: Text(ex.message),
-      //   ),
-      // );
-    }
+    } catch (ex) {}
   }
 }
