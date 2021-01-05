@@ -1,7 +1,7 @@
 import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Models/messages_model.dart';
 import 'package:enactusnca/Screens/Profile/profile.dart';
-import 'package:enactusnca/Screens/chat/messages/open_image_and_downloaded.dart';
+import 'package:enactusnca/Screens/chat/show_image/open_image_and_downloaded.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -14,9 +14,8 @@ class ImageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: user.uid == message.senderId
-          ? MainAxisAlignment.end
-          : MainAxisAlignment.start,
+      mainAxisAlignment:
+          user.uid == message.senderId ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
         user.uid != message.senderId
             ? InkWell(
@@ -58,29 +57,33 @@ class ImageWidget extends StatelessWidget {
               : EdgeInsets.only(top: 8.0, bottom: 8.0),
           padding: EdgeInsets.all(6.0),
           decoration: BoxDecoration(
-              color: user.uid != message.senderId
-                  ? Constants.lightBlue
-                  : Constants.midBlue,
-              borderRadius: user.uid == message.senderId
-                  ? BorderRadius.circular(15)
-                  : BorderRadius.circular(15)),
-          width: MediaQuery.of(context).size.width * 0.75,
+            color: user.uid != message.senderId ? Constants.lightBlue : Constants.midBlue,
+            borderRadius: user.uid == message.senderId
+                ? BorderRadius.only(
+                    bottomLeft: Radius.circular(10.0),
+                    topLeft: Radius.circular(10.0),
+                    topRight: Radius.circular(10.0),
+                  )
+                : BorderRadius.only(
+                    bottomRight: Radius.circular(10.0),
+                    topLeft: Radius.circular(10.0),
+                    topRight: Radius.circular(10.0),
+                  ),
+          ),
+          width: MediaQuery.of(context).size.width * 0.50,
           child: InkWell(
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) {
-                    return OpenImage(
-                      url: message.message,
-                    );
+                    return OpenImage(url: message.message);
                   },
                 ),
               );
             },
             child: Column(
-              mainAxisAlignment: user.uid == message.senderId
-                  ? MainAxisAlignment.end
-                  : MainAxisAlignment.start,
+              mainAxisAlignment:
+                  user.uid == message.senderId ? MainAxisAlignment.end : MainAxisAlignment.start,
               children: [
                 ClipRRect(
                   child: Image.network(message.message),

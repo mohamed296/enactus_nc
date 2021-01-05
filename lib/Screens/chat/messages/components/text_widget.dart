@@ -24,9 +24,8 @@ class _MessageWidgetState extends State<MessageWidget> {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: user.uid == widget.message.senderId
-          ? MainAxisAlignment.end
-          : MainAxisAlignment.start,
+      mainAxisAlignment:
+          user.uid == widget.message.senderId ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
         user.uid != widget.message.senderId
             ? InkWell(
@@ -78,12 +77,9 @@ class _MessageWidgetState extends State<MessageWidget> {
             });
           },
           child: Container(
-            constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.80),
+            constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.80),
             decoration: BoxDecoration(
-              color: user.uid != widget.message.senderId
-                  ? Constants.lightBlue
-                  : Constants.midBlue,
+              color: user.uid != widget.message.senderId ? Constants.lightBlue : Constants.midBlue,
               borderRadius: user.uid == widget.message.senderId
                   ? BorderRadius.only(
                       topLeft: Radius.circular(10.0),
@@ -117,9 +113,7 @@ class _MessageWidgetState extends State<MessageWidget> {
                 showdate == true
                     ? InkWell(
                         onTap: () {
-                          setState(() {
-                            showdate = false;
-                          });
+                          setState(() => showdate = !showdate);
                         },
                         child: Text(
                           '${widget.message.userName} - ${widget.message.timestamp.toDate().hour.toString()}:${widget.message.timestamp.toDate().minute.toString()}',
@@ -130,10 +124,7 @@ class _MessageWidgetState extends State<MessageWidget> {
                           ),
                         ),
                       )
-                    : Container(
-                        width: 0,
-                        height: 0,
-                      ),
+                    : Container(width: 0, height: 0),
               ],
             ),
           ),

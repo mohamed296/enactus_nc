@@ -43,6 +43,8 @@ class MessageServices {
     String lastMessage;
     if (messageModel.type == 'Task' || messageModel.type == 'Message') {
       lastMessage = messageModel.message;
+    } else if (messageModel.type == 'Record') {
+      lastMessage = 'Recored';
     } else {
       lastMessage = 'Image';
     }

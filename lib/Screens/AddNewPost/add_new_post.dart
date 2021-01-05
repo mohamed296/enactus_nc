@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:enactusnca/Models/post.dart';
-import 'package:enactusnca/Screens/Home/Home.dart';
 import 'package:enactusnca/Widgets/constants.dart';
 import 'package:enactusnca/wrapper.dart';
 import 'package:firebase_storage/firebase_storage.dart';

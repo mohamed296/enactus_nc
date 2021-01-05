@@ -31,14 +31,14 @@ class _MyAppState extends State<MyApp> {
         future: _initialization,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Center(child: Text(snapshot.error.toString()));
+            return Scaffold(body: Center(child: Text(snapshot.error.toString())));
           }
 
           if (snapshot.connectionState == ConnectionState.done) {
             return widget.user != null ? Wrapper() : SignIn();
           }
 
-          return Center(child: CircularProgressIndicator());
+          return Scaffold(body: Center(child: CircularProgressIndicator()));
         },
       ),
     );

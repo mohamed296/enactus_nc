@@ -1,22 +1,24 @@
 import 'dart:io';
 
+import 'package:auto_direction/auto_direction.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Models/messages_model.dart';
 import 'package:enactusnca/Models/user_model.dart';
 import 'package:enactusnca/Screens/chat/group_member.dart';
-import 'package:enactusnca/Screens/chat/messages/task_widget.dart';
+import 'package:enactusnca/Screens/chat/messages/components/record_widget.dart';
+import 'package:enactusnca/controller/message_controller.dart';
 import 'package:enactusnca/services/database_methods.dart';
 import 'package:enactusnca/services/message_group_services.dart';
 import 'package:enactusnca/services/message_services.dart';
 import 'package:enactusnca/services/user_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:auto_direction/auto_direction.dart';
-import 'image_widget.dart';
-import 'text_widget.dart';
+
+import 'components/image_widget.dart';
+import 'components/task_message.dart';
+import 'components/task_widget.dart';
+import 'components/text_widget.dart';
 
 class Messages extends StatefulWidget {
   static String id = 'messages';
@@ -47,14 +49,16 @@ class _MessagesState extends State<Messages> {
   final user = FirebaseAuth.instance.currentUser;
   TextEditingController tecMessage = TextEditingController();
   DatabaseMethods databaseMethods = DatabaseMethods();
+  MessageController messageController = MessageController();
+  TaskMessage taskMessage = TaskMessage();
 
   Stream conversationStream;
-  DateTime selectedDate = DateTime.now();
+
   bool isRTL = false;
   String text = "";
 
-  File _image;
-  String _imgURL;
+  bool sending = false;
+  bool recording = false;
 
   @override
   void initState() {
@@ -64,232 +68,6 @@ class _MessagesState extends State<Messages> {
         databaseMethods.markMessageAsSeen(widget.chatRoomId);
       }
     }
-  }
-
-  Future getImage() async {
-    final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _imgURL = pickedFile.hashCode.toString();
-        _image = File(pickedFile.path);
-      });
-    }
-    return _image;
-  }
-
-  Future uploadImage(BuildContext context) async {
-    try {
-      StorageReference ref = FirebaseStorage.instance.ref().child(_imgURL);
-      StorageUploadTask storageUploadTask = ref.putFile(_image);
-      StorageTaskSnapshot taskSnapshot = await storageUploadTask.onComplete;
-      String url = await taskSnapshot.ref.getDownloadURL();
-      return url;
-    } catch (ex) {
-      print(ex.toString());
-    }
-  }
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(2019, 8),
-      lastDate: DateTime(2100),
-      useRootNavigator: true,
-    );
-    if (picked != null && picked != selectedDate) {
-      setState(() => selectedDate = picked);
-    }
-  }
-
-  sendMessage({
-    String type,
-    DateTime dateTime,
-    UserModel userModel,
-    bool sendNotification,
-    String url,
-  }) async {
-    MessageModel messageModel = MessageModel(
-      receverId: widget.userId,
-      groupId: widget.group == true ? widget.groupName : widget.chatRoomId,
-      type: type,
-      message: type == 'Message'
-          ? tecMessage.text
-          : type == 'Task'
-              ? dateTime.toString()
-              : url,
-    );
-    widget.group == true
-        ? type == 'Task'
-            ? MessageGroupServices()
-                .sendTaskMessage(messageModel, dateTime, sendNotification)
-                .catchError((error) => print("getConversationErrors : ${error.toString()}"))
-                .whenComplete(() => tecMessage.clear())
-            : MessageGroupServices()
-                .sendGroupMessage(messageModel)
-                .catchError((error) => print("getConversationErrors : ${error.toString()}"))
-                .whenComplete(() => tecMessage.clear())
-        : MessageServices()
-            .sendMessage(messageModel)
-            .catchError((error) => print("getConversationErrors : ${error.toString()}"))
-            .whenComplete(() => tecMessage.clear());
-  }
-
-  void showGroupMembers(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
-      ),
-      elevation: 1.0,
-      isDismissible: true,
-      clipBehavior: Clip.antiAlias,
-      backgroundColor: Theme.of(context).primaryColor,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return Scaffold(
-              appBar: AppBar(
-                title: Text('Assign Task To'),
-                leading: Container(),
-              ),
-              floatingActionButton: FloatingActionButton(
-                child: Icon(Icons.done_all_rounded),
-                onPressed: () {
-                  _selectDate(context).then((dataTime) {
-                    final UserModel taskUser = UserModel(username: 'All');
-                    sendMessage(
-                      dateTime: selectedDate,
-                      type: 'Task',
-                      userModel: taskUser,
-                      sendNotification: false,
-                    );
-                  }).whenComplete(() => Navigator.pop(context));
-                },
-              ),
-              body: StreamBuilder<List<UserModel>>(
-                stream: FirebaseFirestore.instance
-                    .collection('GroupChat')
-                    .doc(widget.groupName)
-                    .collection('members')
-                    .snapshots()
-                    .map(MessageGroupServices().listOfMembers),
-                builder: (context, snapshot) {
-                  return snapshot.hasData
-                      ? ListView.builder(
-                          physics: BouncingScrollPhysics(),
-                          itemCount: snapshot.data.length,
-                          itemBuilder: (context, index) => ListTile(
-                            onTap: () => _selectDate(context).then((dataTime) {
-                              final UserModel taskUser = UserModel(
-                                id: snapshot.data[index].id,
-                                username: snapshot.data[index].username,
-                                photoUrl: snapshot.data[index].photoUrl,
-                              );
-                              sendMessage(
-                                type: 'Task',
-                                dateTime: selectedDate,
-                                userModel: taskUser,
-                                sendNotification: true,
-                              );
-                            }).whenComplete(() => Navigator.pop(context)),
-                            leading: CircleAvatar(
-                              radius: 30,
-                              backgroundImage: snapshot.data[index].photoUrl == null
-                                  ? AssetImage("assets/images/person.png")
-                                  : NetworkImage(snapshot.data[index].photoUrl),
-                            ),
-                            title: Text(snapshot?.data[index]?.username ?? 'user'),
-                            subtitle: snapshot.data[index].isHead ? Text('Head') : Text('Member'),
-                          ),
-                        )
-                      : CircularProgressIndicator();
-                },
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  _buildMessage(MessageModel message) {
-    return message.type == 'Task'
-        ? TaskWidget(messageModel: message)
-        : message.type == 'Message'
-            ? MessageWidget(message: message, group: widget.group)
-            : ImageWidget(message: message);
-  }
-
-  _buildMessageComposer() {
-    return StreamBuilder<UserModel>(
-      stream: FirebaseFirestore.instance
-          .collection('Users')
-          .doc(user.uid)
-          .snapshots()
-          .map(UserServices().userData),
-      builder: (context, snapshot) {
-        return snapshot.hasData
-            ? Container(
-                margin: EdgeInsets.all(10),
-                padding: EdgeInsets.symmetric(horizontal: 8.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(40),
-                  color: Color(0x8022417A),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    IconButton(
-                      icon: Icon(Icons.image, color: Colors.yellow),
-                      onPressed: () async {
-                        await getImage();
-                        if (_image != null) {
-                          await uploadImage(context).then(
-                            (url) => sendMessage(type: 'image', url: url),
-                          );
-                          _image = null;
-                        }
-                      },
-                    ),
-                    Expanded(
-                      child: AutoDirection(
-                        text: text,
-                        onDirectionChange: (isRTL) => setState(() => this.isRTL = isRTL),
-                        child: TextField(
-                          controller: tecMessage,
-                          textCapitalization: TextCapitalization.sentences,
-                          scrollPhysics: BouncingScrollPhysics(),
-                          style: TextStyle(color: Colors.white),
-                          maxLines: 4,
-                          minLines: 1,
-                          onChanged: (value) => setState(() => text = value),
-                          textInputAction: TextInputAction.newline,
-                          decoration: InputDecoration.collapsed(
-                            hintStyle: TextStyle(color: Colors.grey.shade100),
-                            hintText: "Type a message..",
-                          ),
-                        ),
-                      ),
-                    ),
-                    snapshot.data.isHead || snapshot.data.isAdmin && widget.groupName != null
-                        ? IconButton(
-                            icon: Icon(Icons.table_chart),
-                            color: Constants.yellow,
-                            onPressed: () => showGroupMembers(context),
-                          )
-                        : Container(),
-                    IconButton(
-                      icon: Icon(Icons.send),
-                      color: Constants.yellow,
-                      onPressed: () => sendMessage(type: 'Message'),
-                    )
-                  ],
-                ),
-              )
-            : CircularProgressIndicator();
-      },
-    );
   }
 
   @override
@@ -379,7 +157,13 @@ class _MessagesState extends State<Messages> {
                                 read: snapShot.data[index].read,
                                 messageId: snapShot.data[index].messageId,
                               );
-                              return _buildMessage(message);
+                              return message.type == 'Task'
+                                  ? TaskWidget(messageModel: message)
+                                  : message.type == 'Message'
+                                      ? MessageWidget(message: message, group: widget.group)
+                                      : message.type == 'Record'
+                                          ? RecordWidget(message: message)
+                                          : ImageWidget(message: message);
                             })
                         : Center(child: CircularProgressIndicator());
                   },
@@ -390,6 +174,153 @@ class _MessagesState extends State<Messages> {
           ),
         ),
       ],
+    );
+  }
+
+  sendMessage({String type, String url}) async {
+    MessageModel messageModel = MessageModel(
+      receverId: widget.userId,
+      groupId: widget.group == true ? widget.groupName : widget.chatRoomId,
+      type: type,
+      message: type == 'Message' ? tecMessage.text : url,
+    );
+
+    widget.group == true
+        ? MessageGroupServices()
+            .sendGroupMessage(messageModel)
+            .catchError((error) => print("error in message : ${error.toString()}"))
+            .whenComplete(() => tecMessage.clear())
+        : MessageServices()
+            .sendMessage(messageModel)
+            .catchError((error) => print("error in message : ${error.toString()}"))
+            .whenComplete(() => tecMessage.clear());
+  }
+
+  _buildMessageComposer() {
+    return StreamBuilder<UserModel>(
+      stream: FirebaseFirestore.instance
+          .collection('Users')
+          .doc(user.uid)
+          .snapshots()
+          .map(UserServices().userData),
+      builder: (context, snapshot) {
+        return snapshot.hasData
+            ? Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  recording
+                      ? Text('Recording..')
+                      : sending
+                          ? Text('Sending..')
+                          : Container(),
+                  sending || recording
+                      ? LinearProgressIndicator(
+                          backgroundColor: recording ? Colors.red : Colors.green,
+                        )
+                      : Container(),
+                  Container(
+                    margin: EdgeInsets.all(8),
+                    padding: EdgeInsets.symmetric(horizontal: 8.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(40),
+                      color: Color(0x8022417A),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        IconButton(
+                          padding: EdgeInsets.all(0),
+                          icon: Icon(Icons.image, color: Colors.yellow),
+                          onPressed: () async {
+                            File image = await messageController.getImage();
+                            if (image != null) {
+                              setState(() => sending = true);
+                              await messageController
+                                  .uploadFile(
+                                    file: image,
+                                    image: true,
+                                    fileName: image.path.codeUnits.toString(),
+                                  )
+                                  .then((url) => sendMessage(type: 'image', url: url))
+                                  .whenComplete(() {
+                                setState(() => sending = false);
+                              });
+                            }
+                            return;
+                          },
+                        ),
+                        (snapshot.data.isHead || snapshot.data.isAdmin) && widget.groupName != null
+                            ? IconButton(
+                                padding: EdgeInsets.all(0),
+                                icon: Icon(Icons.table_chart),
+                                color: Constants.yellow,
+                                onPressed: () =>
+                                    taskMessage.showGroupMembers(context, widget.groupName),
+                              )
+                            : Container(),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: GestureDetector(
+                            child: Icon(
+                              Icons.mic_rounded,
+                              color: recording ? Colors.red : Colors.yellow,
+                            ),
+                            onLongPress: () {
+                              setState(() {
+                                recording = true;
+                              });
+                              messageController.startRecording();
+                            },
+                            onLongPressUp: () {
+                              setState(() {
+                                recording = false;
+                                sending = true;
+                              });
+                              messageController.stopRecording().then((url) {
+                                if (url != null) {
+                                  sendMessage(type: 'Record', url: url);
+                                }
+                              }).whenComplete(() {
+                                setState(() {
+                                  sending = false;
+                                });
+                              });
+                            },
+                          ),
+                        ),
+                        Expanded(
+                          child: AutoDirection(
+                            text: text,
+                            onDirectionChange: (isRTL) => setState(() => this.isRTL = isRTL),
+                            child: TextField(
+                              controller: tecMessage,
+                              textCapitalization: TextCapitalization.sentences,
+                              scrollPhysics: BouncingScrollPhysics(),
+                              style: TextStyle(color: Colors.white),
+                              maxLines: 4,
+                              minLines: 1,
+                              onChanged: (value) => setState(() => text = value),
+                              textInputAction: TextInputAction.newline,
+                              decoration: InputDecoration.collapsed(
+                                hintStyle: TextStyle(color: Colors.grey.shade100),
+                                hintText: "Aa",
+                              ),
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          padding: EdgeInsets.all(0),
+                          icon: Icon(Icons.send),
+                          color: Constants.yellow,
+                          onPressed: () => sendMessage(type: 'Message'),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              )
+            : CircularProgressIndicator();
+      },
     );
   }
 }
