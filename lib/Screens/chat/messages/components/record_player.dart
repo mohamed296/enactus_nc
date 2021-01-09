@@ -97,6 +97,7 @@ class _PlayerState extends State<Player> {
 
     _playerErrorSubscription = _audioPlayer.onPlayerError.listen(
       (msg) {
+        _onComplete();
         setState(() {
           _playerState = PlayerState.stopped;
           _duration = Duration(seconds: 0);
@@ -155,60 +156,46 @@ class _PlayerState extends State<Player> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              _isPlaying
-                  ? IconButton(
-                      icon: Icon(Icons.pause_circle_filled_rounded, color: Colors.yellow),
-                      iconSize: 30.0,
-                      onPressed: () => _pause(),
-                    )
-                  : IconButton(
-                      icon: Icon(Icons.play_arrow_rounded, color: Colors.yellow),
-                      iconSize: 30.0,
-                      onPressed: () => _play(),
-                    ),
-              Expanded(
-                child: Slider(
-                  activeColor: Colors.yellow,
-                  value: (_position != null &&
-                          _duration != null &&
-                          _position.inMilliseconds > 0 &&
-                          _position.inMilliseconds < _duration.inMilliseconds)
-                      ? _position.inMilliseconds / _duration.inMilliseconds
-                      : 0.0,
-                  onChanged: (v) {
-                    final position = v * _duration.inMilliseconds;
-                    _audioPlayer.seek(Duration(milliseconds: position.round()));
-                  },
-                ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        _isPlaying
+            ? IconButton(
+                icon: Icon(Icons.pause_circle_filled_rounded,
+                    color: Theme.of(context).iconTheme.color),
+                iconSize: 30.0,
+                onPressed: () => _pause(),
+              )
+            : IconButton(
+                icon: Icon(Icons.play_arrow_rounded, color: Theme.of(context).iconTheme.color),
+                iconSize: 30.0,
+                onPressed: () => _play(),
               ),
-            ],
+        Flexible(
+          child: Slider(
+            activeColor: Theme.of(context).iconTheme.color,
+            value: (_position != null &&
+                    _duration != null &&
+                    _position.inMilliseconds > 0 &&
+                    _position.inMilliseconds < _duration.inMilliseconds)
+                ? _position.inMilliseconds / _duration.inMilliseconds
+                : 0.0,
+            onChanged: (v) {
+              final position = v * _duration.inMilliseconds;
+              _audioPlayer.seek(Duration(milliseconds: position.round()));
+            },
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 12.0, right: 12.0),
-            child: Text(
-              //  : ${_durationText ?? ''}
-              _position != null
-                  ? '${_positionText ?? ''}'
-                  : _duration != null
-                      ? _durationText
-                      : '0.00',
-              style: TextStyle(
-                fontSize: 12.0,
-                color: Theme.of(context).iconTheme.color,
-              ),
-            ),
-          ),
-        ],
-      ),
+        ),
+        Text(
+          _position != null
+              ? '${_positionText ?? ''}'
+              : _duration != null
+                  ? _durationText
+                  : '0.00',
+          style: TextStyle(fontSize: 12.0, color: Theme.of(context).iconTheme.color),
+        ),
+      ],
     );
   }
 }

@@ -20,12 +20,17 @@ class MessageController {
     }
   }
 
-  Future<String> stopRecording() async {
+  Future<String> stopRecording(String chatId) async {
     if (await AudioRecorder.hasPermissions) {
       String _time = getTime();
       File _recordFile = await _recordServices.stopRecording();
-      String _fileName = '${_time.trim.toString}-${_recordFile.toString}';
-      String _url = await uploadFile(fileName: _fileName, file: _recordFile, image: false);
+      String _fileName = '${_time.hashCode.toString()}-${_recordFile.hashCode.toString()}';
+      String _url = await uploadFile(
+        chatId: chatId,
+        fileName: _fileName,
+        file: _recordFile,
+        image: false,
+      );
       return _url;
     }
     return null;
@@ -61,9 +66,9 @@ class MessageController {
     return _image;
   }
 
-  Future uploadFile({String fileName, bool image, File file}) async {
+  Future uploadFile({String chatId, String fileName, bool image, File file}) async {
     try {
-      StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
+      StorageReference reference = FirebaseStorage.instance.ref().child('$chatId/$fileName');
       StorageUploadTask storageUploadTask;
       if (image) {
         storageUploadTask = reference.putFile(file);

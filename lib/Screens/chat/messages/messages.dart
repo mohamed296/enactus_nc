@@ -184,16 +184,18 @@ class _MessagesState extends State<Messages> {
       type: type,
       message: type == 'Message' ? tecMessage.text : url,
     );
+    tecMessage.clear();
+    setState(() => sending = true);
 
     widget.group == true
         ? MessageGroupServices()
             .sendGroupMessage(messageModel)
             .catchError((error) => print("error in message : ${error.toString()}"))
-            .whenComplete(() => tecMessage.clear())
+            .whenComplete(() => setState(() => sending = false))
         : MessageServices()
             .sendMessage(messageModel)
             .catchError((error) => print("error in message : ${error.toString()}"))
-            .whenComplete(() => tecMessage.clear());
+            .whenComplete(() => setState(() => sending = false));
   }
 
   _buildMessageComposer() {
@@ -254,8 +256,10 @@ class _MessagesState extends State<Messages> {
                                 padding: EdgeInsets.all(0),
                                 icon: Icon(Icons.table_chart),
                                 color: Constants.yellow,
-                                onPressed: () =>
-                                    taskMessage.showGroupMembers(context, widget.groupName),
+                                onPressed: () => taskMessage.showGroupMembers(
+                                  context,
+                                  widget.groupName,
+                                ),
                               )
                             : Container(),
                         Padding(
@@ -266,9 +270,7 @@ class _MessagesState extends State<Messages> {
                               color: recording ? Colors.red : Colors.yellow,
                             ),
                             onLongPress: () {
-                              setState(() {
-                                recording = true;
-                              });
+                              setState(() => recording = true);
                               messageController.startRecording();
                             },
                             onLongPressUp: () {
@@ -276,15 +278,12 @@ class _MessagesState extends State<Messages> {
                                 recording = false;
                                 sending = true;
                               });
-                              messageController.stopRecording().then((url) {
+                              String chatId = widget?.chatRoomId ?? widget.groupName;
+                              messageController.stopRecording(chatId).then((url) {
                                 if (url != null) {
                                   sendMessage(type: 'Record', url: url);
                                 }
-                              }).whenComplete(() {
-                                setState(() {
-                                  sending = false;
-                                });
-                              });
+                              }).whenComplete(() => setState(() => sending = false));
                             },
                           ),
                         ),

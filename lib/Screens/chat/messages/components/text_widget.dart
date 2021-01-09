@@ -1,3 +1,4 @@
+import 'package:auto_direction/auto_direction.dart';
 import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Models/messages_model.dart';
 import 'package:enactusnca/Screens/Profile/profile.dart';
@@ -20,12 +21,14 @@ class MessageWidget extends StatefulWidget {
 class _MessageWidgetState extends State<MessageWidget> {
   final user = FirebaseAuth.instance.currentUser;
   bool showdate = false;
+  bool isRTL = false;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment:
           user.uid == widget.message.senderId ? MainAxisAlignment.end : MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         user.uid != widget.message.senderId
             ? InkWell(
@@ -41,11 +44,11 @@ class _MessageWidgetState extends State<MessageWidget> {
                   );
                 },
                 child: Container(
-                  padding: EdgeInsets.all(12.0),
-                  height: 50,
-                  width: 50,
+                  margin: EdgeInsets.only(left: 12.0, bottom: 12.0),
+                  height: 34,
+                  width: 34,
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(25.0),
+                    borderRadius: BorderRadius.circular(24.0),
                     child: widget.message.userImg != null
                         ? Image.network(
                             widget.message.userImg,
@@ -71,44 +74,42 @@ class _MessageWidgetState extends State<MessageWidget> {
               textColor: Theme.of(context).accentColor,
             );
           },
-          onTap: () {
-            setState(() {
-              showdate = true;
-            });
-          },
+          onTap: () => setState(() => showdate = true),
           child: Container(
             constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.80),
             decoration: BoxDecoration(
               color: user.uid != widget.message.senderId ? Constants.lightBlue : Constants.midBlue,
               borderRadius: user.uid == widget.message.senderId
                   ? BorderRadius.only(
-                      topLeft: Radius.circular(10.0),
-                      topRight: Radius.circular(10.0),
-                      bottomLeft: Radius.circular(10.0),
+                      topLeft: Radius.circular(8.0),
+                      topRight: Radius.circular(8.0),
+                      bottomLeft: Radius.circular(8.0),
                     )
                   : BorderRadius.only(
-                      topRight: Radius.circular(10.0),
-                      topLeft: Radius.circular(10.0),
-                      bottomRight: Radius.circular(10.0),
+                      topRight: Radius.circular(8.0),
+                      topLeft: Radius.circular(8.0),
+                      bottomRight: Radius.circular(8.0),
                     ),
             ),
-            margin: user.uid == widget.message.senderId
-                ? EdgeInsets.only(top: 8.0, bottom: 8.0, right: 10.0)
-                : EdgeInsets.only(top: 8.0, bottom: 8.0),
+            margin: EdgeInsets.all(12.0),
             padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 12.0),
             child: Column(
               crossAxisAlignment: user.uid == widget.message.senderId
                   ? CrossAxisAlignment.end
                   : CrossAxisAlignment.start,
               children: <Widget>[
-                LinkWell(
-                  widget.message.message,
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.blueGrey.shade100,
+                AutoDirection(
+                  text: widget.message.message,
+                  onDirectionChange: (isRTL) => setState(() => this.isRTL = isRTL),
+                  child: LinkWell(
+                    widget.message.message,
+                    style: TextStyle(
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.blueGrey.shade100,
+                    ),
+                    softWrap: true,
                   ),
-                  softWrap: true,
                 ),
                 showdate == true
                     ? InkWell(
