@@ -10,7 +10,6 @@ import 'package:enactusnca/Widgets/post_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 class PostTile extends StatefulWidget {
   final Post post;
@@ -194,10 +193,7 @@ class _PostTileState extends State<PostTile> {
       trailing: user.uid == widget.post.ownerId
           ? IconButton(
               onPressed: () {
-                FirebaseFirestore.instance
-                    .collection('Posts')
-                    .doc(widget.post.postId)
-                    .delete();
+                FirebaseFirestore.instance.collection('Posts').doc(widget.post.postId).delete();
               },
               icon: Icon(
                 Icons.delete,
@@ -239,9 +235,7 @@ class _PostTileState extends State<PostTile> {
               //  style: TextStyle(color: KMainColor)
             ),
           ),
-          widget.post.mediaUrl != null
-              ? PostImage(imageUrl: widget.post.mediaUrl)
-              : Container(),
+          widget.post.mediaUrl != null ? PostImage(imageUrl: widget.post.mediaUrl) : Container(),
         ],
       ),
     );

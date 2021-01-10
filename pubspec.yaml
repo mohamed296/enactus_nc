@@ -31,9 +31,13 @@ dependencies:
   cloud_functions: ^0.6.0
   image_picker: ^0.6.7+14
   image_downloader: ^0.20.1
-  dio: ^3.0.10
 
-
+  auto_direction: ^0.0.4+1
+  audio_recorder: ^1.0.2
+  audioplayers: ^0.16.1
+  intl: ^0.16.1
+  permission_handler: ^5.0.1+1
+  
   bottom_navy_bar: ^5.5.0
   line_icons: ^0.2.0
   cupertino_icons: ^1.0.0 
@@ -56,7 +60,6 @@ dependencies:
   animated_theme_switcher: ^1.0.5
   toast: ^0.1.5
   connectivity: ^2.0.0
-  flutter_local_notifications: ^1.4.4+3
   table_calendar: ^2.2.3
   cached_network_image: ^2.3.3
   path: ^1.7.0

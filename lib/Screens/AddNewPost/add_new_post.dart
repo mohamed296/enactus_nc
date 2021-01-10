@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:enactusnca/Models/post.dart';
-import 'package:enactusnca/Screens/Home/Home.dart';
 import 'package:enactusnca/Widgets/constants.dart';
+import 'package:enactusnca/wrapper.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -10,7 +10,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddNewPost extends StatefulWidget {
-  static String id = 'AddNewPost';
   @override
   _AddNewPostState createState() => _AddNewPostState();
 }
@@ -45,8 +44,8 @@ class _AddNewPostState extends State<AddNewPost> {
 
   handleTakePhoto() async {
     Navigator.pop(context);
-    File file = await ImagePicker.pickImage(
-        source: ImageSource.camera, maxHeight: 675, maxWidth: 960);
+    File file =
+        await ImagePicker.pickImage(source: ImageSource.camera, maxHeight: 675, maxWidth: 960);
     setState(() {
       this.file = file;
     });
@@ -54,8 +53,8 @@ class _AddNewPostState extends State<AddNewPost> {
 
   handleChoosePhoto() async {
     Navigator.pop(context);
-    File file = await ImagePicker.pickImage(
-        source: ImageSource.gallery, maxHeight: 675, maxWidth: 960);
+    File file =
+        await ImagePicker.pickImage(source: ImageSource.gallery, maxHeight: 675, maxWidth: 960);
     setState(() {
       this.file = file;
     });
@@ -142,9 +141,7 @@ class _AddNewPostState extends State<AddNewPost> {
             setState(() => showLoadingPost = true);
             if (imageUrl != null) {
               await uploadImage().then((onComplet) async {
-                await post
-                    .addNewPost(description: newPost, mediaUrl: imageUrl)
-                    .then((onComplete) {
+                await post.addNewPost(description: newPost, mediaUrl: imageUrl).then((onComplete) {
                   setState(() => showLoadingPost = false);
                   Fluttertoast.showToast(msg: 'Post add Successfuly.');
                 });
@@ -158,39 +155,14 @@ class _AddNewPostState extends State<AddNewPost> {
           } else {
             Fluttertoast.showToast(msg: 'Please Type Something');
           }
-          Navigator.of(context).pushNamed(Home.id);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Wrapper()),
+          );
         },
       ),
     );
   }
-
-/*   userInfo(BuildContext context) {
-    //final _user = Provider.of<User>(context);
-    // final _user = User;
-    return Container(
-      margin: EdgeInsets.all(16.0),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 16.0,
-
-            /*   backgroundImage: NetworkImage(
-             _user?.photoUrl ??
-                  'https://fakeimg.pl/350x200/?text=World&font=lobster',
-            ),*/
-          ),
-          SizedBox(width: 8.0),
-          Text(
-            //  _user?.runtimeType ??
-            'User Name',
-
-            // style: TextStyle(fontSize: 16.0),
-          ),
-          SizedBox(width: 12.0),
-        ],
-      ),
-    );
-  } */
 
   addImage(BuildContext context) {
     return FlatButton(
@@ -221,9 +193,7 @@ class _AddNewPostState extends State<AddNewPost> {
                             SizedBox(width: 4.0),
                             Text(
                               'Add Photo',
-                              style: TextStyle(
-                                color: Theme.of(context).accentColor,
-                              ),
+                              style: TextStyle(color: Theme.of(context).accentColor),
                             ),
                           ],
                         ),

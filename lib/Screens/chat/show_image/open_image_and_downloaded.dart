@@ -1,12 +1,5 @@
-//import 'dart:io';
-
-//import 'package:dio/dio.dart';
-//import 'package:firebase_storage/firebase_storage.dart';
-
 import 'package:flutter/material.dart';
 import 'package:image_downloader/image_downloader.dart';
-
-//import 'package:path_provider/path_provider.dart';
 
 class OpenImage extends StatelessWidget {
   final String url;

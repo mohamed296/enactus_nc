@@ -79,26 +79,17 @@ class _SearchScreenState extends State<SearchScreen> {
         leading: Row(
           children: [
             IconButton(
-              icon: Icon(
-                Icons.arrow_back,
-                color: KSacandColor,
+              icon: Icon(Icons.arrow_back, color: KSacandColor),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Wrapper()),
               ),
-              onPressed: () {
-                /*  Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => HomeScreen()));*/
-                // Navigator.pop(context);
-                Navigator.pushNamed(context, Wrapper.id);
-              },
             ),
           ],
         ),
-        title: Text(
-          "Search",
-          style: TextStyle(color: KSacandColor),
-        ),
+        title: Text("Search", style: TextStyle(color: KSacandColor)),
       ),
       body: Container(
-        //  color: Constants.darkBlue,
         child: Column(
           children: <Widget>[
             Row(

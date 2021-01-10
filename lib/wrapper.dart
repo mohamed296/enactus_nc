@@ -6,18 +6,7 @@ import 'package:enactusnca/Screens/chat/chat.dart';
 import 'package:enactusnca/Widgets/constants.dart';
 import 'package:flutter/material.dart';
 
-// final StorageReference storageRef = FirebaseStorage.instance.ref();
-// final usersRef = FirebaseFirestore.instance.collection('users');
-// final postsRef = FirebaseFirestore.instance.collection('posts');
-// final commentsRef = FirebaseFirestore.instance.collection('comments');
-// final activityFeedRef = FirebaseFirestore.instance.collection('feed');
-// final timelineRef = FirebaseFirestore.instance.collection('timeline');
-// final DateTime timestamp = DateTime.now();
-// UserModel currentUser;
-
 class Wrapper extends StatefulWidget {
-  static String id = 'wrapper';
-
   @override
   _WrapperState createState() => _WrapperState();
 }
@@ -50,26 +39,19 @@ class _WrapperState extends State<Wrapper> {
             onItemSelected: (index) => setState(() => _currentIndex = index),
             items: <BottomNavyBarItem>[
               BottomNavyBarItem(
-                title: Center(
-                    child: Text('home', style: TextStyle(color: KSacandColor))),
+                title: Center(child: Text('home', style: TextStyle(color: KSacandColor))),
                 icon: Center(child: Icon(Icons.home, color: KSacandColor)),
               ),
               BottomNavyBarItem(
-                title: Center(
-                    child: Text('notifications',
-                        style: TextStyle(color: KSacandColor))),
-                icon: Center(
-                    child: Icon(Icons.notifications, color: KSacandColor)),
+                title: Center(child: Text('notifications', style: TextStyle(color: KSacandColor))),
+                icon: Center(child: Icon(Icons.notifications, color: KSacandColor)),
               ),
               BottomNavyBarItem(
-                title: Center(
-                    child: Text(' Profile',
-                        style: TextStyle(color: KSacandColor))),
+                title: Center(child: Text(' Profile', style: TextStyle(color: KSacandColor))),
                 icon: Center(child: Icon(Icons.portrait, color: KSacandColor)),
               ),
               BottomNavyBarItem(
-                title: Center(
-                    child: Text('chat', style: TextStyle(color: KSacandColor))),
+                title: Center(child: Text('chat', style: TextStyle(color: KSacandColor))),
                 icon: Center(child: Icon(Icons.chat, color: KSacandColor)),
               ),
             ],
@@ -78,16 +60,6 @@ class _WrapperState extends State<Wrapper> {
       ],
     );
   }
-
-  // _changeHome(BuildContext context) {
-  //   if (Provider.of<Admin>(context, listen: false).isAdmin) {
-  //     child:
-  //     AdminHome();
-  //   } else {
-  //     child:
-  //     Home();
-  //   }
-  // }
 }
 
 class MYpopup extends StatelessWidget {

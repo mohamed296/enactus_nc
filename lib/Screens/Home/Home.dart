@@ -13,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Home extends StatefulWidget {
-  static String id = 'Home';
   @override
   _HomeState createState() => _HomeState();
 }
@@ -47,12 +46,13 @@ class _HomeState extends State<Home> {
                     ),
                     Scaffold(
                       backgroundColor: Colors.transparent,
-                      floatingActionButton: snapshot.data.isAdmin ||
-                              snapshot.data.isHead
+                      floatingActionButton: snapshot.data.isAdmin || snapshot.data.isHead
                           ? FloatingActionButton(
                               child: Icon(Icons.add),
-                              onPressed: () =>
-                                  Navigator.pushNamed(context, AddNewPost.id),
+                              onPressed: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => AddNewPost()),
+                              ),
                             )
                           : Container(),
                       appBar: AppBar(
@@ -75,26 +75,16 @@ class _HomeState extends State<Home> {
                           Hero(
                             tag: 'Icon1',
                             child: new IconButton(
-                                icon: Icon(
-                                  FontAwesomeIcons.calendar,
-                                  color: Color.fromRGBO(253, 194, 35, 1.0),
-                                ),
-                                onPressed: () {
-                                  Navigator.pushNamed(context, Events.id);
-                                }),
+                              icon: Icon(
+                                FontAwesomeIcons.calendar,
+                                color: Color.fromRGBO(253, 194, 35, 1.0),
+                              ),
+                              onPressed: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => Events()),
+                              ),
+                            ),
                           ),
-
-                          /*  Hero(
-                    tag: 'Icon3',
-                    child: new IconButton(
-                        icon: Icon(
-                          FontAwesomeIcons.edit,
-                          color: Color.fromRGBO(253, 194, 35, 1.0),
-                        ),
-                        onPressed: () {
-                          Navigator.pushNamed(context, EditPost.id);
-                        }),
-                  ),*/
                           PopupMenuButton(
                             onSelected: select,
                             itemBuilder: (context) {
@@ -107,8 +97,6 @@ class _HomeState extends State<Home> {
                             },
                           ),
                         ],
-
-                        // title: Text('Home',),
                       ),
                       body: PostsList(),
                     ),
@@ -119,7 +107,10 @@ class _HomeState extends State<Home> {
 
   void select(String choice) {
     if (choice == PopUpMenu.aboutUS) {
-      Navigator.pushNamed(context, HelpSupport.id);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HelpSupport()),
+      );
       //  auth.signOutGoogle(context);
     } else if (choice == PopUpMenu.signOut) {
       authMethods.signOut();
