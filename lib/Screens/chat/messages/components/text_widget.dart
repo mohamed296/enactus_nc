@@ -9,10 +9,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:linkwell/linkwell.dart';
 
 class MessageWidget extends StatefulWidget {
-  MessageWidget({this.message, this.group});
+  MessageWidget({this.message, this.group, this.seen});
 
   final MessageModel message;
   final bool group;
+  final bool seen;
 
   @override
   _MessageWidgetState createState() => _MessageWidgetState();
@@ -26,8 +27,9 @@ class _MessageWidgetState extends State<MessageWidget> {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment:
-          user.uid == widget.message.senderId ? MainAxisAlignment.end : MainAxisAlignment.start,
+      mainAxisAlignment: user.uid == widget.message.senderId
+          ? MainAxisAlignment.end
+          : MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         user.uid != widget.message.senderId
@@ -74,60 +76,69 @@ class _MessageWidgetState extends State<MessageWidget> {
               textColor: Theme.of(context).accentColor,
             );
           },
-          onTap: () => setState(() => showdate = true),
-          child: Container(
-            constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.80),
-            decoration: BoxDecoration(
-              color: user.uid != widget.message.senderId ? Constants.lightBlue : Constants.midBlue,
-              borderRadius: user.uid == widget.message.senderId
-                  ? BorderRadius.only(
-                      topLeft: Radius.circular(8.0),
-                      topRight: Radius.circular(8.0),
-                      bottomLeft: Radius.circular(8.0),
-                    )
-                  : BorderRadius.only(
-                      topRight: Radius.circular(8.0),
-                      topLeft: Radius.circular(8.0),
-                      bottomRight: Radius.circular(8.0),
-                    ),
-            ),
-            margin: EdgeInsets.all(12.0),
-            padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 12.0),
-            child: Column(
-              crossAxisAlignment: user.uid == widget.message.senderId
-                  ? CrossAxisAlignment.end
-                  : CrossAxisAlignment.start,
-              children: <Widget>[
-                AutoDirection(
-                  text: widget.message.message,
-                  onDirectionChange: (isRTL) => setState(() => this.isRTL = isRTL),
-                  child: LinkWell(
-                    widget.message.message,
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.blueGrey.shade100,
-                    ),
-                    softWrap: true,
-                  ),
-                ),
-                showdate == true
-                    ? InkWell(
-                        onTap: () {
-                          setState(() => showdate = !showdate);
-                        },
-                        child: Text(
-                          '${widget.message.userName} - ${widget.message.timestamp.toDate().hour.toString()}:${widget.message.timestamp.toDate().minute.toString()}',
-                          style: TextStyle(
-                            fontSize: 12.0,
-                            fontWeight: FontWeight.w200,
-                            color: Colors.grey.shade100,
-                          ),
+          onTap: () => setState(() => showdate = !showdate),
+          child: Row(
+            children: [
+              Container(
+                constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width * 0.80),
+                decoration: BoxDecoration(
+                  color: user.uid != widget.message.senderId
+                      ? Constants.lightBlue
+                      : Constants.midBlue,
+                  borderRadius: user.uid == widget.message.senderId
+                      ? BorderRadius.only(
+                          topLeft: Radius.circular(8.0),
+                          topRight: Radius.circular(8.0),
+                          bottomLeft: Radius.circular(8.0),
+                        )
+                      : BorderRadius.only(
+                          topRight: Radius.circular(8.0),
+                          topLeft: Radius.circular(8.0),
+                          bottomRight: Radius.circular(8.0),
                         ),
-                      )
-                    : Container(width: 0, height: 0),
-              ],
-            ),
+                ),
+                margin: EdgeInsets.all(12.0),
+                padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 12.0),
+                child: Column(
+                  crossAxisAlignment: user.uid == widget.message.senderId
+                      ? CrossAxisAlignment.end
+                      : CrossAxisAlignment.start,
+                  children: <Widget>[
+                    AutoDirection(
+                      text: widget.message.message,
+                      onDirectionChange: (isRTL) =>
+                          setState(() => this.isRTL = isRTL),
+                      child: LinkWell(
+                        widget.message.message,
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.blueGrey.shade100,
+                        ),
+                        softWrap: true,
+                      ),
+                    ),
+                    showdate == true
+                        ? Text(
+                            '${widget.message.userName} - ${widget.message.timestamp.toDate().hour.toString()}:${widget.message.timestamp.toDate().minute.toString()}',
+                            style: TextStyle(
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.w200,
+                              color: Colors.grey.shade100,
+                            ),
+                          )
+                        : Container(width: 0, height: 0),
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: 5,
+              ),
+              widget.seen == false
+                  ? Icon(Icons.check_circle_outline)
+                  : Icon(Icons.check_circle),
+            ],
           ),
         ),
       ],
