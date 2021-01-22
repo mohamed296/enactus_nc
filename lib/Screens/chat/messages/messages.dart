@@ -30,6 +30,8 @@ class Messages extends StatefulWidget {
   final String lastSender;
   final String userId;
   final String imageUrl;
+  final bool read;
+
   Messages({
     this.username,
     this.imageUrl,
@@ -39,6 +41,7 @@ class Messages extends StatefulWidget {
     this.groupName,
     this.group,
     this.userImg,
+    this.read,
   });
 
   @override
@@ -63,6 +66,7 @@ class _MessagesState extends State<Messages> {
   @override
   void initState() {
     super.initState();
+
     if (widget.group == false) {
       if (widget.lastSender != Constants.myName) {
         databaseMethods.markMessageAsSeen(widget.chatRoomId);
@@ -118,12 +122,13 @@ class _MessagesState extends State<Messages> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => GroupMember(groupName: widget.groupName),
+                            builder: (context) =>
+                                GroupMember(groupName: widget.groupName),
                           ),
                         );
                       },
                     )
-                  : Container()
+                  : Container(),
             ],
           ),
           body: Column(
@@ -131,9 +136,13 @@ class _MessagesState extends State<Messages> {
               Expanded(
                 child: StreamBuilder<List<MessageModel>>(
                   stream: FirebaseFirestore.instance
-                      .collection(widget.group == true ? 'GroupChat' : "chatRoom")
-                      .doc(widget.group == true ? widget.groupName : widget.chatRoomId)
-                      .collection(widget.group == true ? widget.groupName : "chats")
+                      .collection(
+                          widget.group == true ? 'GroupChat' : "chatRoom")
+                      .doc(widget.group == true
+                          ? widget.groupName
+                          : widget.chatRoomId)
+                      .collection(
+                          widget.group == true ? widget.groupName : "chats")
                       .orderBy("timestamp", descending: true)
                       .snapshots()
                       .map(MessageServices().listOfMessages),
@@ -160,7 +169,11 @@ class _MessagesState extends State<Messages> {
                               return message.type == 'Task'
                                   ? TaskWidget(messageModel: message)
                                   : message.type == 'Message'
-                                      ? MessageWidget(message: message, group: widget.group)
+                                      ? MessageWidget(
+                                          message: message,
+                                          group: widget.group,
+                                          seen: widget.read,
+                                        )
                                       : message.type == 'Record'
                                           ? RecordWidget(message: message)
                                           : ImageWidget(message: message);
@@ -190,11 +203,13 @@ class _MessagesState extends State<Messages> {
     widget.group == true
         ? MessageGroupServices()
             .sendGroupMessage(messageModel)
-            .catchError((error) => print("error in message : ${error.toString()}"))
+            .catchError(
+                (error) => print("error in message : ${error.toString()}"))
             .whenComplete(() => setState(() => sending = false))
         : MessageServices()
             .sendMessage(messageModel)
-            .catchError((error) => print("error in message : ${error.toString()}"))
+            .catchError(
+                (error) => print("error in message : ${error.toString()}"))
             .whenComplete(() => setState(() => sending = false));
   }
 
@@ -217,7 +232,8 @@ class _MessagesState extends State<Messages> {
                           : Container(),
                   sending || recording
                       ? LinearProgressIndicator(
-                          backgroundColor: recording ? Colors.red : Colors.green,
+                          backgroundColor:
+                              recording ? Colors.red : Colors.green,
                         )
                       : Container(),
                   Container(
@@ -243,7 +259,8 @@ class _MessagesState extends State<Messages> {
                                     image: true,
                                     fileName: image.path.codeUnits.toString(),
                                   )
-                                  .then((url) => sendMessage(type: 'image', url: url))
+                                  .then((url) =>
+                                      sendMessage(type: 'image', url: url))
                                   .whenComplete(() {
                                 setState(() => sending = false);
                               });
@@ -251,7 +268,8 @@ class _MessagesState extends State<Messages> {
                             return;
                           },
                         ),
-                        (snapshot.data.isHead || snapshot.data.isAdmin) && widget.groupName != null
+                        (snapshot.data.isHead || snapshot.data.isAdmin) &&
+                                widget.groupName != null
                             ? IconButton(
                                 padding: EdgeInsets.all(0),
                                 icon: Icon(Icons.table_chart),
@@ -278,19 +296,24 @@ class _MessagesState extends State<Messages> {
                                 recording = false;
                                 sending = true;
                               });
-                              String chatId = widget?.chatRoomId ?? widget.groupName;
-                              messageController.stopRecording(chatId).then((url) {
+                              String chatId =
+                                  widget?.chatRoomId ?? widget.groupName;
+                              messageController
+                                  .stopRecording(chatId)
+                                  .then((url) {
                                 if (url != null) {
                                   sendMessage(type: 'Record', url: url);
                                 }
-                              }).whenComplete(() => setState(() => sending = false));
+                              }).whenComplete(
+                                      () => setState(() => sending = false));
                             },
                           ),
                         ),
                         Expanded(
                           child: AutoDirection(
                             text: text,
-                            onDirectionChange: (isRTL) => setState(() => this.isRTL = isRTL),
+                            onDirectionChange: (isRTL) =>
+                                setState(() => this.isRTL = isRTL),
                             child: TextField(
                               controller: tecMessage,
                               textCapitalization: TextCapitalization.sentences,
@@ -298,10 +321,12 @@ class _MessagesState extends State<Messages> {
                               style: TextStyle(color: Colors.white),
                               maxLines: 4,
                               minLines: 1,
-                              onChanged: (value) => setState(() => text = value),
+                              onChanged: (value) =>
+                                  setState(() => text = value),
                               textInputAction: TextInputAction.newline,
                               decoration: InputDecoration.collapsed(
-                                hintStyle: TextStyle(color: Colors.grey.shade100),
+                                hintStyle:
+                                    TextStyle(color: Colors.grey.shade100),
                                 hintText: "Aa",
                               ),
                             ),

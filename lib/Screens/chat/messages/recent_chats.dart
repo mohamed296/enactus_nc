@@ -78,8 +78,10 @@ class _RecentChatState extends State<RecentChat> {
                   chatRoomId: roomID,
                   imageUrl: imgURL,
                   userId: ids[0] == user.uid ? ids[1] : ids[0],
-                  lastSender: snapshot.data.documents[index].data()["lastSender"],
+                  lastSender:
+                      snapshot.data.documents[index].data()["lastSender"],
                   username: users[1] == user.displayName ? users[0] : users[1],
+                  read: snapshot.data.documents[index].data()['isRead'],
                 ),
               ),
             );
@@ -88,7 +90,8 @@ class _RecentChatState extends State<RecentChat> {
             margin: EdgeInsets.only(top: 5.0, bottom: 5.0, right: 20.0),
             padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
             decoration: BoxDecoration(
-              color: snapshot.data.documents[index].data()["lastSender"] != user.displayName
+              color: snapshot.data.documents[index].data()["lastSender"] !=
+                      user.displayName
                   ? !snapshot.data.documents[index].data()["isRead"]
                       ? Constants.midBlue
                       : Constants.darkBlue
@@ -143,9 +146,12 @@ class _RecentChatState extends State<RecentChat> {
                         Container(
                           width: MediaQuery.of(context).size.width * 0.35,
                           child: Text(
-                            snapshot.data.documents[index].data()["lastMessage"] == null
+                            snapshot.data.documents[index]
+                                        .data()["lastMessage"] ==
+                                    null
                                 ? ""
-                                : snapshot.data.documents[index].data()["lastSender"] ==
+                                : snapshot.data.documents[index]
+                                            .data()["lastSender"] ==
                                         user.displayName
                                     ? 'You: ${snapshot.data.documents[index].data()["lastMessage"]}'
                                     : '${snapshot.data.documents[index].data()["lastMessage"]}',
@@ -167,7 +173,8 @@ class _RecentChatState extends State<RecentChat> {
                   children: <Widget>[
                     Text(
                       Functions.readTimestamp(
-                        snapshot.data.documents[index].data()["lastTime"] == null
+                        snapshot.data.documents[index].data()["lastTime"] ==
+                                null
                             ? 0
                             : snapshot.data.documents[index].data()["lastTime"],
                       ),
@@ -179,9 +186,12 @@ class _RecentChatState extends State<RecentChat> {
                     ),
                     SizedBox(height: 4.0),
                     Container(
-                      child: snapshot.data.documents[index].data()["isRead"] == null
+                      child: snapshot.data.documents[index].data()["isRead"] ==
+                              null
                           ? false
-                          : snapshot.data.documents[index].data()["lastSender"] != user.displayName
+                          : snapshot.data.documents[index]
+                                      .data()["lastSender"] !=
+                                  user.displayName
                               ? !snapshot.data.documents[index].data()["isRead"]
                                   ? Container(
                                       alignment: Alignment.center,
