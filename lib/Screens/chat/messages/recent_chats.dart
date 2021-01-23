@@ -91,7 +91,7 @@ class _RecentChatState extends State<RecentChat> {
             padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
             decoration: BoxDecoration(
               color: snapshot.data.documents[index].data()["lastSender"] !=
-                      user.displayName
+                      user.uid
                   ? !snapshot.data.documents[index].data()["isRead"]
                       ? Constants.midBlue
                       : Constants.darkBlue
