@@ -9,11 +9,12 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:linkwell/linkwell.dart';
 
 class MessageWidget extends StatefulWidget {
-  MessageWidget({this.message, this.group, this.seen});
+  MessageWidget({this.message, this.group, this.seen, this.lastmassage});
 
   final MessageModel message;
   final bool group;
   final bool seen;
+  final String lastmassage;
 
   @override
   _MessageWidgetState createState() => _MessageWidgetState();
@@ -135,9 +136,19 @@ class _MessageWidgetState extends State<MessageWidget> {
               SizedBox(
                 width: 5,
               ),
-              widget.seen == false
-                  ? Icon(Icons.check_circle_outline)
-                  : Icon(Icons.check_circle),
+              (widget.lastmassage == widget.message.message)
+                  ? widget.group == false
+                      ? widget.seen == false
+                          ? Icon(Icons.check_circle_outline)
+                          : Icon(Icons.check_circle)
+                      : Container(
+                          width: 0,
+                          height: 0,
+                        )
+                  : Container(
+                      width: 0,
+                      height: 0,
+                    ),
             ],
           ),
         ),

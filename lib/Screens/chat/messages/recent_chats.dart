@@ -25,6 +25,10 @@ class _RecentChatState extends State<RecentChat> {
   @override
   void initState() {
     super.initState();
+    setState(() {
+      print("${user.displayName}");
+    });
+
     getUserInfo();
   }
 
@@ -82,6 +86,8 @@ class _RecentChatState extends State<RecentChat> {
                       snapshot.data.documents[index].data()["lastSender"],
                   username: users[1] == user.displayName ? users[0] : users[1],
                   read: snapshot.data.documents[index].data()['isRead'],
+                  lastmassage:
+                      snapshot.data.documents[index].data()["lastMessage"],
                 ),
               ),
             );
