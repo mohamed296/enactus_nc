@@ -31,18 +31,19 @@ class Messages extends StatefulWidget {
   final String userId;
   final String imageUrl;
   final bool read;
+  final String lastmassage;
 
-  Messages({
-    this.username,
-    this.imageUrl,
-    this.userId,
-    this.chatRoomId,
-    this.lastSender,
-    this.groupName,
-    this.group,
-    this.userImg,
-    this.read,
-  });
+  Messages(
+      {this.username,
+      this.imageUrl,
+      this.userId,
+      this.chatRoomId,
+      this.lastSender,
+      this.groupName,
+      this.group,
+      this.userImg,
+      this.read,
+      this.lastmassage});
 
   @override
   _MessagesState createState() => _MessagesState();
@@ -68,7 +69,7 @@ class _MessagesState extends State<Messages> {
     super.initState();
 
     if (widget.group == false) {
-      if (widget.lastSender != Constants.myName) {
+      if (widget.lastSender != user.displayName) {
         databaseMethods.markMessageAsSeen(widget.chatRoomId);
       }
     }
@@ -173,6 +174,7 @@ class _MessagesState extends State<Messages> {
                                           message: message,
                                           group: widget.group,
                                           seen: widget.read,
+                                          lastmassage: widget.lastmassage,
                                         )
                                       : message.type == 'Record'
                                           ? RecordWidget(message: message)
