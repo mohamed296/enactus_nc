@@ -66,6 +66,7 @@ dependencies:
   url_launcher: ^5.7.10
   http: ^0.12.2
   linkwell: ^0.1.9
+  email_validator: ^1.0.6
 
 
 
