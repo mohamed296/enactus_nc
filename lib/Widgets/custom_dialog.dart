@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CustomDialog extends StatelessWidget {
   final String content;
   final String title;
-  final Function onTap;
+  final VoidCallback onTap;
   final bool showTitle;
 
   const CustomDialog({
@@ -24,7 +24,7 @@ class CustomDialog extends StatelessWidget {
       actions: [
         FlatButton(
           onPressed: onTap,
-          child: Text('OK'),
+          child: const Text('OK'),
         ),
       ],
     );

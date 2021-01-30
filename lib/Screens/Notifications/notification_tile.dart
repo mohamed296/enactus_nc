@@ -7,23 +7,38 @@ class NotificationTile extends StatelessWidget {
   const NotificationTile({Key key, this.notificationModel}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: ClipRRect(
-        borderRadius: BorderRadius.circular(8.0),
-        child: notificationModel.senderImg != null
-            ? Image.network(
-                notificationModel.senderImg,
-                fit: BoxFit.cover,
-                loadingBuilder: (context, child, loadingProgress) {
-                  return loadingProgress == null
-                      ? child
-                      : Center(child: CircularProgressIndicator());
-                },
-              )
-            : Icon(Icons.calendar_today),
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Row(
+        children: [
+          SizedBox(
+            height: 34,
+            width: 34,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: notificationModel.senderImg != null
+                  ? Image.network(
+                      notificationModel.senderImg,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        return loadingProgress == null
+                            ? child
+                            : Center(child: CircularProgressIndicator());
+                      },
+                    )
+                  : Icon(Icons.calendar_today),
+            ),
+          ),
+          SizedBox(width: 12.0),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(notificationModel.notificationMsg),
+              Text(notificationModel.notificationTime),
+            ],
+          )
+        ],
       ),
-      title: Text(notificationModel.notificationMsg),
-      subtitle: Text(notificationModel.notificationTime),
     );
   }
 }

@@ -1,7 +1,9 @@
+import 'package:badges/badges.dart';
 import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Models/list_of_groups.dart';
 import 'package:enactusnca/Models/user_model.dart';
 import 'package:enactusnca/Screens/chat/messages/messages.dart';
+import 'package:enactusnca/controller/message_group_controller.dart';
 import 'package:enactusnca/services/message_group_services.dart';
 import 'package:flutter/material.dart';
 
@@ -9,55 +11,70 @@ class AdminGroups extends StatelessWidget {
   final UserModel userModel;
 
   const AdminGroups({Key key, this.userModel}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<ListOfGroups>>(
       stream: MessageGroupServices().getGroupsList,
-      builder: (context, snapshot) {
-        return snapshot.hasData
+      builder: (context, groupListSnapshot) {
+        return groupListSnapshot.hasData
             ? ListView.builder(
                 physics: BouncingScrollPhysics(),
-                itemCount: snapshot.data.length,
+                itemCount: groupListSnapshot.data.length,
                 itemBuilder: (context, index) {
-                  return Container(
-                    margin: EdgeInsets.only(
-                      top: 5.0,
-                      bottom: 5.0,
-                      right: 20.0,
-                    ),
-                    padding: EdgeInsets.symmetric(
-                      vertical: 10.0,
-                      horizontal: 20.0,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Constants.midBlue,
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(20),
-                        bottomRight: Radius.circular(20),
-                      ),
-                    ),
-                    child: ListTile(
-                      leading: Container(
-                        height: 35,
-                        width: 35,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(35.0),
-                          child: Image.asset('assets/images/enactus.png'),
-                        ),
-                      ),
-                      title: Text(snapshot.data[index].groupName),
-                      subtitle: Text('${snapshot.data[index].lastMessage}', maxLines: 1),
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Messages(
-                            group: true,
-                            userId: snapshot.data[index].groupName,
-                            groupName: snapshot.data[index].groupName,
-                          ),
-                        ),
-                      ),
-                    ),
+                  return FutureBuilder<bool>(
+                    future: MessageGroupController()
+                        .getMessageCountChange(groupListSnapshot.data[index].groupName),
+                    builder: (context, snapshot) {
+                      return !snapshot.hasData
+                          ? Center(child: CircularProgressIndicator())
+                          : Container(
+                              margin: EdgeInsets.only(
+                                top: 5.0,
+                                bottom: 5.0,
+                                right: 20.0,
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                vertical: 10.0,
+                                horizontal: 20.0,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Constants.midBlue,
+                                borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(20),
+                                  bottomRight: Radius.circular(20),
+                                ),
+                              ),
+                              child: ListTile(
+                                leading: Badge(
+                                  showBadge: snapshot.data,
+                                  badgeContent: Text(''),
+                                  badgeColor: Constants.yellow,
+                                  child: Container(
+                                    height: 35,
+                                    width: 35,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(35.0),
+                                      child: Image.asset('assets/images/enactus.png'),
+                                    ),
+                                  ),
+                                ),
+                                title: Text(groupListSnapshot.data[index].groupName),
+                                subtitle: Text('${groupListSnapshot.data[index].lastMessage}',
+                                    maxLines: 1),
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Messages(
+                                      group: true,
+                                      userId: groupListSnapshot.data[index].groupName,
+                                      groupName: groupListSnapshot.data[index].groupName,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                    },
                   );
                 },
               )
