@@ -1,4 +1,5 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:enactusnca/Widgets/custom_dialog.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -26,23 +27,30 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           loading = true;
         });
         await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Email has been sent.',
-              style: TextStyle(color: Colors.white),
-            ),
-            backgroundColor: Colors.green[900],
+        showDialog(
+          context: context,
+          builder: (context) => CustomDialog(
+            showTitle: true,
+            title: 'Attention..',
+            content: 'Email has been sent.',
+            onTap: () {
+              Navigator.pop(context);
+            },
           ),
         );
       } catch (error) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              error,
-              style: TextStyle(color: Colors.white),
-            ),
-            backgroundColor: Colors.red[900],
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          useRootNavigator: true,
+          useSafeArea: true,
+          builder: (context) => CustomDialog(
+            showTitle: true,
+            title: 'Attentionزز',
+            content: error,
+            onTap: () {
+              Navigator.pop(context);
+            },
           ),
         );
       }
