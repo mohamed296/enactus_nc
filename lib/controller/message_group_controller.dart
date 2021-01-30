@@ -5,7 +5,7 @@ class MessageGroupController {
   final user = FirebaseAuth.instance.currentUser;
 
   Future<bool> getMessageCountChange(String groupName) async {
-    var listOfMessage = await FirebaseFirestore.instance
+    final listOfMessage = await FirebaseFirestore.instance
         .collection('GroupChat')
         .doc(groupName)
         .collection(groupName)
@@ -13,12 +13,12 @@ class MessageGroupController {
         .limit(1)
         .get();
 
-    DocumentSnapshot userData =
+    final DocumentSnapshot userData =
         await FirebaseFirestore.instance.collection('Users').doc(user.uid).get();
 
-    Timestamp lastTimeUserSeenGroupMessage = userData.data()['$groupName time'];
+    final Timestamp lastTimeUserSeenGroupMessage = userData.data()['$groupName time'] as Timestamp;
 
-    Timestamp lasttimeMessageSent = listOfMessage.docs.last.data()['timestamp'];
+    final Timestamp lasttimeMessageSent = listOfMessage.docs.last.data()['timestamp'] as Timestamp;
 
     if (lastTimeUserSeenGroupMessage == lasttimeMessageSent) {
       return false;

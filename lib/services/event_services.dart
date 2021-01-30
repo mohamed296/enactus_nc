@@ -5,11 +5,10 @@ import 'package:http/http.dart' as http;
 class EventServices {
   Future<List> getListOfEvents() async {
     try {
-      var response = await http.get("http://www.enactusnewcairo.org/api/events");
-      var jsonResponse = jsonDecode(response.body);
+      final response = await http.get("http://www.enactusnewcairo.org/api/events");
+      final jsonResponse = jsonDecode(response.body);
       return jsonResponse;
     } catch (e) {
-      print(e);
       return null;
     }
   }

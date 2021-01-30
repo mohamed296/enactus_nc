@@ -4,6 +4,8 @@ import 'package:enactusnca/Helpers/helperfunction.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class CommentModel {
+  User user = FirebaseAuth.instance.currentUser;
+
   final String name;
   final String comment;
   final String postUid;
@@ -18,16 +20,15 @@ class CommentModel {
     this.postUid,
   });
 
-  String _dateTime = formatDate(
+  final String _dateTime = formatDate(
     DateTime.now(),
     [yyyy, '-', mm, '-', dd, ' ', HH, ':', nn],
   );
 
   Future addNewComment({String comment, String postId}) async {
-    User user = FirebaseAuth.instance.currentUser;
     String fName;
     await HelperFunction.getUsername().then((value) => fName = value);
-    return await FirebaseFirestore.instance
+    return FirebaseFirestore.instance
         .collection('Posts')
         .doc(postId)
         .collection('comments')
@@ -44,11 +45,11 @@ class CommentModel {
   List<CommentModel> commentsList(QuerySnapshot snapshot) {
     return snapshot.docs.map((com) {
       return CommentModel(
-        name: com.data()['userName'],
-        postUid: com.data()['postId'],
-        comment: com.data()['comment'],
-        timeStamp: com.data()['timeStamp'] ?? '',
-        userImageUrl: com.data()['userImageUrl'],
+        name: com.data()['userName'] as String,
+        postUid: com.data()['postId'] as String,
+        comment: com.data()['comment'] as String,
+        timeStamp: com.data()['timeStamp'] as String,
+        userImageUrl: com.data()['userImageUrl'] as String,
       );
     }).toList();
   }

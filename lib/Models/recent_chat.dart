@@ -1,9 +1,13 @@
 class RecentCh {
-  int _time;
-  String _message;
-  bool _read;
+  final int _time;
+  final String _message;
+  final bool _read;
 
-  RecentCh(this._time, this._message, this._read);
+  RecentCh(
+    this._time,
+    this._message,
+    this._read,
+  );
 
   bool get read => _read;
 

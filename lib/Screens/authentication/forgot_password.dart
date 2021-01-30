@@ -20,7 +20,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     loading = false;
   }
 
-  void resetPassword() async {
+  resetPassword() async {
     if (form.currentState.validate()) {
       try {
         setState(() {
@@ -104,8 +104,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
                                   Container(
-                                    margin:
-                                        EdgeInsets.symmetric(horizontal: 10),
+                                    margin: EdgeInsets.symmetric(horizontal: 10),
                                     padding: EdgeInsets.symmetric(vertical: 20),
                                     width: 200,
                                     child: Center(
@@ -118,8 +117,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                     ),
                                   ),
                                   Container(
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal: 30, vertical: 20),
+                                    margin: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
                                     child: Center(
                                       child: Text(
                                         "Forgot Password",
@@ -141,23 +139,20 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                               email = value;
                                             });
 
-                                            if (EmailValidator.validate(
-                                                value)) {
+                                            if (EmailValidator.validate(value)) {
                                               return null;
                                             }
                                             return 'Email validator';
                                           },
                                           style: TextStyle(color: Colors.white),
-                                          keyboardType:
-                                              TextInputType.emailAddress,
+                                          keyboardType: TextInputType.emailAddress,
                                           decoration: InputDecoration(
                                             errorBorder: UnderlineInputBorder(
                                               borderSide: BorderSide(
                                                 color: Colors.redAccent,
                                               ),
                                             ),
-                                            errorStyle: TextStyle(
-                                                color: Colors.redAccent),
+                                            errorStyle: TextStyle(color: Colors.redAccent),
                                             hintText: 'example@abc.com',
                                             labelText: 'Email',
                                             labelStyle: TextStyle(
@@ -168,9 +163,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                               color: Colors.white,
                                             ),
                                             enabledBorder: UnderlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Colors.white,
-                                                  width: 1),
+                                              borderSide: BorderSide(color: Colors.white, width: 1),
                                             ),
                                             focusedBorder: UnderlineInputBorder(
                                               borderSide: BorderSide(
@@ -191,10 +184,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                           child: CircularProgressIndicator(),
                                         )
                                       : Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.6,
+                                          width: MediaQuery.of(context).size.width * 0.6,
                                           height: 50,
                                           child: RaisedButton(
                                             shape: StadiumBorder(),
@@ -218,8 +208,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                       padding: EdgeInsets.zero,
                                       child: Text(
                                         'Cancel',
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 18),
+                                        style: TextStyle(color: Colors.white, fontSize: 18),
                                       ),
                                       onPressed: () {
                                         Navigator.pop(context);

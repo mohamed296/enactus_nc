@@ -26,7 +26,7 @@ class _SignUpState extends State<SignUp> {
   List<String> communities = Constants.communities;
   List<String> mmDep = Constants.mmDep;
   List<String> erDep = Constants.erDep;
-  List<String> secondList = List();
+  List<String> secondList = [];
   String department, community;
   QuerySnapshot snapshot;
   bool isSignIn = Constants.isSignIn;
@@ -40,12 +40,11 @@ class _SignUpState extends State<SignUp> {
     community = communities[0];
   }
 
-  signUp() {
+  signUp() async {
     progressDialog.show();
-    UserModel userModel = UserModel(
+    final UserModel userModel = UserModel(
       firstName: tecFirstName.text,
       lastName: tecLastName.text,
-      photoUrl: null,
       email: tecEmailUp.text.toLowerCase(),
       community: community,
       department: department,
@@ -87,16 +86,16 @@ class _SignUpState extends State<SignUp> {
           ),
         );
       }
-    }).catchError((e) => print(e));
+    });
   }
 
   Widget dropDown({List<String> list, String dropdownValue}) {
     return DropdownButton<String>(
       value: dropdownValue,
-      icon: Icon(Icons.arrow_drop_down),
+      icon: const Icon(Icons.arrow_drop_down),
       iconSize: 20,
       elevation: 16,
-      style: TextStyle(color: Colors.grey),
+      style: const TextStyle(color: Colors.grey),
       underline: Container(
         height: 2,
       ),
@@ -162,13 +161,12 @@ class _SignUpState extends State<SignUp> {
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Container(
-                    margin: EdgeInsets.symmetric(horizontal: 10),
-                    padding: EdgeInsets.symmetric(vertical: 10),
+                    margin: const EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
                     width: 200,
-                    child: Center(
+                    child: const Center(
                       child: Image(
                         image: AssetImage(
                           'assets/images/logo.png',
@@ -179,8 +177,8 @@ class _SignUpState extends State<SignUp> {
                   ),
                   Center(
                     child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-                      child: Text(
+                      margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                      child: const Text(
                         "Sign Up",
                         style: TextStyle(
                           fontSize: 28.0,
@@ -200,37 +198,29 @@ class _SignUpState extends State<SignUp> {
                           title: "First name",
                           obscureText: false,
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
+                        const SizedBox(height: 12),
                         EditeText(
                           textEditingController: tecLastName,
                           title: "Last name",
                           obscureText: false,
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
+                        const SizedBox(height: 12),
                         EditeText(
                           textEditingController: tecEmailUp,
                           title: "E-mail",
                           obscureText: false,
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
+                        const SizedBox(height: 12),
                         EditeText(
                           textEditingController: tecPasswordUp,
                           title: "Password",
                           obscureText: true,
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
+                        const SizedBox(height: 12),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Text("Committee "),
+                            const Text("Committee "),
                             dropDown(list: communities, dropdownValue: community),
                           ],
                         ),

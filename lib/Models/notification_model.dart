@@ -14,9 +14,9 @@ class NotificationModel {
 
   NotificationModel({
     this.notificationId,
-    this.senderName,
     this.senderId,
     this.receiverId,
+    this.senderName,
     this.senderImg,
     this.notificationMsg,
     this.notificationTime,

@@ -15,8 +15,8 @@ const kLightPrimaryColor = Color(0xFFFFFFFF);
 const kLightSecondaryColor = Color(0xFFF3F7FB);
 const kAccentColor = Color(0xFFFFC107);
 
-const Kpost = 'post';
-const Kaddpost = 'addpost';
+const kpost = 'post';
+const kaddpost = 'addpost';
 
 final CollectionReference userCollection = FirebaseFirestore.instance.collection('Users');
 
