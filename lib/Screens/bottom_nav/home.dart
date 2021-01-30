@@ -82,7 +82,7 @@ class _HomeState extends State<Home> {
                   });
             },
           ),*/
-          backgroundColor: KMainColor,
+          backgroundColor: kMainColor,
           body:
               /* Container(
                 decoration: BoxDecoration(

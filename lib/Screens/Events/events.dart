@@ -31,7 +31,7 @@ class _EventsState extends State<Events> {
           appBar: AppBar(
             centerTitle: true,
             backgroundColor: Colors.transparent,
-            title: Text('Events', style: TextStyle(color: KSacandColor)),
+            title: Text('Events', style: TextStyle(color: kSacandColor)),
           ),
           body: FutureBuilder<List>(
             future: eventList,

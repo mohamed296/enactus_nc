@@ -134,8 +134,8 @@ class _AddNewPostState extends State<AddNewPost> {
       ),
       floatingActionButton: FloatingActionButton(
         child: showLoadingPost == false
-            ? Icon(Icons.add, color: KMainColor)
-            : SpinKitFoldingCube(color: KMainColor, size: 12.0),
+            ? Icon(Icons.add, color: kMainColor)
+            : SpinKitFoldingCube(color: kMainColor, size: 12.0),
         onPressed: () async {
           if (newPost != null) {
             setState(() => showLoadingPost = true);

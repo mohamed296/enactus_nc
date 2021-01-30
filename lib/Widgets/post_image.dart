@@ -1,29 +1,29 @@
-import 'package:enactusnca/Widgets/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import 'package:enactusnca/Widgets/constants.dart';
+
 class PostImage extends StatelessWidget {
-  final imageUrl;
-  PostImage({this.imageUrl});
+  final String imageUrl;
+  const PostImage({
+    Key key,
+    this.imageUrl,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 300.0,
       width: double.infinity,
-      // decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.0)),
-
       child: ClipRRect(
         child: Image.network(
           imageUrl,
           fit: BoxFit.cover,
-          loadingBuilder: (BuildContext context, Widget child,
-              ImageChunkEvent loadingProgress) {
+          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
             return loadingProgress == null
                 ? child
                 : Center(
                     child: SpinKitFoldingCube(
-                      //color: Theme.of(context).primaryColor,
-                      color: KSacandColor,
+                      color: kSacandColor,
                       size: 18.0,
                     ),
                   );

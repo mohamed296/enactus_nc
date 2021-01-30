@@ -42,16 +42,12 @@ class _SignInState extends State<SignIn> {
       HelperFunction.setUsername(name.toLowerCase().toString());
       HelperFunction.setUserLoggedIn(true);
     });
-    _auth
-        .signInWithEmail(
-            email: tecEmail.text.trim(), password: tecPassword.text.trim())
-        .then(
+    _auth.signInWithEmail(email: tecEmail.text.trim(), password: tecPassword.text.trim()).then(
       (value) {
         if (value == 'Active') {
           sharedPreferences.setString('user', tecEmail.text);
           progressDialog.hide();
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => Wrapper()));
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Wrapper()));
         } else {
           progressDialog.hide();
           showDialog(
@@ -136,8 +132,7 @@ class _SignInState extends State<SignIn> {
                                   ),
                                 ),
                                 Container(
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: 30, vertical: 20),
+                                  margin: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
                                   child: Center(
                                     child: Text(
                                       "Sign In",
@@ -162,8 +157,7 @@ class _SignInState extends State<SignIn> {
                                 ),
                                 SizedBox(height: 15),
                                 Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
                                     Row(
                                       children: <Widget>[
@@ -172,19 +166,15 @@ class _SignInState extends State<SignIn> {
                                           child: Container(
                                             color: Colors.transparent,
                                             padding: EdgeInsets.symmetric(
-                                                horizontal: 5.0,
-                                                vertical: 10.0),
-                                            margin: EdgeInsets.only(
-                                                top: 5.0,
-                                                left: 35.0,
-                                                bottom: 5.0),
+                                                horizontal: 5.0, vertical: 10.0),
+                                            margin:
+                                                EdgeInsets.only(top: 5.0, left: 35.0, bottom: 5.0),
                                             child: InkWell(
                                               onTap: () {
                                                 Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          ForgotPassword()),
+                                                      builder: (context) => ForgotPassword()),
                                                 );
                                               },
                                               child: Text(
@@ -192,8 +182,7 @@ class _SignInState extends State<SignIn> {
                                                 style: TextStyle(
                                                     fontSize: 14.0,
                                                     color: Colors.blueGrey,
-                                                    fontWeight:
-                                                        FontWeight.w600),
+                                                    fontWeight: FontWeight.w600),
                                               ),
                                             ),
                                           ),
@@ -204,24 +193,19 @@ class _SignInState extends State<SignIn> {
                                               isSignIn = !isSignIn;
                                               Navigator.push(
                                                 context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        SignUp()),
+                                                MaterialPageRoute(builder: (context) => SignUp()),
                                               );
                                             });
                                           },
                                           child: Container(
                                             color: Colors.transparent,
                                             padding: EdgeInsets.symmetric(
-                                                horizontal: 10.0,
-                                                vertical: 10.0),
-                                            margin: EdgeInsets.only(
-                                                top: 5.0, bottom: 5.0),
+                                                horizontal: 10.0, vertical: 10.0),
+                                            margin: EdgeInsets.only(top: 5.0, bottom: 5.0),
                                             child: Text(
                                               "Sign up",
                                               style: TextStyle(
-                                                  decoration:
-                                                      TextDecoration.underline,
+                                                  decoration: TextDecoration.underline,
                                                   fontSize: 14.0,
                                                   color: Colors.blueAccent,
                                                   fontWeight: FontWeight.w600),
@@ -234,7 +218,7 @@ class _SignInState extends State<SignIn> {
                                       margin: EdgeInsets.only(right: 30.0),
                                       alignment: Alignment.topRight,
                                       child: CircleAvatar(
-                                        backgroundColor: KSacandColor,
+                                        backgroundColor: kSacandColor,
                                         radius: 35.0,
                                         child: IconButton(
                                           onPressed: () {

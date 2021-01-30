@@ -65,8 +65,7 @@ class _SignUpState extends State<SignUp> {
           builder: (context) => CustomDialog(
             showTitle: true,
             title: 'Pending Approval..',
-            content:
-                'You are successfully Signed Up, please Wait while you approved!',
+            content: 'You are successfully Signed Up, please Wait while you approved!',
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => SignIn()),
@@ -180,8 +179,7 @@ class _SignUpState extends State<SignUp> {
                   ),
                   Center(
                     child: Container(
-                      margin:
-                          EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                      margin: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
                       child: Text(
                         "Sign Up",
                         style: TextStyle(
@@ -233,20 +231,16 @@ class _SignUpState extends State<SignUp> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Text("Committee "),
-                            dropDown(
-                                list: communities, dropdownValue: community),
+                            dropDown(list: communities, dropdownValue: community),
                           ],
                         ),
                         community == communities.elementAt(0) ||
                                 community == communities.elementAt(1)
                             ? Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
                                   Text("department "),
-                                  dropDown(
-                                      list: secondList,
-                                      dropdownValue: department),
+                                  dropDown(list: secondList, dropdownValue: department),
                                 ],
                               )
                             : Container()
@@ -268,8 +262,7 @@ class _SignUpState extends State<SignUp> {
                         },
                         child: Container(
                           color: Colors.transparent,
-                          padding:
-                              EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                           margin: EdgeInsets.only(top: 5, left: 50, bottom: 5),
                           child: Text(
                             "Sign In",
@@ -287,7 +280,7 @@ class _SignUpState extends State<SignUp> {
                         margin: EdgeInsets.only(right: 30.0),
                         alignment: Alignment.topRight,
                         child: CircleAvatar(
-                          backgroundColor: KSacandColor,
+                          backgroundColor: kSacandColor,
                           radius: 35.0,
                           child: IconButton(
                             onPressed: () => signUp(),

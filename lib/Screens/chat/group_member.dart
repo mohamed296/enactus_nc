@@ -13,7 +13,7 @@ class GroupMember extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Group Member', style: TextStyle(color: KSacandColor)),
+        title: Text('Group Member', style: TextStyle(color: kSacandColor)),
         leading: BackButton(),
       ),
       body: StreamBuilder<List<UserModel>>(

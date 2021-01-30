@@ -79,7 +79,7 @@ class _SearchScreenState extends State<SearchScreen> {
         leading: Row(
           children: [
             IconButton(
-              icon: Icon(Icons.arrow_back, color: KSacandColor),
+              icon: Icon(Icons.arrow_back, color: kSacandColor),
               onPressed: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => Wrapper()),
@@ -87,7 +87,7 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           ],
         ),
-        title: Text("Search", style: TextStyle(color: KSacandColor)),
+        title: Text("Search", style: TextStyle(color: kSacandColor)),
       ),
       body: Container(
         child: Column(
@@ -98,11 +98,11 @@ class _SearchScreenState extends State<SearchScreen> {
                   child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: KSacandColor, width: 3.0)),
+                        border: Border.all(color: kSacandColor, width: 3.0)),
                     padding: EdgeInsets.symmetric(horizontal: 15, vertical: 0),
                     child: TextField(
                       controller: etcSearch,
-                      style: TextStyle(color: KSacandColor),
+                      style: TextStyle(color: kSacandColor),
                       decoration: InputDecoration(
                         hintText: "Email",
                         hintStyle: TextStyle(color: Colors.grey.shade200),
@@ -125,7 +125,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         //   backgroundColor: Constants.darkBlue,
                         child: Icon(
                       Icons.search,
-                      color: KSacandColor,
+                      color: kSacandColor,
                     )),
                   ),
                 ),
