@@ -11,7 +11,7 @@ class Members extends StatefulWidget {
 class _MembersState extends State<Members> {
   Stream contactsStream;
   bool isLoadingOver = false;
-  DatabaseMethods databaseMethods = new DatabaseMethods();
+  DatabaseMethods databaseMethods = DatabaseMethods();
 
   @override
   void initState() {
@@ -19,7 +19,7 @@ class _MembersState extends State<Members> {
     getUserInfo();
   }
 
-  getUserInfo() async {
+  Future getUserInfo() async {
     databaseMethods.getUsers().then((val) {
       setState(() {
         contactsStream = val;
@@ -36,9 +36,9 @@ class _MembersState extends State<Members> {
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
-              return Center(
+              return const Center(
                 child: Text(
-                  'poor internet connection\nIt seems like you\'re one of WE clients',
+                  "poor internet connection\nIt seems like you're one of WE clients",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 22.0,
@@ -47,7 +47,7 @@ class _MembersState extends State<Members> {
               );
               break;
             case ConnectionState.waiting:
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
               break;
             default:
               return snapshot.hasData
@@ -64,9 +64,8 @@ class _MembersState extends State<Members> {
 
   Widget buildList(snapshot) {
     return ListView.builder(
-      itemCount: snapshot.data.documents.length,
+      itemCount: snapshot.data.documents.length as int,
       shrinkWrap: true,
-      scrollDirection: Axis.vertical,
       itemBuilder: (context, index) {
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
@@ -76,16 +75,15 @@ class _MembersState extends State<Members> {
               MaterialPageRoute(
                 builder: (context) => Profile(
                   isAppBarEnabled: true,
-                  userId: snapshot.data.documents[index].data()['uid'],
+                  userId:
+                      snapshot.data.documents[index].data()['uid'].toString(),
                 ),
               ),
             );
           },
-          child: Container(
+          child: SizedBox(
             width: double.infinity,
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
               children: [
                 Padding(
                   padding: const EdgeInsets.only(
@@ -95,17 +93,18 @@ class _MembersState extends State<Members> {
                   ),
                   child: CircleAvatar(
                     radius: 30,
-                    backgroundImage: snapshot.data.documents[index]
-                                .data()['photoUrl'] ==
-                            null
-                        ? AssetImage("assets/images/person.png")
-                        : NetworkImage(
-                            snapshot.data.documents[index].data()['photoUrl']),
+                    backgroundImage:
+                        snapshot.data.documents[index].data()['photoUrl'] ==
+                                null
+                            ? const AssetImage("assets/images/person.png")
+                            : NetworkImage(snapshot.data.documents[index]
+                                .data()['photoUrl']
+                                .toString()),
                   ),
                 ),
                 Text(
                   '${snapshot.data.documents[index].data()['firstName']} ${snapshot.data.documents[index].data()['lastName']}',
-                  style: TextStyle(fontSize: 18.0, color: Colors.white),
+                  style: const TextStyle(fontSize: 18.0, color: Colors.white),
                 ),
               ],
             ),

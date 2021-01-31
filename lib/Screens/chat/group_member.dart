@@ -13,8 +13,9 @@ class GroupMember extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Group Member', style: TextStyle(color: kSacandColor)),
-        leading: BackButton(),
+        title:
+            const Text('Group Member', style: TextStyle(color: kSacandColor)),
+        leading: const BackButton(),
       ),
       body: StreamBuilder<List<UserModel>>(
         stream: FirebaseFirestore.instance
@@ -26,7 +27,7 @@ class GroupMember extends StatelessWidget {
         builder: (context, snapshot) {
           return snapshot.hasData
               ? ListView.builder(
-                  physics: BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, index) => ListTile(
                     onTap: () {
@@ -43,14 +44,16 @@ class GroupMember extends StatelessWidget {
                     leading: CircleAvatar(
                       radius: 30,
                       backgroundImage: snapshot.data[index].photoUrl == null
-                          ? AssetImage("assets/images/person.png")
+                          ? const AssetImage("assets/images/person.png")
                           : NetworkImage(snapshot.data[index].photoUrl),
                     ),
                     title: Text(snapshot?.data[index]?.username ?? 'user'),
-                    subtitle: snapshot.data[index].isHead ? Text('Head') : Text('Member'),
+                    subtitle: snapshot.data[index].isHead
+                        ? const Text('Head')
+                        : const Text('Member'),
                   ),
                 )
-              : Center(child: CircularProgressIndicator());
+              : const Center(child: CircularProgressIndicator());
         },
       ),
     );

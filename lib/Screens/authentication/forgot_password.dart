@@ -20,7 +20,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     loading = false;
   }
 
-  resetPassword() async {
+  Future resetPassword() async {
     if (form.currentState.validate()) {
       try {
         setState(() {
@@ -47,7 +47,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           builder: (context) => CustomDialog(
             showTitle: true,
             title: 'Attentionزز',
-            content: error,
+            content: error.toString(),
             onTap: () {
               Navigator.pop(context);
             },
@@ -76,7 +76,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             child: Center(
               child: SingleChildScrollView(
                 child: Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage('assets/images/back.jpg'),
                       fit: BoxFit.fitHeight,
@@ -89,9 +89,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         SingleChildScrollView(
                           child: Center(
                             child: Container(
-                              margin: EdgeInsets.symmetric(horizontal: 10),
-                              padding: EdgeInsets.symmetric(vertical: 20),
-                              decoration: BoxDecoration(
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              padding: const EdgeInsets.symmetric(vertical: 20),
+                              decoration: const BoxDecoration(
                                 //   color: Constants.midBlue,
                                 borderRadius: BorderRadius.only(
                                   bottomLeft: Radius.circular(20),
@@ -101,13 +102,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                               ),
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
                                   Container(
-                                    margin: EdgeInsets.symmetric(horizontal: 10),
-                                    padding: EdgeInsets.symmetric(vertical: 20),
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 20),
                                     width: 200,
-                                    child: Center(
+                                    child: const Center(
                                       child: Image(
                                         image: AssetImage(
                                           'assets/images/logo.png',
@@ -117,8 +119,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                     ),
                                   ),
                                   Container(
-                                    margin: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-                                    child: Center(
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 30, vertical: 20),
+                                    child: const Center(
                                       child: Text(
                                         "Forgot Password",
                                         style: TextStyle(
@@ -139,20 +142,24 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                               email = value;
                                             });
 
-                                            if (EmailValidator.validate(value)) {
+                                            if (EmailValidator.validate(
+                                                value)) {
                                               return null;
                                             }
                                             return 'Email validator';
                                           },
-                                          style: TextStyle(color: Colors.white),
-                                          keyboardType: TextInputType.emailAddress,
-                                          decoration: InputDecoration(
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                          keyboardType:
+                                              TextInputType.emailAddress,
+                                          decoration: const InputDecoration(
                                             errorBorder: UnderlineInputBorder(
                                               borderSide: BorderSide(
                                                 color: Colors.redAccent,
                                               ),
                                             ),
-                                            errorStyle: TextStyle(color: Colors.redAccent),
+                                            errorStyle: TextStyle(
+                                                color: Colors.redAccent),
                                             hintText: 'example@abc.com',
                                             labelText: 'Email',
                                             labelStyle: TextStyle(
@@ -163,7 +170,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                               color: Colors.white,
                                             ),
                                             enabledBorder: UnderlineInputBorder(
-                                              borderSide: BorderSide(color: Colors.white, width: 1),
+                                              borderSide: BorderSide(
+                                                  color: Colors.white),
                                             ),
                                             focusedBorder: UnderlineInputBorder(
                                               borderSide: BorderSide(
@@ -176,43 +184,45 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                       ],
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 20,
                                   ),
-                                  (loading)
-                                      ? Center(
-                                          child: CircularProgressIndicator(),
-                                        )
-                                      : Container(
-                                          width: MediaQuery.of(context).size.width * 0.6,
-                                          height: 50,
-                                          child: RaisedButton(
-                                            shape: StadiumBorder(),
-                                            color: Colors.amber[700],
-                                            child: Text(
-                                              'Reset Password',
-                                              key: UniqueKey(),
-                                              style: TextStyle(
-                                                fontSize: 20,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                            onPressed: () {
-                                              resetPassword();
-                                            },
+                                  if (loading)
+                                    const Center(
+                                      child: CircularProgressIndicator(),
+                                    )
+                                  else
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.6,
+                                      height: 50,
+                                      child: RaisedButton(
+                                        shape: const StadiumBorder(),
+                                        color: Colors.amber[700],
+                                        onPressed: () {
+                                          resetPassword();
+                                        },
+                                        child: Text(
+                                          'Reset Password',
+                                          key: UniqueKey(),
+                                          style: const TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.white,
                                           ),
                                         ),
+                                      ),
+                                    ),
                                   Align(
-                                    alignment: Alignment.center,
                                     child: FlatButton(
                                       padding: EdgeInsets.zero,
-                                      child: Text(
-                                        'Cancel',
-                                        style: TextStyle(color: Colors.white, fontSize: 18),
-                                      ),
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
+                                      child: const Text(
+                                        'Cancel',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 18),
+                                      ),
                                     ),
                                   ),
                                 ],

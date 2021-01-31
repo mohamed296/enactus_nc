@@ -23,17 +23,18 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-  DatabaseMethods _databaseMethods = DatabaseMethods();
-  Auth _auth = Auth();
+  final DatabaseMethods _databaseMethods = DatabaseMethods();
+  final Auth _auth = Auth();
   TextEditingController tecEmail = TextEditingController();
   TextEditingController tecPassword = TextEditingController();
   QuerySnapshot snapshot;
   bool isSignIn = Constants.isSignIn;
   ProgressDialog progressDialog;
 
-  signIn() async {
+  Future signIn() async {
     progressDialog.show();
-    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
     HelperFunction.setUserEmail(tecEmail.text);
     _databaseMethods.getUsersByUserEmail(tecEmail.text).then((val) {
       snapshot = val as QuerySnapshot;
@@ -42,12 +43,16 @@ class _SignInState extends State<SignIn> {
       HelperFunction.setUsername(name.toLowerCase().toString());
       HelperFunction.setUserLoggedIn(true);
     });
-    _auth.signInWithEmail(email: tecEmail.text.trim(), password: tecPassword.text.trim()).then(
+    _auth
+        .signInWithEmail(
+            email: tecEmail.text.trim(), password: tecPassword.text.trim())
+        .then(
       (value) {
         if (value == 'Active') {
           sharedPreferences.setString('user', tecEmail.text);
           progressDialog.hide();
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Wrapper()));
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => Wrapper()));
         } else {
           progressDialog.hide();
           showDialog(
@@ -117,8 +122,10 @@ class _SignInState extends State<SignIn> {
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               Container(
-                                margin: const EdgeInsets.symmetric(horizontal: 10),
-                                padding: const EdgeInsets.symmetric(vertical: 20),
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 20),
                                 width: 200,
                                 child: const Center(
                                   child: Image(
@@ -130,7 +137,8 @@ class _SignInState extends State<SignIn> {
                                 ),
                               ),
                               Container(
-                                margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 30, vertical: 20),
                                 child: const Center(
                                   child: Text(
                                     "Sign In",
@@ -155,7 +163,8 @@ class _SignInState extends State<SignIn> {
                               ),
                               const SizedBox(height: 15),
                               Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   Row(
                                     children: <Widget>[
@@ -177,7 +186,8 @@ class _SignInState extends State<SignIn> {
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                  builder: (context) => ForgotPassword(),
+                                                  builder: (context) =>
+                                                      ForgotPassword(),
                                                 ),
                                               );
                                             },
@@ -197,7 +207,9 @@ class _SignInState extends State<SignIn> {
                                             isSignIn = !isSignIn;
                                             Navigator.push(
                                               context,
-                                              MaterialPageRoute(builder: (context) => SignUp()),
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SignUp()),
                                             );
                                           });
                                         },
@@ -205,11 +217,13 @@ class _SignInState extends State<SignIn> {
                                           color: Colors.transparent,
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 10.0, vertical: 10.0),
-                                          margin: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+                                          margin: const EdgeInsets.only(
+                                              top: 5.0, bottom: 5.0),
                                           child: const Text(
                                             "Sign up",
                                             style: TextStyle(
-                                              decoration: TextDecoration.underline,
+                                              decoration:
+                                                  TextDecoration.underline,
                                               fontSize: 14.0,
                                               color: Colors.blueAccent,
                                               fontWeight: FontWeight.w600,
