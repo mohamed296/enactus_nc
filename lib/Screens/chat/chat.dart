@@ -59,7 +59,7 @@ class _ChatState extends State<Chat> with SingleTickerProviderStateMixin {
             title: Text(
               "Chat",
               style: TextStyle(
-                color: KSacandColor,
+                color: kSacandColor,
                 fontSize: 25,
               ),
             ),

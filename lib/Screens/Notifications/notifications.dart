@@ -14,7 +14,7 @@ class Notifications extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         centerTitle: true,
-        title: Text('Notifications', style: TextStyle(fontSize: 20.0, color: KSacandColor)),
+        title: Text('Notifications', style: TextStyle(fontSize: 20.0, color: kSacandColor)),
       ),
       body: StreamBuilder<List<NotificationModel>>(
         stream: NotificationServices().getNotificationList,

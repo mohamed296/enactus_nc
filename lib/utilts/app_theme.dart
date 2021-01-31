@@ -16,40 +16,40 @@ class AppTheme extends ChangeNotifier {
   // Light Theme
   static final ThemeData lightTheme = ThemeData(
     primarySwatch: Colors.blueGrey,
-    accentColor: KSacandColor,
+    accentColor: kSacandColor,
     scaffoldBackgroundColor: Colors.white,
     cursorColor: Colors.amber,
-    buttonColor: KSacandColor,
+    buttonColor: kSacandColor,
     brightness: Brightness.light,
 
     // color of floating action in light theme
     floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: KMainColor,
+      backgroundColor: kMainColor,
     ),
 
     // color of the icons
-    iconTheme: IconThemeData(color: KMainColor),
+    iconTheme: IconThemeData(color: kMainColor),
 
     // appbar in light theme
     appBarTheme: AppBarTheme(
       elevation: 0.0,
-      color: KMainColor,
+      color: kMainColor,
       textTheme: TextTheme(
         headline6: TextStyle(
-          color: KSacandColor,
+          color: kSacandColor,
           fontSize: 18.0,
           fontWeight: FontWeight.bold,
         ),
       ),
-      iconTheme: IconThemeData(color: KSacandColor),
-      actionsIconTheme: IconThemeData(color: KSacandColor),
+      iconTheme: IconThemeData(color: kSacandColor),
+      actionsIconTheme: IconThemeData(color: kSacandColor),
     ),
   );
 
   // Dark Theme
   static final ThemeData darkTheme = ThemeData(
     primaryColor: Color(0xff0C1E34),
-    accentColor: KSacandColor,
+    accentColor: kSacandColor,
     //scaffoldBackgroundColor: kDarkColor,
     scaffoldBackgroundColor: Color(0xff0C1E34),
     cursorColor: Colors.amber,
@@ -58,7 +58,7 @@ class AppTheme extends ChangeNotifier {
 
     // color of floating action in dark theme
     floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: KSacandColor,
+      backgroundColor: kSacandColor,
     ),
 
     // color of the icons
@@ -76,9 +76,9 @@ class AppTheme extends ChangeNotifier {
           fontWeight: FontWeight.bold,
         ),
       ),
-      iconTheme: IconThemeData(color: KSacandColor),
-      actionsIconTheme: IconThemeData(color: KSacandColor),
+      iconTheme: IconThemeData(color: kSacandColor),
+      actionsIconTheme: IconThemeData(color: kSacandColor),
     ),
-    backgroundColor: KMainColor,
+    backgroundColor: kMainColor,
   );
 }

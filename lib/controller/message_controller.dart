@@ -9,23 +9,23 @@ import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class MessageController {
-  RecordServices _recordServices = RecordServices();
+  final RecordServices _recordServices = RecordServices();
 
-  void startRecording() async {
+  startRecording() async {
     if (await AudioRecorder.hasPermissions) {
-      String _time = getTime();
+      final String _time = getTime();
       _recordServices.startRecording(_time);
     } else {
       await askForAppPermissions();
     }
   }
 
-  Future<String> stopRecording(String chatId) async {
+  Future<dynamic> stopRecording(String chatId) async {
     if (await AudioRecorder.hasPermissions) {
-      String _time = getTime();
-      File _recordFile = await _recordServices.stopRecording();
-      String _fileName = '${_time.hashCode.toString()}-${_recordFile.hashCode.toString()}';
-      String _url = await uploadFile(
+      final String _time = getTime();
+      final File _recordFile = await _recordServices.stopRecording();
+      final String _fileName = '${_time.hashCode.toString()}-${_recordFile.hashCode.toString()}';
+      final dynamic _url = await uploadFile(
         chatId: chatId,
         fileName: _fileName,
         file: _recordFile,
@@ -37,7 +37,7 @@ class MessageController {
   }
 
   Future<DateTime> selectDate(BuildContext context) async {
-    DateTime selectedDate = DateTime.now();
+    final DateTime selectedDate = DateTime.now();
     final DateTime picked = await showDatePicker(
       context: context,
       initialDate: selectedDate,
@@ -66,9 +66,9 @@ class MessageController {
     return _image;
   }
 
-  Future uploadFile({String chatId, String fileName, bool image, File file}) async {
+  Future<dynamic> uploadFile({String chatId, String fileName, bool image, File file}) async {
     try {
-      StorageReference reference = FirebaseStorage.instance.ref().child('$chatId/$fileName');
+      final StorageReference reference = FirebaseStorage.instance.ref().child('$chatId/$fileName');
       StorageUploadTask storageUploadTask;
       if (image) {
         storageUploadTask = reference.putFile(file);
@@ -81,16 +81,16 @@ class MessageController {
           ),
         );
       }
-      StorageTaskSnapshot taskSnapshot = await storageUploadTask.onComplete;
-      String url = await taskSnapshot.ref.getDownloadURL();
+      final StorageTaskSnapshot taskSnapshot = await storageUploadTask.onComplete;
+      final dynamic url = await taskSnapshot.ref.getDownloadURL();
       return url;
     } catch (ex) {
-      print(ex.toString());
+      return ex.toString();
     }
   }
 
-  askForAppPermissions() async {
-    Map<Permission, PermissionStatus> statuses = await [
+  Future<Map<Permission, PermissionStatus>> askForAppPermissions() async {
+    final Map<Permission, PermissionStatus> statuses = await [
       // Permission.location,
       Permission.storage,
       // Permission.camera,

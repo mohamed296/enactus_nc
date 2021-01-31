@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Helpers/functions.dart';
@@ -72,7 +73,7 @@ class _RecentChatState extends State<RecentChat> {
         List emails = snapshot.data.documents[index].data()['emails'];
         List ids = snapshot.data.documents[index].data()['ids'];
         String imgURL;
-        return GestureDetector(
+        return InkWell(
           onTap: () {
             Navigator.push(
               context,
@@ -82,26 +83,26 @@ class _RecentChatState extends State<RecentChat> {
                   chatRoomId: roomID,
                   imageUrl: imgURL,
                   userId: ids[0] == user.uid ? ids[1] : ids[0],
-                  lastSender:
-                      snapshot.data.documents[index].data()["lastSender"],
+                  lastSender: snapshot.data.documents[index].data()["lastSender"],
                   username: users[1] == user.displayName ? users[0] : users[1],
                   read: snapshot.data.documents[index].data()['isRead'],
-                  lastmassage:
-                      snapshot.data.documents[index].data()["lastMessage"],
+                  lastmassage: snapshot.data.documents[index].data()["lastMessage"],
                 ),
               ),
             );
           },
           child: Container(
-            margin: EdgeInsets.only(top: 5.0, bottom: 5.0, right: 20.0),
-            padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+            margin: EdgeInsets.only(top: .0, bottom: 6.0, right: 20.0),
+            padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
             decoration: BoxDecoration(
-              color: snapshot.data.documents[index].data()["lastSender"] !=
-                      user.displayName
-                  ? !snapshot.data.documents[index].data()["isRead"]
-                      ? Constants.midBlue
-                      : Constants.darkBlue
-                  : Constants.darkBlue,
+              color:
+
+                  //  snapshot.data.documents[index].data()["lastSender"] != user.displayName
+                  //     ? !snapshot.data.documents[index].data()["isRead"]
+                  //         ? Constants.midBlue
+                  //         : Constants.darkBlue
+                  //     :
+                  Constants.midBlue,
               borderRadius: BorderRadius.only(
                 topRight: Radius.circular(20),
                 bottomRight: Radius.circular(20),
@@ -110,118 +111,73 @@ class _RecentChatState extends State<RecentChat> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Row(
-                  children: [
-                    FutureBuilder<dynamic>(
-                      future: Constants.myEmail == emails[0]
-                          ? databaseMethods.getUsersByUserEmail(emails[1])
-                          : databaseMethods.getUsersByUserEmail(emails[0]),
-                      builder: (context, newSnap) {
-                        QuerySnapshot querySnapshot = newSnap.data;
-                        imgURL = querySnapshot.docs[0].data()["photoUrl"];
-                        switch (newSnap.connectionState) {
-                          case ConnectionState.done:
-                            return CircleAvatar(
+                FutureBuilder<dynamic>(
+                  future: Constants.myEmail == emails[0]
+                      ? databaseMethods.getUsersByUserEmail(emails[1])
+                      : databaseMethods.getUsersByUserEmail(emails[0]),
+                  builder: (context, newSnap) {
+                    QuerySnapshot querySnapshot = newSnap.data;
+                    imgURL = querySnapshot.docs[0].data()["photoUrl"];
+                    return !newSnap.hasData
+                        ? Center(child: CircularProgressIndicator())
+                        : Badge(
+                            badgeColor: Constants.yellow,
+                            showBadge: !snapshot.data.documents[index].data()["isRead"],
+                            child: CircleAvatar(
                               backgroundColor: Colors.white,
                               backgroundImage: imgURL == null
                                   ? AssetImage('assets/images/person.png')
                                   : NetworkImage(imgURL),
-                              radius: 34.0,
-                            );
-                          case ConnectionState.active:
-                            return CircularProgressIndicator();
-                          case ConnectionState.waiting:
-                            return CircularProgressIndicator();
-                          default:
-                            return CircularProgressIndicator();
-                        }
-                      },
-                    ),
-                    SizedBox(width: 10.0),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          users[0] == user.displayName ? users[1] : users[0],
-                          style: TextStyle(
-                            color: Colors.grey.shade200,
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.35,
-                          child: Text(
-                            snapshot.data.documents[index]
-                                        .data()["lastMessage"] ==
-                                    null
-                                ? ""
-                                : snapshot.data.documents[index]
-                                            .data()["lastSender"] ==
-                                        user.displayName
-                                    ? 'You: ${snapshot.data.documents[index].data()["lastMessage"]}'
-                                    : '${snapshot.data.documents[index].data()["lastMessage"]}',
-                            maxLines: 1,
-                            style: TextStyle(
-                              color: Colors.blueGrey.shade200,
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.w600,
+                              radius: 28.0,
                             ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          );
+                  },
                 ),
-                SizedBox(width: 10.0),
+                SizedBox(width: 12.0),
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      Functions.readTimestamp(
-                        snapshot.data.documents[index].data()["lastTime"] ==
-                                null
-                            ? 0
-                            : snapshot.data.documents[index].data()["lastTime"],
-                      ),
+                      users[0] == user.displayName ? users[1] : users[0],
                       style: TextStyle(
-                        color: Colors.grey.shade100,
+                        color: Colors.grey.shade200,
                         fontSize: 15.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 4.0),
                     Container(
-                      child: snapshot.data.documents[index].data()["isRead"] ==
-                              null
-                          ? false
-                          : snapshot.data.documents[index]
-                                      .data()["lastSender"] !=
-                                  user.displayName
-                              ? !snapshot.data.documents[index].data()["isRead"]
-                                  ? Container(
-                                      alignment: Alignment.center,
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: 4,
-                                        horizontal: 8,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(30),
-                                      ),
-                                      child: Text(
-                                        "NEW",
-                                        style: TextStyle(
-                                          color: Colors.black54,
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    )
-                                  : Container()
-                              : Container(),
+                      width: MediaQuery.of(context).size.width * 0.35,
+                      child: Text(
+                        snapshot.data.documents[index].data()["lastMessage"] == null
+                            ? ""
+                            : snapshot.data.documents[index].data()["lastSender"] ==
+                                    user.displayName
+                                ? 'You: ${snapshot.data.documents[index].data()["lastMessage"]}'
+                                : '${snapshot.data.documents[index].data()["lastMessage"]}',
+                        maxLines: 1,
+                        style: TextStyle(
+                          color: Colors.blueGrey.shade200,
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
-                )
+                ),
+                Spacer(),
+                Text(
+                  Functions.readTimestamp(
+                    snapshot.data.documents[index].data()["lastTime"] == null
+                        ? 0
+                        : snapshot.data.documents[index].data()["lastTime"],
+                  ),
+                  style: TextStyle(
+                    color: Colors.grey.shade100,
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ],
             ),
           ),

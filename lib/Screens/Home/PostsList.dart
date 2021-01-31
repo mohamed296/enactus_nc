@@ -23,7 +23,7 @@ class _PostsListState extends State<PostsList> {
               ? Center(
                   child: SpinKitFoldingCube(
                     //  color: Theme.of(context).primaryColor,
-                    color: KSacandColor,
+                    color: kSacandColor,
                     size: 24.0,
                   ),
                 )

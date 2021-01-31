@@ -197,7 +197,7 @@ class _PostTileState extends State<PostTile> {
               },
               icon: Icon(
                 Icons.delete,
-                color: KSacandColor,
+                color: kSacandColor,
               ),
             )
           : null,

@@ -6,6 +6,8 @@ import 'package:enactusnca/Widgets/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Post {
+  User user = FirebaseAuth.instance.currentUser;
+
   final String ownerId;
   final String postId;
   final String name;
@@ -13,9 +15,6 @@ class Post {
   final String mediaUrl;
   final String userProfileImg;
   final String timeStamp;
-
-  Map likes;
-  int likeCount;
 
   Post({
     this.ownerId,
@@ -25,31 +24,16 @@ class Post {
     this.mediaUrl,
     this.userProfileImg,
     this.timeStamp,
-    this.likes,
-    this.likeCount,
   });
 
-  int getLikesCount(likes) {
-    if (likes == null) {
-      return 0;
-    }
-    int count = 0;
-    likes.value.forEach((val) {
-      if (val == true) {
-        count += 1;
-      }
-    });
-  }
-
-  String _dateTime = formatDate(
+  final String _dateTime = formatDate(
     DateTime.now(),
     [yyyy, '-', mm, '-', dd, ' ', HH, ':', nn],
   );
 
   Future<dynamic> addNewPost({String description, String mediaUrl}) async {
-    User user = FirebaseAuth.instance.currentUser;
     final postC = FirebaseFirestore.instance.collection('Posts').doc();
-    return await postC.set({
+    return postC.set({
       'ownerId': user.uid,
       'email': user.email,
       'name': user.displayName,
@@ -65,14 +49,12 @@ class Post {
     return snapshot.docs.map((doc) {
       return Post(
         postId: doc.id,
-        ownerId: doc['ownerId'],
-        name: doc['name'],
-        description: doc['description'],
-        userProfileImg: doc['userProfileImg'],
-        mediaUrl: doc['mediaUrl'],
-        timeStamp: doc['timeStamp'],
-        likes: doc.data()['likes'],
-        likeCount: getLikesCount(this.likes),
+        ownerId: doc['ownerId'] as String,
+        name: doc['name'] as String,
+        description: doc['description'] as String,
+        userProfileImg: doc['userProfileImg'] as String,
+        mediaUrl: doc['mediaUrl'] as String,
+        timeStamp: doc['timeStamp'] as String,
       );
     }).toList();
   }
@@ -80,8 +62,4 @@ class Post {
   Stream<List<Post>> get getPosts {
     return postCollection.orderBy('timeStamp', descending: true).snapshots().map(postsList);
   }
-
-  toMap() {}
-
-  static fromMap(map) {}
 }

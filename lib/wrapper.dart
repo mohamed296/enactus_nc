@@ -39,20 +39,20 @@ class _WrapperState extends State<Wrapper> {
             onItemSelected: (index) => setState(() => _currentIndex = index),
             items: <BottomNavyBarItem>[
               BottomNavyBarItem(
-                title: Center(child: Text('home', style: TextStyle(color: KSacandColor))),
-                icon: Center(child: Icon(Icons.home, color: KSacandColor)),
+                title: Center(child: Text('home', style: TextStyle(color: kSacandColor))),
+                icon: Center(child: Icon(Icons.home, color: kSacandColor)),
               ),
               BottomNavyBarItem(
-                title: Center(child: Text('notifications', style: TextStyle(color: KSacandColor))),
-                icon: Center(child: Icon(Icons.notifications, color: KSacandColor)),
+                title: Center(child: Text('notifications', style: TextStyle(color: kSacandColor))),
+                icon: Center(child: Icon(Icons.notifications, color: kSacandColor)),
               ),
               BottomNavyBarItem(
-                title: Center(child: Text(' Profile', style: TextStyle(color: KSacandColor))),
-                icon: Center(child: Icon(Icons.portrait, color: KSacandColor)),
+                title: Center(child: Text(' Profile', style: TextStyle(color: kSacandColor))),
+                icon: Center(child: Icon(Icons.portrait, color: kSacandColor)),
               ),
               BottomNavyBarItem(
-                title: Center(child: Text('chat', style: TextStyle(color: KSacandColor))),
-                icon: Center(child: Icon(Icons.chat, color: KSacandColor)),
+                title: Center(child: Text('chat', style: TextStyle(color: kSacandColor))),
+                icon: Center(child: Icon(Icons.chat, color: kSacandColor)),
               ),
             ],
           ),
@@ -66,7 +66,7 @@ class MYpopup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<Menu>(
-      color: KSacandColor,
+      color: kSacandColor,
       onSelected: (Menu option) {
         print(option.toString());
       },

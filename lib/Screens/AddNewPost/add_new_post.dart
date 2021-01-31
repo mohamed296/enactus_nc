@@ -25,18 +25,20 @@ class _AddNewPostState extends State<AddNewPost> {
 
   File _image;
   File file;
-  var pickedFile;
+  PickedFile pickedFile;
 
   bool showLoadingImage = false;
   bool showLoadingPost = false;
 
   TextEditingController _controller;
 
+  @override
   void initState() {
     super.initState();
     _controller = TextEditingController();
   }
 
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
@@ -44,7 +46,7 @@ class _AddNewPostState extends State<AddNewPost> {
 
   handleTakePhoto() async {
     Navigator.pop(context);
-    File file =
+    final File file =
         await ImagePicker.pickImage(source: ImageSource.camera, maxHeight: 675, maxWidth: 960);
     setState(() {
       this.file = file;
@@ -53,31 +55,31 @@ class _AddNewPostState extends State<AddNewPost> {
 
   handleChoosePhoto() async {
     Navigator.pop(context);
-    File file =
+    final File file =
         await ImagePicker.pickImage(source: ImageSource.gallery, maxHeight: 675, maxWidth: 960);
     setState(() {
       this.file = file;
     });
   }
 
-  selectImage(printcontext) {
+  Future selectImage(BuildContext printcontext) {
     return showDialog(
         context: printcontext,
         builder: (context) {
           return SimpleDialog(
-            title: Text('Create Post'),
+            title: const Text('Create Post'),
             children: [
               SimpleDialogOption(
-                child: Text('photo with camera'),
                 onPressed: handleTakePhoto,
+                child: const Text('photo with camera'),
               ),
               SimpleDialogOption(
-                child: Text('Image from Gallery'),
                 onPressed: handleChoosePhoto,
+                child: const Text('Image from Gallery'),
               ),
               SimpleDialogOption(
-                child: Text('Cancel'),
                 onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel'),
               ),
             ],
           );
@@ -89,19 +91,18 @@ class _AddNewPostState extends State<AddNewPost> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Create post'),
+        title: const Text('Create post'),
       ),
       body: SafeArea(
         child: ListView(
           children: <Widget>[
-            //  userInfo(context),
             Column(
               children: <Widget>[
-                SizedBox(height: 12.0),
+                const SizedBox(height: 12.0),
                 Container(
-                  margin: EdgeInsets.only(left: 12.0, right: 12.0),
+                  margin: const EdgeInsets.only(left: 12.0, right: 12.0),
                   child: TextField(
-                    scrollPadding: EdgeInsets.all(14.0),
+                    scrollPadding: const EdgeInsets.all(14.0),
                     controller: _controller,
                     maxLines: 8,
                     minLines: 4,
@@ -119,7 +120,6 @@ class _AddNewPostState extends State<AddNewPost> {
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
                         borderSide: BorderSide(
-                          width: 1,
                           color: Theme.of(context).accentColor,
                         ),
                       ),
@@ -133,9 +133,6 @@ class _AddNewPostState extends State<AddNewPost> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: showLoadingPost == false
-            ? Icon(Icons.add, color: KMainColor)
-            : SpinKitFoldingCube(color: KMainColor, size: 12.0),
         onPressed: () async {
           if (newPost != null) {
             setState(() => showLoadingPost = true);
@@ -160,14 +157,18 @@ class _AddNewPostState extends State<AddNewPost> {
             MaterialPageRoute(builder: (context) => Wrapper()),
           );
         },
+        child: showLoadingPost == false
+            ? const Icon(Icons.add, color: kMainColor)
+            : SpinKitFoldingCube(color: kMainColor, size: 12.0),
       ),
     );
   }
 
-  addImage(BuildContext context) {
+  FlatButton addImage(BuildContext context) {
     return FlatButton(
+      onPressed: () => getImageUrl(),
       child: Container(
-        margin: EdgeInsets.only(top: 16.0),
+        margin: const EdgeInsets.only(top: 16.0),
         child: SizedBox(
           height: 300,
           child: ClipRect(
@@ -184,13 +185,12 @@ class _AddNewPostState extends State<AddNewPost> {
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             Icon(
                               Icons.camera_alt,
                               color: Theme.of(context).accentColor,
                             ),
-                            SizedBox(width: 4.0),
+                            const SizedBox(width: 4.0),
                             Text(
                               'Add Photo',
                               style: TextStyle(color: Theme.of(context).accentColor),
@@ -202,7 +202,6 @@ class _AddNewPostState extends State<AddNewPost> {
           ),
         ),
       ),
-      onPressed: () => getImageUrl(),
     );
   }
 
@@ -220,17 +219,16 @@ class _AddNewPostState extends State<AddNewPost> {
   }
 
   Future uploadImage() async {
-    String fileName = imageUrl;
-    StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
-    StorageUploadTask uploadTask = reference.putFile(_image);
-    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
-    dynamic url = await taskSnapshot.ref.getDownloadURL();
+    final String fileName = imageUrl;
+    final StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
+    final StorageUploadTask uploadTask = reference.putFile(_image);
+    final StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+    final dynamic url = await taskSnapshot.ref.getDownloadURL();
     if (url != null) {
       setState(() {
-        imageUrl = url;
+        imageUrl = url as String;
         showLoadingImage = false;
       });
-      print(imageUrl);
       Fluttertoast.showToast(msg: 'Upload image Complete');
     } else {
       setState(() => showLoadingImage = false);

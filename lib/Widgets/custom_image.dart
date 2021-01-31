@@ -5,10 +5,10 @@ Widget cachedNetworkImage(String mediaUrl) {
   return CachedNetworkImage(
     imageUrl: mediaUrl,
     fit: BoxFit.cover,
-    placeholder: (context, url) => Padding(
-      child: CircularProgressIndicator(),
+    placeholder: (context, url) => const Padding(
       padding: EdgeInsets.all(20.0),
+      child: CircularProgressIndicator(),
     ),
-    errorWidget: (context, url, error) => Icon(Icons.error),
+    errorWidget: (context, url, error) => const Icon(Icons.error),
   );
 }
