@@ -27,10 +27,10 @@ class _PlayerState extends State<Player> {
   StreamSubscription _playerErrorSubscription;
   StreamSubscription _playerStateSubscription;
 
-  get _isPlaying => _playerState == PlayerState.playing;
+  bool get _isPlaying => _playerState == PlayerState.playing;
   // get _isPaused => _playerState == PlayerState.paused;
-  get _durationText => _duration?.toString()?.split('.')?.first ?? '';
-  get _positionText {
+  String get _durationText => _duration?.toString()?.split('.')?.first ?? '';
+  String get _positionText {
     if (_position != null) {
       // _position.toString().split('.').first;
       // _position.toString().split(':');
@@ -100,8 +100,8 @@ class _PlayerState extends State<Player> {
         _onComplete();
         setState(() {
           _playerState = PlayerState.stopped;
-          _duration = Duration(seconds: 0);
-          _position = Duration(seconds: 0);
+          _duration = const Duration();
+          _position = const Duration();
         });
       },
     );
@@ -158,20 +158,21 @@ class _PlayerState extends State<Player> {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        _isPlaying
-            ? IconButton(
-                icon: Icon(Icons.pause_circle_filled_rounded,
-                    color: Theme.of(context).iconTheme.color),
-                iconSize: 30.0,
-                onPressed: () => _pause(),
-              )
-            : IconButton(
-                icon: Icon(Icons.play_arrow_rounded, color: Theme.of(context).iconTheme.color),
-                iconSize: 30.0,
-                onPressed: () => _play(),
-              ),
+        if (_isPlaying != null)
+          IconButton(
+            icon: Icon(Icons.pause_circle_filled_rounded,
+                color: Theme.of(context).iconTheme.color),
+            iconSize: 30.0,
+            onPressed: () => _pause(),
+          )
+        else
+          IconButton(
+            icon: Icon(Icons.play_arrow_rounded,
+                color: Theme.of(context).iconTheme.color),
+            iconSize: 30.0,
+            onPressed: () => _play(),
+          ),
         Flexible(
           child: Slider(
             activeColor: Theme.of(context).iconTheme.color,
@@ -193,7 +194,8 @@ class _PlayerState extends State<Player> {
               : _duration != null
                   ? _durationText
                   : '0.00',
-          style: TextStyle(fontSize: 12.0, color: Theme.of(context).iconTheme.color),
+          style: TextStyle(
+              fontSize: 12.0, color: Theme.of(context).iconTheme.color),
         ),
       ],
     );

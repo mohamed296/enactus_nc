@@ -8,10 +8,10 @@ import 'package:flutter/material.dart';
 class TaskMessage {
   MessageController messageController = MessageController();
   sendTask({UserModel user, BuildContext context, String groupId}) async {
-    DateTime date = await messageController.selectDate(context);
+    final DateTime date = await messageController.selectDate(context);
 
-    MessageModel messageModel = MessageModel(
-      receverId: user == null ? null : user.id,
+    final MessageModel messageModel = MessageModel(
+      receverId: user?.id,
       userName: user == null ? 'All' : user.username,
       groupId: groupId,
       type: 'Task',
@@ -20,14 +20,15 @@ class TaskMessage {
 
     MessageGroupServices()
         .sendTaskMessage(messageModel, date, true)
-        .catchError((error) => print("Error on send task : ${error.toString()}"))
+        .catchError(
+            (error) => print("Error on send task : ${error.toString()}"))
         .whenComplete(() => Navigator.pop(context));
   }
 
   void showGroupMembers(BuildContext context, String groupId) {
     showModalBottomSheet(
       context: context,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
       ),
       elevation: 1.0,
@@ -38,10 +39,11 @@ class TaskMessage {
         return StatefulBuilder(
           builder: (context, setState) {
             return Scaffold(
-              appBar: AppBar(title: Text('Assign Task To'), leading: Container()),
+              appBar: AppBar(
+                  title: const Text('Assign Task To'), leading: Container()),
               floatingActionButton: FloatingActionButton(
-                child: Icon(Icons.done_all_rounded),
                 onPressed: () => sendTask(),
+                child: const Icon(Icons.done_all_rounded),
               ),
               body: StreamBuilder<List<UserModel>>(
                 stream: FirebaseFirestore.instance
@@ -53,10 +55,11 @@ class TaskMessage {
                 builder: (context, snapshot) {
                   return snapshot.hasData
                       ? ListView.builder(
-                          physics: BouncingScrollPhysics(),
+                          physics: const BouncingScrollPhysics(),
                           itemCount: snapshot.data.length,
                           itemBuilder: (context, index) => ListTile(
-                            onTap: () => messageController.selectDate(context).then(
+                            onTap: () =>
+                                messageController.selectDate(context).then(
                               (dataTime) {
                                 final UserModel taskUser = UserModel(
                                   id: snapshot.data[index].id,
@@ -68,15 +71,19 @@ class TaskMessage {
                             ),
                             leading: CircleAvatar(
                               radius: 30,
-                              backgroundImage: snapshot.data[index].photoUrl == null
-                                  ? AssetImage("assets/images/person.png")
+                              backgroundImage: snapshot.data[index].photoUrl ==
+                                      null
+                                  ? const AssetImage("assets/images/person.png")
                                   : NetworkImage(snapshot.data[index].photoUrl),
                             ),
-                            title: Text(snapshot?.data[index]?.username ?? 'user'),
-                            subtitle: snapshot.data[index].isHead ? Text('Head') : Text('Member'),
+                            title:
+                                Text(snapshot?.data[index]?.username ?? 'user'),
+                            subtitle: snapshot.data[index].isHead
+                                ? const Text('Head')
+                                : const Text('Member'),
                           ),
                         )
-                      : CircularProgressIndicator();
+                      : const CircularProgressIndicator();
                 },
               ),
             );
