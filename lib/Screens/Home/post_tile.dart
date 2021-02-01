@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:enactusnca/Helpers/constants.dart';
-import 'package:enactusnca/Helpers/helperfunction.dart';
-import 'package:enactusnca/Models/post.dart';
-import 'package:enactusnca/Models/user_model.dart';
-import 'package:enactusnca/Screens/Post/OpenPost.dart';
-import 'package:enactusnca/Screens/Profile/profile.dart';
-import 'package:enactusnca/Widgets/constants.dart';
-import 'package:enactusnca/Widgets/post_image.dart';
+import 'package:enactusnca/helpers/constants.dart';
+import 'package:enactusnca/helpers/helperfunction.dart';
+import 'package:enactusnca/models/post.dart';
+import 'package:enactusnca/models/user_model.dart';
+import 'package:enactusnca/screens/post/open_post.dart';
+import 'package:enactusnca/screens/profile/profile.dart';
+import 'package:enactusnca/widgets/constants.dart';
+import 'package:enactusnca/widgets/post_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -14,36 +14,15 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class PostTile extends StatefulWidget {
   final Post post;
   final UserModel user;
-  final dynamic likes;
-  final int likeCount;
 
-  PostTile({this.post, this.user, this.likes, this.likeCount});
-
-  factory PostTile.fromDocument(DocumentSnapshot doc) {
-    return PostTile(
-      likes: doc['likes'],
-    );
-  }
-
-  int getLikeCount(likes) {
-    if (likes == null) {
-      return 0;
-    } else {
-      int count = 0;
-      likes.value.forEach((val) {
-        if (val == true) {
-          count++;
-        }
-      });
-      return count;
-    }
-  }
+  const PostTile({
+    Key key,
+    this.post,
+    this.user,
+  }) : super(key: key);
 
   @override
-  _PostTileState createState() => _PostTileState(
-        likes: this.likes,
-        likeCount: getLikeCount(this.likes),
-      );
+  _PostTileState createState() => _PostTileState();
 }
 
 class _PostTileState extends State<PostTile> {
@@ -76,21 +55,18 @@ class _PostTileState extends State<PostTile> {
   @override
   void initState() {
     super.initState();
-    print(widget.post.mediaUrl);
     getUserInfo();
   }
 
-  getUserInfo() async {
+  Future<void> getUserInfo() async {
     Constants.myName = await HelperFunction.getUsername();
     Constants.myEmail = await HelperFunction.getUserEmail();
     Constants.myName = await HelperFunction.getUsername();
     Constants.myId = await HelperFunction.getUserId();
-    print("welcome  ${Constants.myName} ${Constants.myEmail}");
-    // setState(() {});
   }
 
-  likePost() {
-    bool _isLiked = likes[Constants.myEmail] == true;
+  void likePost() {
+    final bool _isLiked = likes[Constants.myEmail] == true;
     if (_isLiked) {
       FirebaseFirestore.instance
           .collection("Posts")
@@ -120,11 +96,9 @@ class _PostTileState extends State<PostTile> {
   Widget build(BuildContext context) {
     isLiked = false;
     return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         userInfo(context),
-        //Padding(padding: EdgeInsets.only(bottom: 2)),
         postSection(context),
         rowButtons(context),
       ],
@@ -182,20 +156,12 @@ class _PostTileState extends State<PostTile> {
           fontWeight: FontWeight.bold,
         ),
       ),
-      /*  onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Profile(postUserId: post.ownerId),
-          ),
-        );
-      },*/
       trailing: user.uid == widget.post.ownerId
           ? IconButton(
               onPressed: () {
                 FirebaseFirestore.instance.collection('Posts').doc(widget.post.postId).delete();
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.delete,
                 color: kSacandColor,
               ),
@@ -204,7 +170,7 @@ class _PostTileState extends State<PostTile> {
     );
   }
 
-  postSection(BuildContext context) {
+  InkWell postSection(BuildContext context) {
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -218,11 +184,10 @@ class _PostTileState extends State<PostTile> {
         );
       },
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
+            margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
             child: Text(
               widget.post.description,
               maxLines: 5,
@@ -232,33 +197,23 @@ class _PostTileState extends State<PostTile> {
                 color: Colors.amber[300],
                 fontWeight: FontWeight.bold,
               ),
-              //  style: TextStyle(color: KMainColor)
             ),
           ),
-          widget.post.mediaUrl != null ? PostImage(imageUrl: widget.post.mediaUrl) : Container(),
+          if (widget.post.mediaUrl != null)
+            PostImage(imageUrl: widget.post.mediaUrl)
+          else
+            Container(),
         ],
       ),
     );
   }
 
-  rowButtons(BuildContext context) {
+  Column rowButtons(BuildContext context) {
     return Column(
       children: <Widget>[
         Row(
-          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(padding: EdgeInsets.only(top: 40, left: 20)),
-            /*  GestureDetector(
-              onTap: () {
-                likePost();
-              },
-              child: Icon(
-                isLiked ? LineAwesomeIcons.heart_1 : LineAwesomeIcons.heart,
-                // color: KMainColor,
-                size: 25,
-              ),
-            ),
-            Padding(padding: EdgeInsets.only(right: 25)),*/
+            const Padding(padding: EdgeInsets.only(top: 40, left: 20)),
             InkWell(
               onTap: () {
                 Navigator.push(
@@ -271,42 +226,11 @@ class _PostTileState extends State<PostTile> {
                   ),
                 );
               },
-              child: Icon(
-                FontAwesomeIcons.comment,
-                //   color: KMainColor,
-                size: 25,
-              ),
+              child: const Icon(FontAwesomeIcons.comment, size: 25),
             ),
           ],
         ),
-        /*   Row(
-          children: [
-            Container(
-              margin: EdgeInsets.only(left: 20),
-              child: Text(
-                "$ownerId",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
-        ),
-        Padding(
-          padding: EdgeInsets.all(10),
-        )*/
       ],
     );
   }
-
-  /* void select(String choice) {
-    if (choice == PopUpMenu.settings) {
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => Settings(),
-      //   ),
-      // );
-    } else if (choice == PopUpMenu.signOut) {
-      //  auth.signOutGoogle(context);
-    }
-  } */
 }

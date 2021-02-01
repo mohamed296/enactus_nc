@@ -55,12 +55,12 @@ class DatabaseMethods {
     return FirebaseFirestore.instance.collection("chatRoom").doc(chatRoomId).set(chatRoomMap);
   }
 
-  Future<void> addConversationMessages({String chatRoomId, chatConversationMap}) {
-    return FirebaseFirestore.instance
-        .collection("chatRoom")
-        .doc(chatRoomId)
-        .update(chatConversationMap);
-  }
+  // Future<void> addConversationMessages({String chatRoomId, chatConversationMap}) {
+  //   return FirebaseFirestore.instance
+  //       .collection("chatRoom")
+  //       .doc(chatRoomId)
+  //       .update(chatConversationMap);
+  // }
 
   Future<void> markMessageAsSeen(String chatRoomId) {
     return FirebaseFirestore.instance

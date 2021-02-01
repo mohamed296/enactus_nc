@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import 'package:enactusnca/Models/post.dart';
+import 'package:enactusnca/models/post.dart';
 import 'package:enactusnca/Screens/Profile/profile.dart';
 import 'package:enactusnca/Widgets/post_image.dart';
 
 import 'comments_list.dart';
 
 class OpenPost extends StatefulWidget {
-  final focus;
+  final bool focus;
   final Post post;
   const OpenPost({
     Key key,

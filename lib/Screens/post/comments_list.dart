@@ -35,7 +35,7 @@ class _CommentsListState extends State<CommentsList> {
     return Stack(
       children: <Widget>[
         addnewComment(),
-        StreamBuilder(
+        StreamBuilder<List<CommentModel>>(
           stream: FirebaseFirestore.instance
               .collection('Posts')
               .doc(widget.thisPost.postId)
@@ -65,9 +65,9 @@ class _CommentsListState extends State<CommentsList> {
               margin: const EdgeInsets.only(top: 110.0),
               child: ListView.builder(
                 controller: widget.scrollController,
-                itemCount: snapshot.data.length as int,
+                itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
-                  return CommentCard(comment: snapshot.data[index] as CommentModel);
+                  return CommentCard(comment: snapshot.data[index]);
                 },
               ),
             );
