@@ -25,7 +25,7 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
   List<String> communities = Constants.communities;
   List<String> mmDep = Constants.mmDep;
   List<String> erDep = Constants.erDep;
-  List<String> secondList = List();
+  List<String> secondList = [];
 
   @override
   void initState() {
@@ -40,8 +40,7 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
   }
 
   Future getImage() async {
-    final pickedFile =
-        await ImagePicker().getImage(source: ImageSource.gallery);
+    final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
     setState(() {
       _imgURL = pickedFile.hashCode.toString();
       _image = File(pickedFile.path);
@@ -52,10 +51,10 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
   Widget dropDown({List<String> list, String dropdownValue}) {
     return DropdownButton<String>(
       value: dropdownValue,
-      icon: Icon(Icons.arrow_drop_down),
+      icon: const Icon(Icons.arrow_drop_down),
       iconSize: 20,
       elevation: 16,
-      style: TextStyle(color: Colors.grey),
+      style: const TextStyle(color: Colors.grey),
       underline: Container(height: 2),
       onChanged: (String newValue) {
         setState(() {
@@ -92,6 +91,7 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
             }
           } else {
             department = newValue;
+            // ignore: parameter_assignments
             dropdownValue = newValue;
           }
         });
@@ -105,11 +105,11 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
     );
   }
 
-  void onSave() async {
+  Future<void> onSave() async {
     setState(() => loading = true);
 
     await uploadImage(context).whenComplete(() {
-      UserModel userModel = UserModel(
+      final UserModel userModel = UserModel(
         firstName: firstName ?? widget.userModel.firstName,
         lastName: lastName ?? widget.userModel.lastName,
         photoUrl: _imgURL ?? widget.userModel.photoUrl,
@@ -123,7 +123,7 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
     }).whenComplete(() {
       setState(() => loading = false);
       Navigator.pop(context);
-    }).catchError((e) => print(e));
+    });
   }
 
   @override
@@ -132,22 +132,22 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
       children: [
         Scaffold(
           appBar: AppBar(
-            title: Text(
+            title: const Text(
               "Edit Profile",
               style: TextStyle(fontSize: 25, fontWeight: FontWeight.w900),
             ),
           ),
           body: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             child: Container(
-              padding: EdgeInsets.only(left: 16, right: 16),
+              padding: const EdgeInsets.only(left: 16, right: 16),
               child: GestureDetector(
                 onTap: () {
                   FocusScope.of(context).unfocus();
                 },
                 child: Column(
                   children: [
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Center(
                       child: Stack(
                         children: [
@@ -161,13 +161,13 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
                                   spreadRadius: 2,
                                   blurRadius: 10,
                                   color: Colors.white.withOpacity(0.1),
-                                  offset: Offset(0, 10),
+                                  offset: const Offset(0, 10),
                                 ),
                               ],
                               shape: BoxShape.circle,
                               image: DecorationImage(
                                 image: _image != null
-                                    ? FileImage(_image)
+                                    ? FileImage(_image) as ImageProvider
                                     : NetworkImage(
                                         widget?.userModel?.photoUrl ??
                                             "https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png",
@@ -183,30 +183,28 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
                                 width: 40,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  border:
-                                      Border.all(width: 2, color: Colors.white),
+                                  border: Border.all(width: 2, color: Colors.white),
                                   color: Theme.of(context).accentColor,
                                 ),
                                 child: IconButton(
-                                  icon: Icon(Icons.edit, color: Colors.white),
+                                  icon: const Icon(Icons.edit, color: Colors.white),
                                   onPressed: getImage,
                                 ),
                               )),
                         ],
                       ),
                     ),
-                    SizedBox(height: 35),
+                    const SizedBox(height: 35),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 35.0),
                       child: TextField(
-                        onChanged: (String val) =>
-                            setState(() => firstName = val),
+                        onChanged: (String val) => setState(() => firstName = val),
                         decoration: InputDecoration(
-                          contentPadding: EdgeInsets.only(bottom: 3),
+                          contentPadding: const EdgeInsets.only(bottom: 3),
                           labelText: 'FirstName',
                           floatingLabelBehavior: FloatingLabelBehavior.always,
                           hintText: "${widget.userModel.firstName}",
-                          hintStyle: TextStyle(
+                          hintStyle: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -217,14 +215,13 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 35.0),
                       child: TextField(
-                        onChanged: (String val) =>
-                            setState(() => lastName = val),
+                        onChanged: (String val) => setState(() => lastName = val),
                         decoration: InputDecoration(
-                          contentPadding: EdgeInsets.only(bottom: 3),
+                          contentPadding: const EdgeInsets.only(bottom: 3),
                           labelText: 'lastName',
                           floatingLabelBehavior: FloatingLabelBehavior.always,
                           hintText: "${widget.userModel.lastName}",
-                          hintStyle: TextStyle(
+                          hintStyle: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -237,11 +234,11 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
                       child: TextField(
                         onChanged: (String val) => setState(() => email = val),
                         decoration: InputDecoration(
-                          contentPadding: EdgeInsets.only(bottom: 3),
+                          contentPadding: const EdgeInsets.only(bottom: 3),
                           labelText: 'E-mail',
                           floatingLabelBehavior: FloatingLabelBehavior.always,
                           hintText: "${widget.userModel.email}",
-                          hintStyle: TextStyle(
+                          hintStyle: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -252,44 +249,45 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Committee "),
+                        const Text("Committee "),
                         dropDown(list: communities, dropdownValue: community),
                       ],
                     ),
-                    community == communities.elementAt(0) ||
-                            community == communities.elementAt(1)
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("department "),
-                              dropDown(
-                                  list: secondList, dropdownValue: department),
-                            ],
-                          )
-                        : Container(),
-                    SizedBox(height: 35),
+                    if (community == communities.elementAt(0) ||
+                        community == communities.elementAt(1))
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("department "),
+                          dropDown(list: secondList, dropdownValue: department),
+                        ],
+                      )
+                    else
+                      Container(),
+                    const SizedBox(height: 35),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         OutlineButton(
-                          padding: EdgeInsets.symmetric(horizontal: 50),
+                          padding: const EdgeInsets.symmetric(horizontal: 50),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          child: Text(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text(
                             "CANCEL",
                             style: TextStyle(fontSize: 15, letterSpacing: 2.2),
                           ),
-                          onPressed: () => Navigator.pop(context),
                         ),
                         Builder(
                           builder: (context) => RaisedButton(
-                            padding: EdgeInsets.symmetric(horizontal: 50.0),
+                            padding: const EdgeInsets.symmetric(horizontal: 50.0),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
                             ),
                             color: Theme.of(context).accentColor,
-                            child: Text(
+                            onPressed: onSave,
+                            child: const Text(
                               "SAVE",
                               style: TextStyle(
                                 fontSize: 15,
@@ -297,7 +295,6 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            onPressed: onSave,
                           ),
                         )
                       ],
@@ -308,25 +305,26 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
             ),
           ),
         ),
-        loading == true
-            ? Container(
-                color: Colors.black.withOpacity(0.3),
-                child: Center(child: CircularProgressIndicator()),
-              )
-            : Container(),
+        if (loading == true)
+          Container(
+            color: Colors.black.withOpacity(0.3),
+            child: const Center(child: CircularProgressIndicator()),
+          )
+        else
+          Container(),
       ],
     );
   }
 
   Future uploadImage(BuildContext context) async {
     try {
-      StorageReference ref = FirebaseStorage.instance.ref().child(_imgURL);
-      StorageUploadTask storageUploadTask = ref.putFile(_image);
-      StorageTaskSnapshot taskSnapshot = await storageUploadTask.onComplete;
+      final StorageReference ref = FirebaseStorage.instance.ref().child(_imgURL);
+      final StorageUploadTask storageUploadTask = ref.putFile(_image);
+      final StorageTaskSnapshot taskSnapshot = await storageUploadTask.onComplete;
       // Scaffold.of(context).showSnackBar(
       //   SnackBar(content: Text("Success")),
       // );
-      String url = await taskSnapshot.ref.getDownloadURL();
+      final String url = await taskSnapshot.ref.getDownloadURL() as String;
       setState(() {
         _imgURL = url;
       });

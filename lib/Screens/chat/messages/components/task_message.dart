@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 
 class TaskMessage {
   MessageController messageController = MessageController();
-  sendTask({UserModel user, BuildContext context, String groupId}) async {
+
+  Future<void> sendTask({UserModel user, BuildContext context, String groupId}) async {
     final DateTime date = await messageController.selectDate(context);
 
     final MessageModel messageModel = MessageModel(
@@ -19,9 +20,7 @@ class TaskMessage {
     );
 
     MessageGroupServices()
-        .sendTaskMessage(messageModel, date, true)
-        .catchError(
-            (error) => print("Error on send task : ${error.toString()}"))
+        .sendTaskMessage(messageModel: messageModel, dateTime: date, sendNotifi: true)
         .whenComplete(() => Navigator.pop(context));
   }
 
@@ -39,8 +38,7 @@ class TaskMessage {
         return StatefulBuilder(
           builder: (context, setState) {
             return Scaffold(
-              appBar: AppBar(
-                  title: const Text('Assign Task To'), leading: Container()),
+              appBar: AppBar(title: const Text('Assign Task To'), leading: Container()),
               floatingActionButton: FloatingActionButton(
                 onPressed: () => sendTask(),
                 child: const Icon(Icons.done_all_rounded),
@@ -58,8 +56,7 @@ class TaskMessage {
                           physics: const BouncingScrollPhysics(),
                           itemCount: snapshot.data.length,
                           itemBuilder: (context, index) => ListTile(
-                            onTap: () =>
-                                messageController.selectDate(context).then(
+                            onTap: () => messageController.selectDate(context).then(
                               (dataTime) {
                                 final UserModel taskUser = UserModel(
                                   id: snapshot.data[index].id,
@@ -71,13 +68,11 @@ class TaskMessage {
                             ),
                             leading: CircleAvatar(
                               radius: 30,
-                              backgroundImage: snapshot.data[index].photoUrl ==
-                                      null
-                                  ? const AssetImage("assets/images/person.png")
+                              backgroundImage: snapshot.data[index].photoUrl == null
+                                  ? const AssetImage("assets/images/person.png") as ImageProvider
                                   : NetworkImage(snapshot.data[index].photoUrl),
                             ),
-                            title:
-                                Text(snapshot?.data[index]?.username ?? 'user'),
+                            title: Text(snapshot?.data[index]?.username ?? 'user'),
                             subtitle: snapshot.data[index].isHead
                                 ? const Text('Head')
                                 : const Text('Member'),

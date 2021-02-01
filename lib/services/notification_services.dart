@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
+import 'package:enactusnca/Models/event_model.dart';
 import 'package:enactusnca/Models/messages_model.dart';
 import 'package:enactusnca/Models/notification_model.dart';
+import 'package:enactusnca/Models/post.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart ' as http;
@@ -10,7 +12,7 @@ class NotificationServices {
   String url = 'http://www.enactusnewcairo.org/api/ncaapp/notifications/group/?';
   final user = FirebaseAuth.instance.currentUser;
 
-  String notificationMsg(NotificationModel notificationModel, bool like) {
+  String notificationMsg({NotificationModel notificationModel, bool like}) {
     String notificationMsg;
     if (notificationModel.notificationEvent == null) {
       if (like) {
@@ -27,9 +29,9 @@ class NotificationServices {
     return notificationMsg;
   }
 
-  Future sendNotification(NotificationModel notificationModel, bool like) async {
+  Future sendNotification({NotificationModel notificationModel, bool like}) async {
     final String notificationMessage = notificationModel.notificationPost != null
-        ? notificationMsg(notificationModel, like)
+        ? notificationMsg(notificationModel: notificationModel, like: like)
         : notificationModel.notificationMsg;
     final String notificationTime = formatDate(
       DateTime.now(),
@@ -65,8 +67,6 @@ class NotificationServices {
 
     if (item.exists) {
       return item.reference.delete();
-    } else {
-      return null;
     }
   }
 
@@ -75,14 +75,14 @@ class NotificationServices {
         .map(
           (notifi) => NotificationModel(
             notificationId: notifi.id,
-            receiverId: notifi.data()['receiverId'],
-            senderId: notifi.data()['senderId'],
-            senderName: notifi.data()['senderName'],
-            senderImg: notifi.data()['senderImg'],
-            notificationTime: notifi.data()['notificationTime'],
-            notificationMsg: notifi.data()['notificationMsg'],
-            notificationPost: notifi.data()['notificationPost'],
-            notificationEvent: notifi.data()['notificationEvent'],
+            receiverId: notifi.data()['receiverId'] as String,
+            senderId: notifi.data()['senderId'] as String,
+            senderName: notifi.data()['senderName'] as String,
+            senderImg: notifi.data()['senderImg'] as String,
+            notificationTime: notifi.data()['notificationTime'] as String,
+            notificationMsg: notifi.data()['notificationMsg'] as String,
+            notificationPost: notifi.data()['notificationPost'] as Post,
+            notificationEvent: notifi.data()['notificationEvent'] as EventModel,
           ),
         )
         .toList();
@@ -99,8 +99,8 @@ class NotificationServices {
         .map(listOfNotification);
   }
 
-  sendGetNotificationOto(MessageModel messageModel) async {
-    var url;
+  Future<void> sendGetNotificationOto(MessageModel messageModel) async {
+    String url;
     try {
       if (messageModel.type == 'Task' || messageModel.type == 'Message') {
         url =
@@ -109,12 +109,12 @@ class NotificationServices {
         url =
             'http://www.enactusnewcairo.org/api/ncaapp/notifications/group/?auth-token=2d041ds81dsa5641dsa5611d6as5&senderid=${messageModel.senderId}&recid=${messageModel.receverId}&body=$Image&notification-type=oto';
       }
-      final responce = await http.get(url);
+      await http.get(url);
     } catch (e) {}
   }
 
-  sendGetnotificationGroup(MessageModel messageModel) async {
-    var url;
+  Future<void> sendGetnotificationGroup(MessageModel messageModel) async {
+    String url;
     try {
       if (messageModel.type == 'Task' || messageModel.type == 'Message') {
         url =
@@ -123,7 +123,7 @@ class NotificationServices {
         url =
             'http://www.enactusnewcairo.org/api/ncaapp/notifications/group/?auth-token=2d041ds81dsa5641dsa5611d6as5&senderid=${messageModel.senderId}&groupname=${messageModel.groupId}&body=$Image&notification-type=group';
       }
-      final responce = await http.get(url);
+      await http.get(url);
     } catch (e) {}
   }
 }

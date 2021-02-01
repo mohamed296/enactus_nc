@@ -28,17 +28,17 @@ final CollectionReference commentsCollection = FirebaseFirestore.instance.collec
 final CollectionReference chatCollection = FirebaseFirestore.instance.collection('Chat');
 
 final kTitleTextStyle = TextStyle(
-  fontSize: ScreenUtil().setSp(kSpacingUnit.w * 1.7),
+  fontSize: ScreenUtil().setSp(kSpacingUnit.w * 1.7) as double,
   fontWeight: FontWeight.w600,
 );
 
 final kCaptionTextStyle = TextStyle(
-  fontSize: ScreenUtil().setSp(kSpacingUnit.w * 1.3),
+  fontSize: ScreenUtil().setSp(kSpacingUnit.w * 1.3) as double,
   fontWeight: FontWeight.w100,
 );
 
 final kButtonTextStyle = TextStyle(
-  fontSize: ScreenUtil().setSp(kSpacingUnit.w * 1.5),
+  fontSize: ScreenUtil().setSp(kSpacingUnit.w * 1.5) as double,
   fontWeight: FontWeight.w400,
   color: kDarkPrimaryColor,
 );

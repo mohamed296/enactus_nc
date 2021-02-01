@@ -16,9 +16,9 @@ class RecentChat extends StatefulWidget {
 }
 
 class _RecentChatState extends State<RecentChat> {
-  List<RecentCh> recent = new List();
-  Auth authMethods = new Auth();
-  DatabaseMethods databaseMethods = new DatabaseMethods();
+  List<RecentCh> recent = [];
+  Auth authMethods = Auth();
+  DatabaseMethods databaseMethods = DatabaseMethods();
   Stream chatRoomStream;
   bool isLoadingOver = false;
   final user = FirebaseAuth.instance.currentUser;
@@ -26,10 +26,6 @@ class _RecentChatState extends State<RecentChat> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      print("${user.displayName}");
-    });
-
     getUserInfo();
   }
 
@@ -39,10 +35,8 @@ class _RecentChatState extends State<RecentChat> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Image.asset("assets/images/emptychat.png"),
-          SizedBox(
-            height: 5,
-          ),
-          Text(
+          const SizedBox(height: 6.0),
+          const Text(
             'your chat list is empty ',
             style: TextStyle(fontSize: 16.0, color: Colors.white),
           ),
@@ -51,27 +45,24 @@ class _RecentChatState extends State<RecentChat> {
     );
   }
 
-  getUserInfo() async {
+  Future<void> getUserInfo() async {
     databaseMethods.getChatRooms(email: user.email).then((val) {
-      setState(() {
-        chatRoomStream = val;
-      });
+      setState(() => chatRoomStream = val);
     });
     isLoadingOver = true;
     setState(() {});
   }
 
-  Widget contactsList(snapshot) {
+  Widget contactsList(AsyncSnapshot<dynamic> snapshot) {
     return ListView.builder(
-      scrollDirection: Axis.vertical,
       shrinkWrap: true,
-      physics: BouncingScrollPhysics(),
-      itemCount: snapshot.data.documents.length,
+      physics: const BouncingScrollPhysics(),
+      itemCount: snapshot.data.documents.length as int,
       itemBuilder: (context, index) {
-        List users = snapshot.data.documents[index].data()["users"];
-        String roomID = snapshot.data.documents[index].data()["chatroomid"];
-        List emails = snapshot.data.documents[index].data()['emails'];
-        List ids = snapshot.data.documents[index].data()['ids'];
+        final List users = snapshot.data.documents[index].data()["users"] as List;
+        final String roomID = snapshot.data.documents[index].data()["chatroomid"] as String;
+        final List emails = snapshot.data.documents[index].data()['emails'] as List;
+        final List ids = snapshot.data.documents[index].data()['ids'] as List;
         String imgURL;
         return InkWell(
           onTap: () {
@@ -82,28 +73,21 @@ class _RecentChatState extends State<RecentChat> {
                   group: false,
                   chatRoomId: roomID,
                   imageUrl: imgURL,
-                  userId: ids[0] == user.uid ? ids[1] : ids[0],
-                  lastSender: snapshot.data.documents[index].data()["lastSender"],
-                  username: users[1] == user.displayName ? users[0] : users[1],
-                  read: snapshot.data.documents[index].data()['isRead'],
-                  lastmassage: snapshot.data.documents[index].data()["lastMessage"],
+                  userId: ids[0] == user.uid ? ids[1] as String : ids[0] as String,
+                  lastSender: snapshot.data.documents[index].data()["lastSender"] as String,
+                  username: users[1] == user.displayName ? users[0] as String : users[1] as String,
+                  read: snapshot.data.documents[index].data()['isRead'] as bool,
+                  lastmassage: snapshot.data.documents[index].data()["lastMessage"] as String,
                 ),
               ),
             );
           },
           child: Container(
-            margin: EdgeInsets.only(top: .0, bottom: 6.0, right: 20.0),
-            padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
+            margin: const EdgeInsets.only(bottom: 6.0, right: 20.0),
+            padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
             decoration: BoxDecoration(
-              color:
-
-                  //  snapshot.data.documents[index].data()["lastSender"] != user.displayName
-                  //     ? !snapshot.data.documents[index].data()["isRead"]
-                  //         ? Constants.midBlue
-                  //         : Constants.darkBlue
-                  //     :
-                  Constants.midBlue,
-              borderRadius: BorderRadius.only(
+              color: Constants.midBlue,
+              borderRadius: const BorderRadius.only(
                 topRight: Radius.circular(20),
                 bottomRight: Radius.circular(20),
               ),
@@ -113,39 +97,41 @@ class _RecentChatState extends State<RecentChat> {
               children: <Widget>[
                 FutureBuilder<dynamic>(
                   future: Constants.myEmail == emails[0]
-                      ? databaseMethods.getUsersByUserEmail(emails[1])
-                      : databaseMethods.getUsersByUserEmail(emails[0]),
+                      ? databaseMethods.getUsersByUserEmail(emails[1] as String)
+                      : databaseMethods.getUsersByUserEmail(emails[0] as String),
                   builder: (context, newSnap) {
-                    QuerySnapshot querySnapshot = newSnap.data;
-                    imgURL = querySnapshot.docs[0].data()["photoUrl"];
-                    return !newSnap.hasData
-                        ? Center(child: CircularProgressIndicator())
-                        : Badge(
-                            badgeColor: Constants.yellow,
-                            showBadge: !snapshot.data.documents[index].data()["isRead"],
-                            child: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              backgroundImage: imgURL == null
-                                  ? AssetImage('assets/images/person.png')
-                                  : NetworkImage(imgURL),
-                              radius: 28.0,
-                            ),
-                          );
+                    final QuerySnapshot querySnapshot = newSnap.data as QuerySnapshot;
+                    imgURL = querySnapshot.docs[0].data()["photoUrl"] as String;
+                    if (!newSnap.hasData) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else {
+                      return Badge(
+                        badgeColor: Constants.yellow,
+                        showBadge: snapshot.data.documents[index].data()["isRead"] as bool,
+                        child: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          backgroundImage: imgURL == null
+                              ? const AssetImage('assets/images/person.png') as ImageProvider
+                              : NetworkImage(imgURL),
+                          radius: 28.0,
+                        ),
+                      );
+                    }
                   },
                 ),
-                SizedBox(width: 12.0),
+                const SizedBox(width: 12.0),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      users[0] == user.displayName ? users[1] : users[0],
+                      users[0] == user.displayName ? users[1] as String : users[0] as String,
                       style: TextStyle(
                         color: Colors.grey.shade200,
                         fontSize: 15.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Container(
+                    SizedBox(
                       width: MediaQuery.of(context).size.width * 0.35,
                       child: Text(
                         snapshot.data.documents[index].data()["lastMessage"] == null
@@ -165,12 +151,10 @@ class _RecentChatState extends State<RecentChat> {
                     ),
                   ],
                 ),
-                Spacer(),
+                const Spacer(),
                 Text(
                   Functions.readTimestamp(
-                    snapshot.data.documents[index].data()["lastTime"] == null
-                        ? 0
-                        : snapshot.data.documents[index].data()["lastTime"],
+                    snapshot.data.documents[index].data()["lastTime"] as int ?? 0,
                   ),
                   style: TextStyle(
                     color: Colors.grey.shade100,
@@ -188,29 +172,30 @@ class _RecentChatState extends State<RecentChat> {
 
   Widget createChatContacts() {
     return StreamBuilder(
-        stream: chatRoomStream,
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-              return Center(child: CircularProgressIndicator());
-              break;
-            default:
-              return snapshot.hasData ? contactsList(snapshot) : emptyView();
-              break;
-          }
-        });
+      stream: chatRoomStream,
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return const Center(child: CircularProgressIndicator());
+            break;
+          default:
+            return snapshot.hasData ? contactsList(snapshot) : emptyView();
+            break;
+        }
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(
           topRight: Radius.circular(30),
         ),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.only(
+        borderRadius: const BorderRadius.only(
           topRight: Radius.circular(30),
         ),
         child: createChatContacts(),

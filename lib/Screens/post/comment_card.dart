@@ -1,23 +1,24 @@
-import 'package:enactusnca/Models/comment_model.dart';
 import 'package:flutter/material.dart';
 
+import 'package:enactusnca/Models/comment_model.dart';
+
 class CommentCard extends StatelessWidget {
-  static String id = 'CommentCard';
   final CommentModel comment;
-  CommentCard({this.comment});
+  const CommentCard({
+    Key key,
+    this.comment,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         Row(
-          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              margin: EdgeInsets.all(12.0),
+              margin: const EdgeInsets.all(12.0),
               child: CircleAvatar(
                 backgroundImage: NetworkImage(
                   comment?.userImageUrl ??
@@ -28,8 +29,8 @@ class CommentCard extends StatelessWidget {
             ),
             Expanded(
               child: Container(
-                padding: EdgeInsets.all(12.0),
-                margin: EdgeInsets.only(top: 4.0, right: 12.0, bottom: 4.0),
+                padding: const EdgeInsets.all(12.0),
+                margin: const EdgeInsets.only(top: 4.0, right: 12.0, bottom: 4.0),
                 decoration: BoxDecoration(
                   color: Theme.of(context).accentColor,
                   borderRadius: BorderRadius.circular(20.0),
@@ -42,18 +43,18 @@ class CommentCard extends StatelessWidget {
                       children: <Widget>[
                         Text(
                           comment?.name ?? "",
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16.0,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        Spacer(),
+                        const Spacer(),
                       ],
                     ),
                     Text(
                       comment.comment,
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                     ),
                   ],
                 ),
@@ -62,10 +63,8 @@ class CommentCard extends StatelessWidget {
           ],
         ),
         Container(
-          margin: EdgeInsets.only(left: 66.0),
-          child: Text(
-            comment.timeStamp,
-          ),
+          margin: const EdgeInsets.only(left: 66.0),
+          child: Text(comment.timeStamp),
         ),
       ],
     );

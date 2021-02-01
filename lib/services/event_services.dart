@@ -7,12 +7,9 @@ class EventServices {
     try {
       final response = await http.get("http://www.enactusnewcairo.org/api/events");
       final jsonResponse = jsonDecode(response.body);
-      return jsonResponse;
+      return jsonResponse as List;
     } catch (e) {
       return null;
     }
   }
 }
-
-// DatabaseService<EventModel> eventDBS = DatabaseService<EventModel>("events",
-//     fromDS: (id, data) => EventModel.fromJson(id, data), toMap: (event) => event.toMap());

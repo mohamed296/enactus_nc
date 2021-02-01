@@ -18,36 +18,31 @@ class ProfileListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: kSpacingUnit.w * 5.5,
-      margin: EdgeInsets.symmetric(
-        horizontal: kSpacingUnit.w * 4,
-      ).copyWith(
-        bottom: kSpacingUnit.w * 2,
-      ),
-      padding: EdgeInsets.symmetric(
-        horizontal: kSpacingUnit.w * 2,
-      ),
+      height: kSpacingUnit.w * 5.5 as double,
+      margin: EdgeInsets.symmetric(horizontal: kSpacingUnit.w * 4 as double)
+          .copyWith(bottom: kSpacingUnit.w * 2 as double),
+      padding: EdgeInsets.symmetric(horizontal: kSpacingUnit.w * 2 as double),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(kSpacingUnit.w * 3),
+        borderRadius: BorderRadius.circular(kSpacingUnit.w * 3 as double),
         color: Theme.of(context).backgroundColor,
       ),
       child: Row(
         children: <Widget>[
           Icon(
-            this.icon,
-            size: kSpacingUnit.w * 2.5,
+            icon,
+            size: kSpacingUnit.w * 2.5 as double,
           ),
-          SizedBox(width: kSpacingUnit.w * 1.5),
+          SizedBox(width: kSpacingUnit.w * 1.5 as double),
           Text(
-            this.text,
+            text,
             style: kTitleTextStyle.copyWith(
               fontWeight: FontWeight.w500,
             ),
           ),
-          Spacer(),
+          const Spacer(),
           Icon(
             LineAwesomeIcons.angle_right,
-            size: kSpacingUnit.w * 2.5,
+            size: kSpacingUnit.w * 2.5 as double,
           ),
         ],
       ),

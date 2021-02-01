@@ -1,11 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enactusnca/Models/user_model.dart';
-import 'package:enactusnca/Screens/AddNewPost/add_new_post.dart';
-import 'package:enactusnca/Screens/Events/events.dart';
-import 'package:enactusnca/Screens/Home/PostsList.dart';
-import 'package:enactusnca/Screens/Profile/HelpSupport.dart';
-import 'package:enactusnca/Screens/authentication/sign_in.dart';
-import 'package:enactusnca/Widgets/PopUpMenu.dart';
+import 'package:enactusnca/Widgets/pop_up_menu.dart';
 import 'package:enactusnca/services/auth.dart';
 import 'package:enactusnca/services/user_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -35,7 +30,7 @@ class _HomeState extends State<Home> {
             .then(UserServices().userData),
         builder: (context, snapshot) {
           return !snapshot.hasData
-              ? Center(child: CircularProgressIndicator())
+              ? const Center(child: CircularProgressIndicator())
               : Stack(
                   children: [
                     Image.asset(
@@ -48,24 +43,22 @@ class _HomeState extends State<Home> {
                       backgroundColor: Colors.transparent,
                       floatingActionButton: snapshot.data.isAdmin || snapshot.data.isHead
                           ? FloatingActionButton(
-                              child: Icon(Icons.add),
                               onPressed: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) => AddNewPost()),
                               ),
+                              child: const Icon(Icons.add),
                             )
                           : Container(),
                       appBar: AppBar(
                         backgroundColor: Colors.transparent,
                         leading: Center(
                           child: Container(
-                            padding: EdgeInsets.only(left: 5),
+                            padding: const EdgeInsets.only(left: 5),
                             height: 100,
-                            child: Center(
+                            child: const Center(
                               child: Image(
-                                image: AssetImage(
-                                  'assets/images/logo.png',
-                                ),
+                                image: AssetImage('assets/images/logo.png'),
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -74,8 +67,8 @@ class _HomeState extends State<Home> {
                         actions: <Widget>[
                           Hero(
                             tag: 'Icon1',
-                            child: new IconButton(
-                              icon: Icon(
+                            child: IconButton(
+                              icon: const Icon(
                                 FontAwesomeIcons.calendar,
                                 color: Color.fromRGBO(253, 194, 35, 1.0),
                               ),
@@ -90,8 +83,8 @@ class _HomeState extends State<Home> {
                             itemBuilder: (context) {
                               return PopUpMenu.choices.map((String choice) {
                                 return PopupMenuItem(
-                                  child: Text(choice),
                                   value: choice,
+                                  child: Text(choice),
                                 );
                               }).toList();
                             },
