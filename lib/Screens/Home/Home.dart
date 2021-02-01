@@ -54,7 +54,7 @@ class _HomeState extends State<Home> {
                         backgroundColor: Colors.transparent,
                         leading: Center(
                           child: Container(
-                            padding: EdgeInsets.only(left: 5),
+                            padding: const EdgeInsets.only(left: 5),
                             height: 100,
                             child: const Center(
                               child: Image(

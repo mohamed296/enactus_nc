@@ -34,7 +34,10 @@ class Messages extends StatefulWidget {
   final bool read;
   final String lastmassage;
 
-  const Messages({
+  const Messages(
+    bool group,
+    bool group,
+    bool group, {
     Key key,
     this.username,
     this.userImg,

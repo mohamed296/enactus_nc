@@ -1,21 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:enactusnca/Models/notification_model.dart';
-import 'package:enactusnca/Models/post.dart';
-import 'package:enactusnca/Models/comment_model.dart';
+import 'package:enactusnca/models/comment_model.dart';
+import 'package:enactusnca/models/notification_model.dart';
+import 'package:enactusnca/models/post.dart';
 import 'package:enactusnca/services/notification_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-import 'CommentCard.dart';
+import 'comment_card.dart';
 
 class CommentsList extends StatefulWidget {
   static String id = 'CommentsList';
-  final focus;
+  final bool focus;
   final Post thisPost;
 
   final ScrollController scrollController;
 
-  CommentsList({this.thisPost, this.scrollController, this.focus});
+  const CommentsList({this.thisPost, this.scrollController, this.focus});
 
   @override
   _CommentsListState createState() => _CommentsListState();
@@ -46,16 +46,14 @@ class _CommentsListState extends State<CommentsList> {
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Container(
-                margin: EdgeInsets.only(top: 70.0),
+                margin: const EdgeInsets.only(top: 70.0),
                 height: 54.0,
-                child: Center(
-                  child: Text('No Comments'),
-                ),
+                child: const Center(child: Text('No Comments')),
               );
             }
             if (snapshot.hasError) {
               return Container(
-                margin: EdgeInsets.only(top: 70.0),
+                margin: const EdgeInsets.only(top: 70.0),
                 height: 54.0,
                 child: Center(
                   child: Text('oh! no! we got erroe ${snapshot.error}'),
@@ -64,12 +62,12 @@ class _CommentsListState extends State<CommentsList> {
             }
             return Container(
               color: Theme.of(context).appBarTheme.color,
-              margin: EdgeInsets.only(top: 110.0),
+              margin: const EdgeInsets.only(top: 110.0),
               child: ListView.builder(
                 controller: widget.scrollController,
-                itemCount: snapshot.data.length,
+                itemCount: snapshot.data.length as int,
                 itemBuilder: (context, index) {
-                  return CommentCard(comment: snapshot.data[index]);
+                  return CommentCard(comment: snapshot.data[index] as CommentModel);
                 },
               ),
             );
@@ -79,16 +77,16 @@ class _CommentsListState extends State<CommentsList> {
     );
   }
 
-  addnewComment() {
+  Container addnewComment() {
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).appBarTheme.color,
-        borderRadius: BorderRadius.only(
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(20.0),
           topRight: Radius.circular(20.0),
         ),
       ),
-      padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
       child: ListView(
         controller: widget.scrollController,
         children: <Widget>[
@@ -96,7 +94,7 @@ class _CommentsListState extends State<CommentsList> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Container(
-                margin: EdgeInsets.all(8.0),
+                margin: const EdgeInsets.all(8.0),
                 child: Text(
                   'Swipe Up For Comments ',
                   style: TextStyle(
@@ -107,7 +105,7 @@ class _CommentsListState extends State<CommentsList> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.all(8.0),
+                margin: const EdgeInsets.all(8.0),
                 child: Icon(
                   Icons.keyboard_arrow_up,
                   color: Theme.of(context).accentColor,
@@ -117,13 +115,12 @@ class _CommentsListState extends State<CommentsList> {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Expanded(
                 flex: 4,
                 child: Form(
                   key: _key,
-                  child: Container(
+                  child: SizedBox(
                     height: 55.0,
                     child: TextFormField(
                       autofocus: widget.focus,
@@ -151,35 +148,31 @@ class _CommentsListState extends State<CommentsList> {
                 ),
               ),
               Expanded(
-                flex: 1,
                 child: Container(
                   height: 55.0,
-                  margin: EdgeInsets.only(left: 4.0, right: 3.0),
+                  margin: const EdgeInsets.only(left: 4.0, right: 3.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20.0),
                     color: Theme.of(context).accentColor,
                   ),
                   child: IconButton(
                     icon: showLoading == false
-                        ? Icon(Icons.send, color: Colors.white)
-                        : SpinKitChasingDots(
-                            color: Theme.of(context).accentColor),
+                        ? const Icon(Icons.send, color: Colors.white)
+                        : SpinKitChasingDots(color: Theme.of(context).accentColor),
                     onPressed: () async {
                       setState(() => showLoading = true);
                       await comment
-                          .addNewComment(
-                              postId: widget.thisPost.postId,
-                              comment: newComment)
+                          .addNewComment(postId: widget.thisPost.postId, comment: newComment)
                           .then(
                         (done) {
-                          NotificationModel notificationModel =
-                              NotificationModel(
+                          final NotificationModel notificationModel = NotificationModel(
                             receiverId: widget.thisPost.ownerId,
                             notificationPost: widget.thisPost,
-                            notificationEvent: null,
                           );
-                          NotificationServices()
-                              .sendNotification(notificationModel, false);
+                          NotificationServices().sendNotification(
+                            notificationModel: notificationModel,
+                            like: false,
+                          );
                           setState(() => showLoading = false);
                           _key.currentState.reset();
                         },
