@@ -31,13 +31,13 @@ class _EventsState extends State<Events> {
           appBar: AppBar(
             centerTitle: true,
             backgroundColor: Colors.transparent,
-            title: Text('Events', style: TextStyle(color: kSacandColor)),
+            title: const Text('Events', style: TextStyle(color: kSacandColor)),
           ),
           body: FutureBuilder<List>(
             future: eventList,
             builder: (context, snapshot) {
               return !snapshot.hasData
-                  ? Center(child: CircularProgressIndicator())
+                  ? const Center(child: CircularProgressIndicator())
                   : EventDetails(event: snapshot.data);
             },
           ),

@@ -16,55 +16,60 @@ class ImageWidget extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.all(12.0),
       child: Row(
-        mainAxisAlignment:
-            user.uid == message.senderId ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment: user.uid == message.senderId
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          user.uid != message.senderId
-              ? InkWell(
-                  onTap: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Profile(
-                          isAppBarEnabled: true,
-                          userId: message.senderId,
-                        ),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(right: 12.0),
-                    height: 34,
-                    width: 34,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(24.0),
-                      child: message.userImg != null
-                          ? Image.network(
-                              message.userImg,
-                              fit: BoxFit.cover,
-                              loadingBuilder: (context, child, loadingProgress) {
-                                return loadingProgress == null
-                                    ? child
-                                    : Center(child: CircularProgressIndicator());
-                              },
-                            )
-                          : Image.asset('assets/images/enactus.png'),
+          if (user.uid != message.senderId)
+            InkWell(
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Profile(
+                      isAppBarEnabled: true,
+                      userId: message.senderId,
                     ),
                   ),
-                )
-              : Container(),
+                );
+              },
+              child: Container(
+                margin: const EdgeInsets.only(right: 12.0),
+                height: 34,
+                width: 34,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(24.0),
+                  child: message.userImg != null
+                      ? Image.network(
+                          message.userImg,
+                          fit: BoxFit.cover,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            return loadingProgress == null
+                                ? child
+                                : const Center(
+                                    child: CircularProgressIndicator());
+                          },
+                        )
+                      : Image.asset('assets/images/enactus.png'),
+                ),
+              ),
+            )
+          else
+            Container(),
           Container(
-            padding: EdgeInsets.all(4.0),
+            padding: const EdgeInsets.all(4.0),
             decoration: BoxDecoration(
-              color: user.uid != message.senderId ? Constants.lightBlue : Constants.midBlue,
+              color: user.uid != message.senderId
+                  ? Constants.lightBlue
+                  : Constants.midBlue,
               borderRadius: user.uid == message.senderId
-                  ? BorderRadius.only(
+                  ? const BorderRadius.only(
                       bottomLeft: Radius.circular(8.0),
                       topLeft: Radius.circular(8.0),
                       topRight: Radius.circular(8.0),
                     )
-                  : BorderRadius.only(
+                  : const BorderRadius.only(
                       bottomRight: Radius.circular(8.0),
                       topLeft: Radius.circular(8.0),
                       topRight: Radius.circular(8.0),
@@ -84,10 +89,10 @@ class ImageWidget extends StatelessWidget {
               child: Column(
                 children: [
                   ClipRRect(
-                    child: Image.network(message.message),
                     borderRadius: BorderRadius.circular(6.0),
+                    child: Image.network(message.message),
                   ),
-                  SizedBox(height: 6.0),
+                  const SizedBox(height: 6.0),
                   Text(
                     '${message.userName} . ${message.timestamp.toDate().hour.toString()}:${message.timestamp.toDate().minute.toString()}',
                     style: TextStyle(

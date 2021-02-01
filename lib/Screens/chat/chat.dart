@@ -1,9 +1,11 @@
+import 'package:enactusnca/Screens/search/search.dart';
 import 'package:enactusnca/Screens/views/search.dart';
 import 'package:enactusnca/Widgets/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'groups/group_chat.dart';
+// ignore: library_prefixes
 import 'members/members.dart' as contactsScreen;
 import 'messages/recent_chats.dart';
 
@@ -38,7 +40,7 @@ class _ChatState extends State<Chat> with SingleTickerProviderStateMixin {
             automaticallyImplyLeading: false,
             bottom: TabBar(
               controller: controller,
-              tabs: <Widget>[
+              tabs: const <Widget>[
                 Tab(text: 'Messages'),
                 Tab(text: 'Groups'),
                 Tab(text: 'Members'),
@@ -46,7 +48,7 @@ class _ChatState extends State<Chat> with SingleTickerProviderStateMixin {
             ),
             actions: <Widget>[
               IconButton(
-                icon: Icon(Icons.search),
+                icon: const Icon(Icons.search),
                 onPressed: () {
                   Navigator.pushReplacement(
                     context,
@@ -56,7 +58,7 @@ class _ChatState extends State<Chat> with SingleTickerProviderStateMixin {
               ),
             ],
             centerTitle: false,
-            title: Text(
+            title: const Text(
               "Chat",
               style: TextStyle(
                 color: kSacandColor,

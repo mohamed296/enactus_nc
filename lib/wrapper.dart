@@ -18,7 +18,7 @@ class _WrapperState extends State<Wrapper> {
   final List<Widget> _widgetOptions = <Widget>[
     Home(),
     Notifications(),
-    Profile(),
+    const Profile(),
     Chat(),
   ];
 
@@ -32,27 +32,36 @@ class _WrapperState extends State<Wrapper> {
             children: _widgetOptions,
           ),
           bottomNavigationBar: BottomNavyBar(
-            showElevation: true,
             curve: Curves.ease,
-            backgroundColor: Color(0xff0C1E34),
+            backgroundColor: const Color(0xff0C1E34),
             selectedIndex: _currentIndex,
             onItemSelected: (index) => setState(() => _currentIndex = index),
             items: <BottomNavyBarItem>[
               BottomNavyBarItem(
-                title: Center(child: Text('home', style: TextStyle(color: kSacandColor))),
-                icon: Center(child: Icon(Icons.home, color: kSacandColor)),
+                title: const Center(
+                    child: Text('home', style: TextStyle(color: kSacandColor))),
+                icon:
+                    const Center(child: Icon(Icons.home, color: kSacandColor)),
               ),
               BottomNavyBarItem(
-                title: Center(child: Text('notifications', style: TextStyle(color: kSacandColor))),
-                icon: Center(child: Icon(Icons.notifications, color: kSacandColor)),
+                title: const Center(
+                    child: Text('notifications',
+                        style: TextStyle(color: kSacandColor))),
+                icon: const Center(
+                    child: Icon(Icons.notifications, color: kSacandColor)),
               ),
               BottomNavyBarItem(
-                title: Center(child: Text(' Profile', style: TextStyle(color: kSacandColor))),
-                icon: Center(child: Icon(Icons.portrait, color: kSacandColor)),
+                title: const Center(
+                    child: Text(' Profile',
+                        style: TextStyle(color: kSacandColor))),
+                icon: const Center(
+                    child: Icon(Icons.portrait, color: kSacandColor)),
               ),
               BottomNavyBarItem(
-                title: Center(child: Text('chat', style: TextStyle(color: kSacandColor))),
-                icon: Center(child: Icon(Icons.chat, color: kSacandColor)),
+                title: const Center(
+                    child: Text('chat', style: TextStyle(color: kSacandColor))),
+                icon:
+                    const Center(child: Icon(Icons.chat, color: kSacandColor)),
               ),
             ],
           ),
@@ -67,22 +76,20 @@ class MYpopup extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopupMenuButton<Menu>(
       color: kSacandColor,
-      onSelected: (Menu option) {
-        print(option.toString());
-      },
+      onSelected: (Menu option) {},
       itemBuilder: (BuildContext context) {
         return <PopupMenuEntry<Menu>>[
-          PopupMenuItem(
-            child: Text('Setting'),
+          const PopupMenuItem(
             value: Menu.Settings,
+            child: Text('Setting'),
           ),
-          PopupMenuItem(
-            child: Text('About'),
+          const PopupMenuItem(
             value: Menu.About,
+            child: Text('About'),
           ),
-          PopupMenuItem(
-            child: Text('Aboutt'),
+          const PopupMenuItem(
             value: Menu.Aboutt,
+            child: Text('Aboutt'),
           ),
         ];
       },

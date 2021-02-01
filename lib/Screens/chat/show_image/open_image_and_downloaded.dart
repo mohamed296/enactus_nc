@@ -11,7 +11,7 @@ class OpenImage extends StatelessWidget {
       appBar: AppBar(
         actions: [
           IconButton(
-            icon: Icon(Icons.file_download),
+            icon: const Icon(Icons.file_download),
             onPressed: () {
               downloadImage();
             },
@@ -29,27 +29,10 @@ class OpenImage extends StatelessWidget {
   }
 
   Future downloadImage() async {
-    //StorageReference rec = FirebaseStorage.instance.ref().child('$url');
-
-    // Dio dio = Dio();
     try {
-      /* final String image = await rec.getDownloadURL();
-      Response response = await dio.get(image);
-      final Directory dir = Directory.systemTemp;
-      final File file = File('${dir.path}/tmp.jpg');
-      await file.create();
-      final StorageFileDownloadTask task = rec.writeToFile(file);*/
-
-      var imageId = await ImageDownloader.downloadImage(url);
-
-      /* var path = await ExtStorage.getExternalStoragePublicDirectory(
-          ExtStorage.DIRECTORY_DOWNLOADS);*/
-      //  var dir =  await getExternalStorageDirectories(type: StorageDirectory.downloads);
-      // await dio.download(url, "$dir/myimage.jpg");
-
-      //File file =File(dir)as List;
-      //var raf = file.openSync(mode: FileMode.write);
-      // raf.writFromSync(response.data);
-    } catch (e) {}
+      final imageId = await ImageDownloader.downloadImage(url);
+    } catch (e) {
+      return e;
+    }
   }
 }

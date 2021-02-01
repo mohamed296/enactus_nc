@@ -14,20 +14,22 @@ class Notifications extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         centerTitle: true,
-        title: Text('Notifications', style: TextStyle(fontSize: 20.0, color: kSacandColor)),
+        title: const Text('Notifications',
+            style: TextStyle(fontSize: 20.0, color: kSacandColor)),
       ),
       body: StreamBuilder<List<NotificationModel>>(
         stream: NotificationServices().getNotificationList,
         builder: (context, snapshot) {
           return snapshot.hasData
               ? ListView.builder(
-                  physics: BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, index) {
-                    return NotificationTile(notificationModel: snapshot.data[index]);
+                    return NotificationTile(
+                        notificationModel: snapshot.data[index]);
                   },
                 )
-              : CircularProgressIndicator();
+              : const CircularProgressIndicator();
         },
       ),
     );

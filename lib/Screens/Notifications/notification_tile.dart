@@ -23,13 +23,13 @@ class NotificationTile extends StatelessWidget {
                       loadingBuilder: (context, child, loadingProgress) {
                         return loadingProgress == null
                             ? child
-                            : Center(child: CircularProgressIndicator());
+                            : const Center(child: CircularProgressIndicator());
                       },
                     )
-                  : Icon(Icons.calendar_today),
+                  : const Icon(Icons.calendar_today),
             ),
           ),
-          SizedBox(width: 12.0),
+          const SizedBox(width: 12.0),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

@@ -6,8 +6,8 @@ import 'package:path_provider/path_provider.dart';
 
 class RecordServices {
   Future startRecording(String time) async {
-    Directory appDocDirectory = await getApplicationDocumentsDirectory();
-    String path = '${appDocDirectory.path}/${time.toString().codeUnits}}';
+    final Directory appDocDirectory = await getApplicationDocumentsDirectory();
+    final String path = '${appDocDirectory.path}/${time.toString().codeUnits}}';
     await AudioRecorder.start(
       path: path,
       audioOutputFormat: AudioOutputFormat.AAC,
@@ -15,8 +15,8 @@ class RecordServices {
   }
 
   Future<File> stopRecording() async {
-    var recording = await AudioRecorder.stop();
-    File recordingFile = File(recording.path);
+    final recording = await AudioRecorder.stop();
+    final File recordingFile = File(recording.path);
     return recordingFile;
   }
 }

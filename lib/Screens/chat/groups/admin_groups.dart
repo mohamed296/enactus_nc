@@ -19,28 +19,28 @@ class AdminGroups extends StatelessWidget {
       builder: (context, groupListSnapshot) {
         return groupListSnapshot.hasData
             ? ListView.builder(
-                physics: BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 itemCount: groupListSnapshot.data.length,
                 itemBuilder: (context, index) {
                   return FutureBuilder<bool>(
-                    future: MessageGroupController()
-                        .getMessageCountChange(groupListSnapshot.data[index].groupName),
+                    future: MessageGroupController().getMessageCountChange(
+                        groupListSnapshot.data[index].groupName),
                     builder: (context, snapshot) {
                       return !snapshot.hasData
-                          ? Center(child: CircularProgressIndicator())
+                          ? const Center(child: CircularProgressIndicator())
                           : Container(
-                              margin: EdgeInsets.only(
+                              margin: const EdgeInsets.only(
                                 top: 5.0,
                                 bottom: 5.0,
                                 right: 20.0,
                               ),
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                 vertical: 10.0,
                                 horizontal: 20.0,
                               ),
                               decoration: BoxDecoration(
                                 color: Constants.midBlue,
-                                borderRadius: BorderRadius.only(
+                                borderRadius: const BorderRadius.only(
                                   topRight: Radius.circular(20),
                                   bottomRight: Radius.circular(20),
                                 ),
@@ -48,27 +48,32 @@ class AdminGroups extends StatelessWidget {
                               child: ListTile(
                                 leading: Badge(
                                   showBadge: snapshot.data,
-                                  badgeContent: Text(''),
+                                  badgeContent: const Text(''),
                                   badgeColor: Constants.yellow,
-                                  child: Container(
+                                  child: SizedBox(
                                     height: 35,
                                     width: 35,
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(35.0),
-                                      child: Image.asset('assets/images/enactus.png'),
+                                      child: Image.asset(
+                                          'assets/images/enactus.png'),
                                     ),
                                   ),
                                 ),
-                                title: Text(groupListSnapshot.data[index].groupName),
-                                subtitle: Text('${groupListSnapshot.data[index].lastMessage}',
+                                title: Text(
+                                    groupListSnapshot.data[index].groupName),
+                                subtitle: Text(
+                                    groupListSnapshot.data[index].lastMessage,
                                     maxLines: 1),
                                 onTap: () => Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => Messages(
                                       group: true,
-                                      userId: groupListSnapshot.data[index].groupName,
-                                      groupName: groupListSnapshot.data[index].groupName,
+                                      userId: groupListSnapshot
+                                          .data[index].groupName,
+                                      groupName: groupListSnapshot
+                                          .data[index].groupName,
                                     ),
                                   ),
                                 ),
@@ -78,7 +83,7 @@ class AdminGroups extends StatelessWidget {
                   );
                 },
               )
-            : CircularProgressIndicator();
+            : const CircularProgressIndicator();
       },
     );
   }

@@ -12,14 +12,12 @@ class _HelpSupportState extends State<HelpSupport> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Help & Support"),
+        title: const Text("Help & Support"),
       ),
       body: Center(
         child: Column(
           children: [
             FlatButton(
-              child:
-                  Image(image: AssetImage('assets/images/Facebook-icon.png')),
               onPressed: () async {
                 const url = "https://www.facebook.com/EnactusNewCairo/";
                 if (await canLaunch(url)) {
@@ -28,11 +26,13 @@ class _HelpSupportState extends State<HelpSupport> {
                   throw 'Could not launch $url';
                 }
               },
+              child: const Image(
+                  image: AssetImage('assets/images/Facebook-icon.png')),
             ),
-            SizedBox(
+            const SizedBox(
               height: 15.0,
             ),
-            Text(
+            const Text(
               "contact@enactusnewcairo.org",
               style: TextStyle(
                 fontSize: 20,

@@ -23,7 +23,7 @@ class GroupChat extends StatelessWidget {
             ? snapshot.data.isAdmin == true
                 ? AdminGroups(userModel: snapshot.data)
                 : MemberGroups(userModel: snapshot.data)
-            : Center(child: CircularProgressIndicator());
+            : const Center(child: CircularProgressIndicator());
       },
     );
   }
