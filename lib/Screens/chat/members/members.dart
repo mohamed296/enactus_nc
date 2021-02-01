@@ -1,3 +1,4 @@
+import 'package:enactusnca/Models/user_model.dart';
 import 'package:enactusnca/Screens/Profile/profile.dart';
 import 'package:enactusnca/services/database_methods.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,7 +10,7 @@ class Members extends StatefulWidget {
 }
 
 class _MembersState extends State<Members> {
-  Stream contactsStream;
+  Stream<List<UserModel>> contactsStream;
   bool isLoadingOver = false;
   DatabaseMethods databaseMethods = DatabaseMethods();
 
@@ -21,50 +22,24 @@ class _MembersState extends State<Members> {
 
   Future getUserInfo() async {
     databaseMethods.getUsers().then((val) {
-      setState(() {
-        contactsStream = val;
-      });
+      setState(() => contactsStream = val as Stream<List<UserModel>>);
     });
-    setState(() {
-      isLoadingOver = true;
-    });
+    setState(() => isLoadingOver = true);
   }
 
-  Widget createChatContacts() {
-    return StreamBuilder(
-        stream: contactsStream,
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.done:
-              return const Center(
-                child: Text(
-                  "poor internet connection\nIt seems like you're one of WE clients",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 22.0,
-                  ),
-                ),
-              );
-              break;
-            case ConnectionState.waiting:
-              return const Center(child: CircularProgressIndicator());
-              break;
-            default:
-              return snapshot.hasData
-                  ? buildList(snapshot)
-                  : Center(
-                      child: Center(
-                        child: Container(),
-                      ),
-                    );
-              break;
-          }
-        });
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<List<UserModel>>(
+      stream: contactsStream,
+      builder: (context, snapshot) {
+        return snapshot.hasData ? buildList(snapshot) : const CircularProgressIndicator();
+      },
+    );
   }
 
-  Widget buildList(snapshot) {
+  Widget buildList(AsyncSnapshot<List<UserModel>> snapshot) {
     return ListView.builder(
-      itemCount: snapshot.data.documents.length as int,
+      itemCount: snapshot.data.length,
       shrinkWrap: true,
       itemBuilder: (context, index) {
         return GestureDetector(
@@ -75,8 +50,7 @@ class _MembersState extends State<Members> {
               MaterialPageRoute(
                 builder: (context) => Profile(
                   isAppBarEnabled: true,
-                  userId:
-                      snapshot.data.documents[index].data()['uid'].toString(),
+                  userId: snapshot.data[index].id,
                 ),
               ),
             );
@@ -93,17 +67,13 @@ class _MembersState extends State<Members> {
                   ),
                   child: CircleAvatar(
                     radius: 30,
-                    backgroundImage:
-                        snapshot.data.documents[index].data()['photoUrl'] ==
-                                null
-                            ? const AssetImage("assets/images/person.png")
-                            : NetworkImage(snapshot.data.documents[index]
-                                .data()['photoUrl']
-                                .toString()),
+                    backgroundImage: snapshot.data[index].photoUrl == null
+                        ? const AssetImage("assets/images/person.png") as ImageProvider
+                        : NetworkImage(snapshot.data[index].photoUrl),
                   ),
                 ),
                 Text(
-                  '${snapshot.data.documents[index].data()['firstName']} ${snapshot.data.documents[index].data()['lastName']}',
+                  '${snapshot.data[index].firstName} ${snapshot.data[index].lastName}',
                   style: const TextStyle(fontSize: 18.0, color: Colors.white),
                 ),
               ],
@@ -112,10 +82,5 @@ class _MembersState extends State<Members> {
         );
       },
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return createChatContacts();
   }
 }

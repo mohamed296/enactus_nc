@@ -3,22 +3,22 @@ import 'package:enactusnca/Models/user_model.dart';
 
 class DatabaseMethods {
   Future uploadUserInfo({UserModel userModel, String uid}) async {
-    return await FirebaseFirestore.instance.collection("Users").doc(uid).set({
-      "firstName": userModel.firstName,
-      "lastName": userModel.lastName,
-      "department": userModel.department,
-      "community": userModel.community,
-      "email": userModel.email,
-      "photoUrl": userModel.photoUrl,
-      "uid": uid,
-      "isActive": false,
-      "isHead": false,
-      'isAdmin': false,
-      "joiningDate": DateTime.now(),
-      'userName': '${userModel.firstName}${userModel.lastName}',
-    }).catchError((e) {
-      print("Uploading error " + e.toString());
-    });
+    return FirebaseFirestore.instance.collection("Users").doc(uid).set(
+      {
+        "firstName": userModel.firstName,
+        "lastName": userModel.lastName,
+        "department": userModel.department,
+        "community": userModel.community,
+        "email": userModel.email,
+        "photoUrl": userModel.photoUrl,
+        "uid": uid,
+        "isActive": false,
+        "isHead": false,
+        'isAdmin': false,
+        "joiningDate": DateTime.now(),
+        'userName': '${userModel.firstName} ${userModel.lastName}',
+      },
+    );
   }
 
   Future<String> checkUserActivate(String id) async {
@@ -26,7 +26,7 @@ class DatabaseMethods {
     final user = await path.get();
 
     if (user.exists == true) {
-      bool isActive = await user.data()['isActive'];
+      final bool isActive = await user.data()['isActive'] as bool;
       if (isActive) return 'Active';
       return 'Your account still pending Approval';
     } else {
@@ -34,58 +34,42 @@ class DatabaseMethods {
     }
   }
 
-  Future getUserData(String id) async {
-    return await FirebaseFirestore.instance.collection("Users").doc(id).get();
+  Future<DocumentSnapshot> getUserData(String id) {
+    return FirebaseFirestore.instance.collection("Users").doc(id).get();
   }
 
-  changeIsLiked(bool newVal, String roomId, String messageId) {
-    FirebaseFirestore.instance
+  Future<void> changeIsLiked({bool newVal, String roomId, String messageId}) {
+    return FirebaseFirestore.instance
         .collection("chatRoom")
         .doc(roomId)
         .collection("chats")
         .doc(messageId)
-        .update({'isLiked': newVal}).catchError((e) {
-      print("Uploading error " + e.toString());
-    });
+        .update({'isLiked': newVal});
   }
 
-  getUsersByUserEmail(String email) async {
-    return await FirebaseFirestore.instance
-        .collection("Users")
-        .where("email", isEqualTo: email)
-        .get();
+  Future<QuerySnapshot> getUsersByUserEmail(String email) {
+    return FirebaseFirestore.instance.collection("Users").where("email", isEqualTo: email).get();
   }
 
-  createChatRoom(String chatRoomId, chatRoomMap) async {
-    return await FirebaseFirestore.instance
+  Future<void> createChatRoom(String chatRoomId, Map<String, dynamic> chatRoomMap) {
+    return FirebaseFirestore.instance.collection("chatRoom").doc(chatRoomId).set(chatRoomMap);
+  }
+
+  Future<void> addConversationMessages({String chatRoomId, chatConversationMap}) {
+    return FirebaseFirestore.instance
         .collection("chatRoom")
         .doc(chatRoomId)
-        .set(chatRoomMap)
-        .catchError((error) {
-      print("chatRoom error: ${error.toString()}");
-    });
+        .update(chatConversationMap);
   }
 
-  addConversationMessages({String chatRoomId, chatConversationMap}) {
-    FirebaseFirestore.instance
+  Future<void> markMessageAsSeen(String chatRoomId) {
+    return FirebaseFirestore.instance
         .collection("chatRoom")
         .doc(chatRoomId)
-        .update(chatConversationMap)
-        .catchError((e) {
-      print("Uploading error " + e.toString());
-    });
+        .update({'isRead': true});
   }
 
-  markMessageAsSeen(String chatRoomId) {
-    FirebaseFirestore.instance
-        .collection("chatRoom")
-        .doc(chatRoomId)
-        .update({'isRead': true}).catchError((e) {
-      print("Uploading error " + e.toString());
-    });
-  }
-
-  getConversationMessages({String chatRoomId}) async {
+  Future<Stream<QuerySnapshot>> getConversationMessages({String chatRoomId}) async {
     return FirebaseFirestore.instance
         .collection("chatRoom")
         .doc(chatRoomId)
@@ -94,7 +78,7 @@ class DatabaseMethods {
         .snapshots();
   }
 
-  getChatRooms({String email}) async {
+  Future<Stream<QuerySnapshot>> getChatRooms({String email}) async {
     return FirebaseFirestore.instance
         .collection("chatRoom")
         .where("emails", arrayContains: email)
@@ -102,7 +86,7 @@ class DatabaseMethods {
         .snapshots();
   }
 
-  getChatRooByRoomId({String roomId}) async {
+  Future<QuerySnapshot> getChatRooByRoomId({String roomId}) async {
     return FirebaseFirestore.instance
         .collection("chatRoom")
         .where("chatroomid", isEqualTo: roomId)
@@ -110,7 +94,7 @@ class DatabaseMethods {
         .get();
   }
 
-  getUsers() async {
+  Future<Stream<QuerySnapshot>> getUsers() async {
     return FirebaseFirestore.instance.collection("Users").snapshots();
   }
 }

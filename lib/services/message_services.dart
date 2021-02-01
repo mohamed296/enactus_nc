@@ -7,7 +7,7 @@ class MessageServices {
   final user = FirebaseAuth.instance.currentUser;
 
   Future sendMessage(MessageModel messageModel) async {
-    MessageModel message = MessageModel(
+    final MessageModel message = MessageModel(
       senderId: user.uid,
       receverId: messageModel.receverId,
       userImg: user.photoURL,
@@ -16,7 +16,7 @@ class MessageServices {
       type: messageModel.type,
       message: messageModel.message,
     );
-    Map<String, dynamic> messageData = {
+    final Map<String, dynamic> messageData = {
       'groupId': messageModel.groupId,
       'senderId': user.uid,
       'receverId': messageModel.receverId,
@@ -28,18 +28,17 @@ class MessageServices {
       'read': false,
     };
 
-    DocumentReference addMessage = await FirebaseFirestore.instance
+    final DocumentReference addMessage = await FirebaseFirestore.instance
         .collection("chatRoom")
         .doc(messageModel.groupId)
         .collection("chats")
         .add(messageData)
-        .catchError((error) => print("getConversationErrors : ${error.toString()}"))
         .then((value) => NotificationServices().sendGetNotificationOto(message))
-        .whenComplete(() => updateLastMessage(message));
+        .whenComplete(() => updateLastMessage(message)) as DocumentReference;
     return addMessage;
   }
 
-  Future updateLastMessage(MessageModel messageModel) async {
+  Future<void> updateLastMessage(MessageModel messageModel) async {
     String lastMessage;
     if (messageModel.type == 'Task' || messageModel.type == 'Message') {
       lastMessage = messageModel.message;
@@ -49,38 +48,33 @@ class MessageServices {
       lastMessage = 'Image';
     }
 
-    Map<String, dynamic> chatRoomData = {
+    final Map<String, dynamic> chatRoomData = {
       "lastSender": user.displayName,
       "lastMessage": lastMessage,
       "isRead": false,
       "lastTime": DateTime.now().millisecondsSinceEpoch,
       "chatroomid": messageModel.groupId,
     };
-    return await FirebaseFirestore.instance
+    return FirebaseFirestore.instance
         .collection("chatRoom")
         .doc(messageModel.groupId)
-        .update(chatRoomData)
-        .catchError((e) => print("update error " + e.toString()));
+        .update(chatRoomData);
   }
 
-  List<MessageModel> listOfMessages(QuerySnapshot snapshot) {
-    var listOfMessages = snapshot.docs
-        .map(
-          (message) => MessageModel(
-            messageId: message.id,
-            groupId: message.data()['groupId'],
-            message: message.data()['message'],
-            timestamp: message.data()['timestamp'],
-            type: message.data()['type'],
-            senderId: message.data()['senderId'],
-            receverId: message.data()['receverId'],
-            userImg: message.data()['userImg'],
-            userName: message.data()['userName'],
-            read: message.data()['read'],
-          ),
-        )
-        .toList();
-
-    return listOfMessages;
-  }
+  List<MessageModel> listOfMessages(QuerySnapshot snapshot) => snapshot.docs
+      .map(
+        (message) => MessageModel(
+          messageId: message.id,
+          groupId: message.data()['groupId'] as String,
+          message: message.data()['message'] as String,
+          timestamp: message.data()['timestamp'] as Timestamp,
+          type: message.data()['type'] as String,
+          senderId: message.data()['senderId'] as String,
+          receverId: message.data()['receverId'] as String,
+          userImg: message.data()['userImg'] as String,
+          userName: message.data()['userName'] as String,
+          read: message.data()['read'] as bool,
+        ),
+      )
+      .toList();
 }

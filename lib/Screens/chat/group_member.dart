@@ -13,8 +13,7 @@ class GroupMember extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:
-            const Text('Group Member', style: TextStyle(color: kSacandColor)),
+        title: const Text('Group Member', style: TextStyle(color: kSacandColor)),
         leading: const BackButton(),
       ),
       body: StreamBuilder<List<UserModel>>(
@@ -44,13 +43,12 @@ class GroupMember extends StatelessWidget {
                     leading: CircleAvatar(
                       radius: 30,
                       backgroundImage: snapshot.data[index].photoUrl == null
-                          ? const AssetImage("assets/images/person.png")
+                          ? const AssetImage("assets/images/person.png") as ImageProvider
                           : NetworkImage(snapshot.data[index].photoUrl),
                     ),
                     title: Text(snapshot?.data[index]?.username ?? 'user'),
-                    subtitle: snapshot.data[index].isHead
-                        ? const Text('Head')
-                        : const Text('Member'),
+                    subtitle:
+                        snapshot.data[index].isHead ? const Text('Head') : const Text('Member'),
                   ),
                 )
               : const Center(child: CircularProgressIndicator());

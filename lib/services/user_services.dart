@@ -6,11 +6,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 class UserServices {
   final user = FirebaseAuth.instance.currentUser;
 
-  Future updateUserData(UserModel userModel) async {
-    return await FirebaseFirestore.instance
-        .collection('Users')
-        .doc(user.uid)
-        .update({
+  Future updateUserData(UserModel userModel) => FirebaseFirestore.instance
+      .collection('Users')
+      .doc(user.uid)
+      .update(
+        {
           "firstName": userModel.firstName,
           "lastName": userModel.lastName,
           'userName': '${userModel.firstName} ${userModel.lastName}',
@@ -18,33 +18,31 @@ class UserServices {
           "photoUrl": userModel.photoUrl,
           "community": userModel.community,
           "department": userModel.department,
-        })
-        .then(
-          (value) => user.updateProfile(
-            displayName: userModel.username,
-            photoURL: userModel.photoUrl,
-          ),
-        )
-        .whenComplete(() {
-          MessageGroupServices().createGroupChatOrAddNewMember(userModel.community, userModel);
-          MessageGroupServices().createGroupChatOrAddNewMember(userModel.department, userModel);
-        });
-  }
+        },
+      )
+      .then(
+        (value) => user.updateProfile(
+          displayName: userModel.username,
+          photoURL: userModel.photoUrl,
+        ),
+      )
+      .whenComplete(() {
+        MessageGroupServices().createGroupChatOrAddNewMember(userModel.community, userModel);
+        MessageGroupServices().createGroupChatOrAddNewMember(userModel.department, userModel);
+      });
 
-  UserModel userData(DocumentSnapshot snapshot) {
-    return UserModel(
-      id: snapshot.id,
-      firstName: snapshot.data()['firstName'],
-      lastName: snapshot.data()['lastName'],
-      username: snapshot.data()['userName'],
-      email: snapshot.data()['email'],
-      photoUrl: snapshot.data()['photoUrl'],
-      joiningDate: snapshot.data()['joiningDate'],
-      community: snapshot.data()['community'],
-      department: snapshot.data()['department'],
-      isActive: snapshot.data()['isActive'],
-      isHead: snapshot.data()['isHead'],
-      isAdmin: snapshot.data()['isAdmin'],
-    );
-  }
+  UserModel userData(DocumentSnapshot snapshot) => UserModel(
+        id: snapshot.id,
+        firstName: snapshot.data()['firstName'] as String,
+        lastName: snapshot.data()['lastName'] as String,
+        username: snapshot.data()['userName'] as String,
+        email: snapshot.data()['email'] as String,
+        photoUrl: snapshot.data()['photoUrl'] as String,
+        joiningDate: snapshot.data()['joiningDate'] as Timestamp,
+        community: snapshot.data()['community'] as String,
+        department: snapshot.data()['department'] as String,
+        isActive: snapshot.data()['isActive'] as bool,
+        isHead: snapshot.data()['isHead'] as bool,
+        isAdmin: snapshot.data()['isAdmin'] as bool,
+      );
 }

@@ -1,14 +1,19 @@
+import 'package:flutter/material.dart';
+
 import 'package:enactusnca/Models/post.dart';
 import 'package:enactusnca/Screens/Profile/profile.dart';
 import 'package:enactusnca/Widgets/post_image.dart';
-import 'package:flutter/material.dart';
 
 import 'CommentsList.dart';
 
 class OpenPost extends StatefulWidget {
   final focus;
   final Post post;
-  OpenPost({this.post, this.focus});
+  const OpenPost({
+    Key key,
+    this.post,
+    this.focus,
+  }) : super(key: key);
 
   @override
   _OpenPostState createState() => _OpenPostState();

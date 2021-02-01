@@ -2,6 +2,9 @@ import 'dart:io';
 
 import 'package:auto_direction/auto_direction.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
 import 'package:enactusnca/Helpers/constants.dart';
 import 'package:enactusnca/Models/messages_model.dart';
 import 'package:enactusnca/Models/user_model.dart';
@@ -12,8 +15,6 @@ import 'package:enactusnca/services/database_methods.dart';
 import 'package:enactusnca/services/message_group_services.dart';
 import 'package:enactusnca/services/message_services.dart';
 import 'package:enactusnca/services/user_services.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 
 import 'components/image_widget.dart';
 import 'components/task_message.dart';
@@ -33,18 +34,19 @@ class Messages extends StatefulWidget {
   final bool read;
   final String lastmassage;
 
-  Messages({
+  const Messages({
+    Key key,
     this.username,
-    this.imageUrl,
-    this.userId,
-    this.chatRoomId,
-    this.lastSender,
+    this.userImg,
     this.groupName,
     this.group,
-    this.userImg,
+    this.chatRoomId,
+    this.lastSender,
+    this.userId,
+    this.imageUrl,
     this.read,
     this.lastmassage,
-  });
+  }) : super(key: key);
 
   @override
   _MessagesState createState() => _MessagesState();
@@ -84,8 +86,8 @@ class _MessagesState extends State<Messages> {
     super.dispose();
   }
 
-  void saveLastMessageTimeSeen() async {
-    var listOfMessage = await FirebaseFirestore.instance
+  Future<void> saveLastMessageTimeSeen() async {
+    final listOfMessage = await FirebaseFirestore.instance
         .collection('GroupChat')
         .doc(widget.groupName)
         .collection(widget.groupName)
@@ -114,7 +116,7 @@ class _MessagesState extends State<Messages> {
             title: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
+                SizedBox(
                   height: 35,
                   width: 35,
                   child: ClipRRect(
@@ -126,31 +128,32 @@ class _MessagesState extends State<Messages> {
                             loadingBuilder: (context, child, loadingProgress) {
                               return loadingProgress == null
                                   ? child
-                                  : Center(child: CircularProgressIndicator());
+                                  : const Center(child: CircularProgressIndicator());
                             },
                           )
                         : Image.asset('assets/images/enactus.png'),
                   ),
                 ),
-                SizedBox(width: 12.0),
+                const SizedBox(width: 12.0),
                 Text(widget.group == true ? widget.groupName : widget.username),
               ],
             ),
-            leading: BackButton(),
+            leading: const BackButton(),
             actions: [
-              widget.group == true
-                  ? IconButton(
-                      icon: Icon(Icons.info_outline),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => GroupMember(groupName: widget.groupName),
-                          ),
-                        );
-                      },
-                    )
-                  : Container(),
+              if (widget.group == true)
+                IconButton(
+                  icon: const Icon(Icons.info_outline),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => GroupMember(groupName: widget.groupName),
+                      ),
+                    );
+                  },
+                )
+              else
+                Container(),
             ],
           ),
           body: Column(
@@ -169,11 +172,11 @@ class _MessagesState extends State<Messages> {
                     return snapShot.hasData
                         ? ListView.builder(
                             reverse: true,
-                            padding: EdgeInsets.only(top: 15.0),
-                            physics: BouncingScrollPhysics(),
+                            padding: const EdgeInsets.only(top: 15.0),
+                            physics: const BouncingScrollPhysics(),
                             itemCount: snapShot.data.length,
                             itemBuilder: (context, index) {
-                              MessageModel message = MessageModel(
+                              final MessageModel message = MessageModel(
                                 groupId: snapShot.data[index].groupId,
                                 type: snapShot.data[index].type,
                                 receverId: snapShot.data[index].receverId,
@@ -198,7 +201,7 @@ class _MessagesState extends State<Messages> {
                                           ? RecordWidget(message: message)
                                           : ImageWidget(message: message);
                             })
-                        : Center(child: CircularProgressIndicator());
+                        : const Center(child: CircularProgressIndicator());
                   },
                 ),
               ),
@@ -210,8 +213,8 @@ class _MessagesState extends State<Messages> {
     );
   }
 
-  sendMessage({String type, String url}) async {
-    MessageModel messageModel = MessageModel(
+  Future<void> sendMessage({String type, String url}) async {
+    final MessageModel messageModel = MessageModel(
       receverId: widget.userId,
       groupId: widget.group == true ? widget.groupName : widget.chatRoomId,
       type: type,
@@ -223,136 +226,132 @@ class _MessagesState extends State<Messages> {
     widget.group == true
         ? MessageGroupServices()
             .sendGroupMessage(messageModel)
-            .catchError((error) => print("error in message : ${error.toString()}"))
             .whenComplete(() => setState(() => sending = false))
         : MessageServices()
             .sendMessage(messageModel)
-            .catchError((error) => print("error in message : ${error.toString()}"))
             .whenComplete(() => setState(() => sending = false));
   }
 
-  _buildMessageComposer() {
-    return StreamBuilder<UserModel>(
-      stream: FirebaseFirestore.instance
-          .collection('Users')
-          .doc(user.uid)
-          .snapshots()
-          .map(UserServices().userData),
-      builder: (context, snapshot) {
-        return snapshot.hasData
-            ? Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  recording
-                      ? Text('Recording..')
-                      : sending
-                          ? Text('Sending..')
-                          : Container(),
-                  sending || recording
-                      ? LinearProgressIndicator(
-                          backgroundColor: recording ? Colors.red : Colors.green,
-                        )
-                      : Container(),
-                  Container(
-                    margin: EdgeInsets.all(8),
-                    padding: EdgeInsets.symmetric(horizontal: 8.0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(40),
-                      color: Color(0x8022417A),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        IconButton(
-                          padding: EdgeInsets.all(0),
-                          icon: Icon(Icons.image, color: Colors.yellow),
-                          onPressed: () async {
-                            File image = await messageController.getImage();
-                            if (image != null) {
-                              setState(() => sending = true);
-                              await messageController
-                                  .uploadFile(
-                                    file: image,
-                                    image: true,
-                                    fileName: image.path.codeUnits.toString(),
-                                  )
-                                  .then((url) => sendMessage(type: 'image', url: url))
-                                  .whenComplete(() {
-                                setState(() => sending = false);
-                              });
-                            }
-                            return;
-                          },
-                        ),
-                        (snapshot.data.isHead || snapshot.data.isAdmin) && widget.groupName != null
-                            ? IconButton(
-                                padding: EdgeInsets.all(0),
-                                icon: Icon(Icons.table_chart),
-                                color: Constants.yellow,
-                                onPressed: () => taskMessage.showGroupMembers(
-                                  context,
-                                  widget.groupName,
-                                ),
-                              )
-                            : Container(),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: GestureDetector(
-                            child: Icon(
-                              Icons.mic_rounded,
-                              color: recording ? Colors.red : Colors.yellow,
-                            ),
-                            onLongPress: () {
-                              setState(() => recording = true);
-                              messageController.startRecording();
-                            },
-                            onLongPressUp: () {
-                              setState(() {
-                                recording = false;
-                                sending = true;
-                              });
-                              String chatId = widget?.chatRoomId ?? widget.groupName;
-                              messageController.stopRecording(chatId).then((url) {
-                                if (url != null) {
-                                  sendMessage(type: 'Record', url: url);
-                                }
-                              }).whenComplete(() => setState(() => sending = false));
+  StreamBuilder<UserModel> _buildMessageComposer() => StreamBuilder<UserModel>(
+        stream: FirebaseFirestore.instance
+            .collection('Users')
+            .doc(user.uid)
+            .snapshots()
+            .map(UserServices().userData),
+        builder: (context, snapshot) {
+          return snapshot.hasData
+              ? Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (recording)
+                      const Text('Recording..')
+                    else
+                      sending ? const Text('Sending..') : Container(),
+                    if (sending || recording)
+                      LinearProgressIndicator(
+                        backgroundColor: recording ? Colors.red : Colors.green,
+                      )
+                    else
+                      Container(),
+                    Container(
+                      margin: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(40),
+                        color: const Color(0x8022417A),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          IconButton(
+                            padding: const EdgeInsets.all(0),
+                            icon: const Icon(Icons.image, color: Colors.yellow),
+                            onPressed: () async {
+                              final File image = await messageController.getImage();
+                              if (image != null) {
+                                setState(() => sending = true);
+                                await messageController
+                                    .uploadFile(
+                                      file: image,
+                                      image: true,
+                                      fileName: image.path.codeUnits.toString(),
+                                    )
+                                    .then((url) => sendMessage(type: 'image', url: url as String))
+                                    .whenComplete(() => setState(() => sending = false));
+                              }
+                              return;
                             },
                           ),
-                        ),
-                        Expanded(
-                          child: AutoDirection(
-                            text: text,
-                            onDirectionChange: (isRTL) => setState(() => this.isRTL = isRTL),
-                            child: TextField(
-                              controller: tecMessage,
-                              textCapitalization: TextCapitalization.sentences,
-                              scrollPhysics: BouncingScrollPhysics(),
-                              style: TextStyle(color: Colors.white),
-                              maxLines: 4,
-                              minLines: 1,
-                              onChanged: (value) => setState(() => text = value),
-                              textInputAction: TextInputAction.newline,
-                              decoration: InputDecoration.collapsed(
-                                hintStyle: TextStyle(color: Colors.grey.shade100),
-                                hintText: "Aa",
+                          if ((snapshot.data.isHead || snapshot.data.isAdmin) &&
+                              widget.groupName != null)
+                            IconButton(
+                              padding: const EdgeInsets.all(0),
+                              icon: const Icon(Icons.table_chart),
+                              color: Constants.yellow,
+                              onPressed: () => taskMessage.showGroupMembers(
+                                context,
+                                widget.groupName,
+                              ),
+                            )
+                          else
+                            Container(),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: GestureDetector(
+                              onLongPress: () {
+                                setState(() => recording = true);
+                                messageController.startRecording();
+                              },
+                              onLongPressUp: () {
+                                setState(() {
+                                  recording = false;
+                                  sending = true;
+                                });
+                                final String chatId = widget?.chatRoomId ?? widget.groupName;
+                                messageController.stopRecording(chatId).then((url) {
+                                  if (url != null) {
+                                    sendMessage(type: 'Record', url: url as String);
+                                  }
+                                }).whenComplete(() => setState(() => sending = false));
+                              },
+                              child: Icon(
+                                Icons.mic_rounded,
+                                color: recording ? Colors.red : Colors.yellow,
                               ),
                             ),
                           ),
-                        ),
-                        IconButton(
-                          padding: EdgeInsets.all(0),
-                          icon: Icon(Icons.send),
-                          color: Constants.yellow,
-                          onPressed: () => sendMessage(type: 'Message'),
-                        )
-                      ],
+                          Expanded(
+                            child: AutoDirection(
+                              text: text,
+                              onDirectionChange: (isRTL) => setState(() => this.isRTL = isRTL),
+                              child: TextField(
+                                controller: tecMessage,
+                                textCapitalization: TextCapitalization.sentences,
+                                scrollPhysics: const BouncingScrollPhysics(),
+                                style: const TextStyle(color: Colors.white),
+                                maxLines: 4,
+                                minLines: 1,
+                                onChanged: (value) => setState(() => text = value),
+                                textInputAction: TextInputAction.newline,
+                                decoration: InputDecoration.collapsed(
+                                  hintStyle: TextStyle(color: Colors.grey.shade100),
+                                  hintText: "Aa",
+                                ),
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            padding: const EdgeInsets.all(0),
+                            icon: const Icon(Icons.send),
+                            color: Constants.yellow,
+                            onPressed: () => sendMessage(type: 'Message'),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              )
-            : CircularProgressIndicator();
-      },
-    );
-  }
+                  ],
+                )
+              : const Center(child: CircularProgressIndicator());
+        },
+      );
 }
