@@ -14,7 +14,7 @@ class TaskWidget extends StatelessWidget {
       child: Column(
         children: [
           Row(
-            children: [
+            children: const [
               Icon(Icons.list_alt),
               SizedBox(width: 12.0),
               Text('Task assigned to', style: TextStyle(color: Colors.black)),
@@ -22,18 +22,20 @@ class TaskWidget extends StatelessWidget {
           ),
           Row(
             children: [
-              Icon(Icons.person),
-              SizedBox(width: 12.0),
-              Text(messageModel.userName, style: TextStyle(color: Colors.black)),
+              const Icon(Icons.person),
+              const SizedBox(width: 12.0),
+              Text(messageModel.userName,
+                  style: const TextStyle(color: Colors.black)),
             ],
           ),
           Container(
             color: Colors.yellow,
             child: Row(
               children: [
-                Icon(Icons.date_range_rounded, color: Colors.white),
-                SizedBox(width: 12.0),
-                Text(messageModel.message, style: TextStyle(color: Colors.black)),
+                const Icon(Icons.date_range_rounded, color: Colors.white),
+                const SizedBox(width: 12.0),
+                Text(messageModel.message,
+                    style: const TextStyle(color: Colors.black)),
               ],
             ),
           )

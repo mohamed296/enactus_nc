@@ -12,10 +12,10 @@ class Auth {
 
   Future<String> signInWithEmail({String email, String password}) async {
     try {
-      UserCredential result =
-          await _auth.signInWithEmailAndPassword(email: email, password: password);
-      User user = result.user;
-      String id = user.uid;
+      final UserCredential result = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      final User user = result.user;
+      final String id = user.uid;
       NotificationManager().getAndSaveToken(id);
       return DatabaseMethods().checkUserActivate(id);
     } catch (ex) {
@@ -25,8 +25,9 @@ class Auth {
 
   Future signInWithPhoneNumber({String phoneNumber}) async {
     try {
-      ConfirmationResult result = await _auth.signInWithPhoneNumber(phoneNumber);
-      var user = result;
+      final ConfirmationResult result =
+          await _auth.signInWithPhoneNumber(phoneNumber);
+      final user = result;
       return user;
     } catch (ex) {
       return ex.toString();
@@ -35,7 +36,7 @@ class Auth {
 
   Future<String> signUpWithEmail(UserModel userModel, String password) async {
     try {
-      UserCredential result = await _auth.createUserWithEmailAndPassword(
+      final UserCredential result = await _auth.createUserWithEmailAndPassword(
         email: userModel.email,
         password: password,
       );
@@ -61,11 +62,14 @@ class Auth {
       await DatabaseMethods()
           .uploadUserInfo(userModel: authUser, uid: firebaseUser.uid)
           .then((value) {
-        MessageGroupServices().createGroupChatOrAddNewMember(authUser.community, authUser);
+        MessageGroupServices()
+            .createGroupChatOrAddNewMember(authUser.community, authUser);
         if (userModel.department != null) {
-          MessageGroupServices().createGroupChatOrAddNewMember(authUser.department, authUser);
+          MessageGroupServices()
+              .createGroupChatOrAddNewMember(authUser.department, authUser);
         }
-        MessageGroupServices().createGroupChatOrAddNewMember('Enactus NC', authUser);
+        MessageGroupServices()
+            .createGroupChatOrAddNewMember('Enactus NC', authUser);
       });
       HelperFunction.setUserEmail(authUser.email);
       HelperFunction.setUsername('${authUser.firstName} ${authUser.lastName}');
@@ -81,15 +85,20 @@ class Auth {
     try {
       return await _auth.sendPasswordResetEmail(email: email);
     } catch (ex) {
+      // ignore: avoid_print
       print("resat Password issue ${ex.toString()}");
     }
   }
 
   Future signOut() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
     try {
-      return await _auth.signOut().whenComplete(() => sharedPreferences.remove('user'));
+      return await _auth
+          .signOut()
+          .whenComplete(() => sharedPreferences.remove('user'));
     } catch (ex) {
+      // ignore: avoid_print
       print("Signing out issue ${ex.toString()}");
     }
   }

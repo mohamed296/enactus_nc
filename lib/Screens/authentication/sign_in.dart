@@ -37,7 +37,7 @@ class _SignInState extends State<SignIn> {
         await SharedPreferences.getInstance();
     HelperFunction.setUserEmail(tecEmail.text);
     _databaseMethods.getUsersByUserEmail(tecEmail.text).then((val) {
-      snapshot = val as QuerySnapshot;
+      snapshot = val;
       final String name =
           '${snapshot.docs[0].data()["firstName"]} ${snapshot.docs[0].data()["lastName"]}';
       HelperFunction.setUsername(name.toLowerCase().toString());

@@ -6,7 +6,7 @@ class AppTheme extends ChangeNotifier {
 
   AppTheme({this.themeData});
 
-  getTheme() => themeData;
+  ThemeData getTheme() => themeData;
 
   setTheme(ThemeData theme) {
     themeData = theme;
@@ -23,15 +23,15 @@ class AppTheme extends ChangeNotifier {
     brightness: Brightness.light,
 
     // color of floating action in light theme
-    floatingActionButtonTheme: FloatingActionButtonThemeData(
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: kMainColor,
     ),
 
     // color of the icons
-    iconTheme: IconThemeData(color: kMainColor),
+    iconTheme: const IconThemeData(color: kMainColor),
 
     // appbar in light theme
-    appBarTheme: AppBarTheme(
+    appBarTheme: const AppBarTheme(
       elevation: 0.0,
       color: kMainColor,
       textTheme: TextTheme(
@@ -48,24 +48,24 @@ class AppTheme extends ChangeNotifier {
 
   // Dark Theme
   static final ThemeData darkTheme = ThemeData(
-    primaryColor: Color(0xff0C1E34),
+    primaryColor: const Color(0xff0C1E34),
     accentColor: kSacandColor,
     //scaffoldBackgroundColor: kDarkColor,
-    scaffoldBackgroundColor: Color(0xff0C1E34),
+    scaffoldBackgroundColor: const Color(0xff0C1E34),
     cursorColor: Colors.amber,
-    buttonColor: Color(0xff0C1E34),
+    buttonColor: const Color(0xff0C1E34),
     brightness: Brightness.dark,
 
     // color of floating action in dark theme
-    floatingActionButtonTheme: FloatingActionButtonThemeData(
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: kSacandColor,
     ),
 
     // color of the icons
-    iconTheme: IconThemeData(color: Colors.amber),
+    iconTheme: const IconThemeData(color: Colors.amber),
 
     // appbar in dark theme
-    appBarTheme: AppBarTheme(
+    appBarTheme: const AppBarTheme(
       elevation: 0.0,
       centerTitle: true,
       color: Color(0xff0C1E34),

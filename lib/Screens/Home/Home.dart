@@ -1,5 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enactusnca/Models/user_model.dart';
+import 'package:enactusnca/Screens/Events/events.dart';
+import 'package:enactusnca/Screens/Home/posts_list.dart';
+import 'package:enactusnca/Screens/Profile/help_support.dart';
+import 'package:enactusnca/Screens/add_new_post/add_new_post.dart';
+import 'package:enactusnca/Screens/authentication/sign_in.dart';
 import 'package:enactusnca/Widgets/pop_up_menu.dart';
 import 'package:enactusnca/services/auth.dart';
 import 'package:enactusnca/services/user_services.dart';
@@ -41,15 +46,17 @@ class _HomeState extends State<Home> {
                     ),
                     Scaffold(
                       backgroundColor: Colors.transparent,
-                      floatingActionButton: snapshot.data.isAdmin || snapshot.data.isHead
-                          ? FloatingActionButton(
-                              onPressed: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => AddNewPost()),
-                              ),
-                              child: const Icon(Icons.add),
-                            )
-                          : Container(),
+                      floatingActionButton:
+                          snapshot.data.isAdmin || snapshot.data.isHead
+                              ? FloatingActionButton(
+                                  onPressed: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => AddNewPost()),
+                                  ),
+                                  child: const Icon(Icons.add),
+                                )
+                              : Container(),
                       appBar: AppBar(
                         backgroundColor: Colors.transparent,
                         leading: Center(
@@ -74,7 +81,8 @@ class _HomeState extends State<Home> {
                               ),
                               onPressed: () => Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => Events()),
+                                MaterialPageRoute(
+                                    builder: (context) => Events()),
                               ),
                             ),
                           ),
@@ -91,7 +99,7 @@ class _HomeState extends State<Home> {
                           ),
                         ],
                       ),
-                      body: PostsList(),
+                      body: const PostsList(),
                     ),
                   ],
                 );

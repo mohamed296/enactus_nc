@@ -32,8 +32,10 @@ class _SearchScreenState extends State<SearchScreen> {
             shrinkWrap: true,
             itemBuilder: (context, index) {
               return SearchTitle(
-                fistName: searchSnapshot.docs[index].data()["firstName"] as String,
-                lastName: searchSnapshot.docs[index].data()["lastName"] as String,
+                fistName:
+                    searchSnapshot.docs[index].data()["firstName"] as String,
+                lastName:
+                    searchSnapshot.docs[index].data()["lastName"] as String,
                 userEmail: searchSnapshot.docs[index].data()["email"] as String,
                 userId: searchSnapshot.docs[index].data()["uid"] as String,
                 imgUrl: searchSnapshot.docs[index].data()["photoUrl"] as String,
@@ -94,7 +96,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(color: kSacandColor, width: 3.0)),
-                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: TextField(
                     controller: etcSearch,
                     style: const TextStyle(color: kSacandColor),
@@ -113,7 +115,8 @@ class _SearchScreenState extends State<SearchScreen> {
                 },
                 child: Container(
                   padding: const EdgeInsets.all(12),
-                  child: const CircleAvatar(child: Icon(Icons.search, color: kSacandColor)),
+                  child: const CircleAvatar(
+                      child: Icon(Icons.search, color: kSacandColor)),
                 ),
               ),
             ],
@@ -192,9 +195,9 @@ class SearchTitle extends StatelessWidget {
 
 String getChatRoomId(String a, String b) {
   if (a.length > b.length) {
-    return "$b\_$a";
+    return "$b _ $a";
   } else {
-    return "$a\_$b";
+    return "$a _ $b";
   }
 }
 
@@ -216,7 +219,10 @@ void createChatRoomAndStartConversation({
           final User user = FirebaseAuth.instance.currentUser;
           final List<String> users = [userName, user.displayName];
           final List<String> ids = [userId, user.uid];
-          final List<String> emails = [userEmail.toLowerCase(), user.email.toLowerCase()];
+          final List<String> emails = [
+            userEmail.toLowerCase(),
+            user.email.toLowerCase()
+          ];
 
           final Map<String, dynamic> chatRoomMap = {
             "users": users,

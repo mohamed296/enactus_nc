@@ -7,8 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  var user = prefs.getString('user');
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  final user = prefs.getString('user');
   runApp(MyApp(user: user));
 }
 
@@ -31,14 +31,16 @@ class _MyAppState extends State<MyApp> {
         future: _initialization,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Scaffold(body: Center(child: Text(snapshot.error.toString())));
+            return Scaffold(
+                body: Center(child: Text(snapshot.error.toString())));
           }
 
           if (snapshot.connectionState == ConnectionState.done) {
             return widget.user != null ? Wrapper() : SignIn();
           }
 
-          return Scaffold(body: Center(child: CircularProgressIndicator()));
+          return const Scaffold(
+              body: Center(child: CircularProgressIndicator()));
         },
       ),
     );

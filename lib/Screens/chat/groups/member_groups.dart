@@ -27,13 +27,16 @@ class _MemberGroupsState extends State<MemberGroups> {
     getData();
   }
 
-  void getData() async {
-    CollectionReference _groupchat = FirebaseFirestore.instance.collection('GroupChat');
-    final communityGitingData = await _groupchat.doc(widget.userModel.community).get();
+  Future getData() async {
+    final CollectionReference _groupchat =
+        FirebaseFirestore.instance.collection('GroupChat');
+    final communityGitingData =
+        await _groupchat.doc(widget.userModel.community).get();
     setState(() => communityData = communityGitingData);
 
     if (widget.userModel.department != null) {
-      final departmentGitingData = await _groupchat.doc(widget.userModel.department).get();
+      final departmentGitingData =
+          await _groupchat.doc(widget.userModel.department).get();
       setState(() => departmentData = departmentGitingData);
     }
     final enactusGitingData = await _groupchat.doc('Enactus NC').get();
@@ -43,25 +46,27 @@ class _MemberGroupsState extends State<MemberGroups> {
   @override
   Widget build(BuildContext context) {
     return enactusData == null
-        ? Center(child: CircularProgressIndicator())
+        ? const Center(child: CircularProgressIndicator())
         : SingleChildScrollView(
             child: Column(
               children: [
                 FutureBuilder<bool>(
-                  future: MessageGroupController().getMessageCountChange('Enactus NC'),
+                  future: MessageGroupController()
+                      .getMessageCountChange('Enactus NC'),
                   builder: (context, snapshot) {
                     return !snapshot.hasData
-                        ? Center(child: CircularProgressIndicator())
+                        ? const Center(child: CircularProgressIndicator())
                         : Container(
-                            margin: EdgeInsets.only(
+                            margin: const EdgeInsets.only(
                               top: 5.0,
                               bottom: 5.0,
                               right: 20.0,
                             ),
-                            padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 20.0),
                             decoration: BoxDecoration(
                               color: Constants.midBlue,
-                              borderRadius: BorderRadius.only(
+                              borderRadius: const BorderRadius.only(
                                 topRight: Radius.circular(20),
                                 bottomRight: Radius.circular(20),
                               ),
@@ -69,19 +74,22 @@ class _MemberGroupsState extends State<MemberGroups> {
                             child: ListTile(
                               leading: Badge(
                                 showBadge: snapshot.data,
-                                badgeContent: Text(''),
+                                badgeContent: const Text(''),
                                 badgeColor: Constants.yellow,
+                                // ignore: sized_box_for_whitespace
                                 child: Container(
                                   height: 28,
                                   width: 28,
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(34.0),
-                                    child: Image.asset('assets/images/enactus.png'),
+                                    child: Image.asset(
+                                        'assets/images/enactus.png'),
                                   ),
                                 ),
                               ),
-                              title: Text('Enactus NC'),
-                              subtitle: Text('${enactusData['lastMessage']}', maxLines: 1),
+                              title: const Text('Enactus NC'),
+                              subtitle: Text('${enactusData['lastMessage']}',
+                                  maxLines: 1),
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -97,24 +105,24 @@ class _MemberGroupsState extends State<MemberGroups> {
                   },
                 ),
                 FutureBuilder<bool>(
-                  future:
-                      MessageGroupController().getMessageCountChange(widget.userModel.community),
+                  future: MessageGroupController()
+                      .getMessageCountChange(widget.userModel.community),
                   builder: (context, snapshot) {
                     return !snapshot.hasData
-                        ? Center(child: CircularProgressIndicator())
+                        ? const Center(child: CircularProgressIndicator())
                         : Container(
-                            margin: EdgeInsets.only(
+                            margin: const EdgeInsets.only(
                               top: 5.0,
                               bottom: 5.0,
                               right: 20.0,
                             ),
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                               vertical: 10.0,
                               horizontal: 20.0,
                             ),
                             decoration: BoxDecoration(
                               color: Constants.midBlue,
-                              borderRadius: BorderRadius.only(
+                              borderRadius: const BorderRadius.only(
                                 topRight: Radius.circular(20),
                                 bottomRight: Radius.circular(20),
                               ),
@@ -122,19 +130,21 @@ class _MemberGroupsState extends State<MemberGroups> {
                             child: ListTile(
                               leading: Badge(
                                 showBadge: snapshot.data,
-                                badgeContent: Text(''),
+                                badgeContent: const Text(''),
                                 badgeColor: Constants.yellow,
-                                child: Container(
+                                child: SizedBox(
                                   height: 28,
                                   width: 28,
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(34.0),
-                                    child: Image.asset('assets/images/enactus.png'),
+                                    child: Image.asset(
+                                        'assets/images/enactus.png'),
                                   ),
                                 ),
                               ),
                               title: Text(widget.userModel.community),
-                              subtitle: Text('${communityData['lastMessage']}', maxLines: 1),
+                              subtitle: Text('${communityData['lastMessage']}',
+                                  maxLines: 1),
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -149,69 +159,75 @@ class _MemberGroupsState extends State<MemberGroups> {
                           );
                   },
                 ),
-                widget.userModel.department != null
-                    ? FutureBuilder<bool>(
-                        future: MessageGroupController()
-                            .getMessageCountChange(widget.userModel.department),
-                        builder: (context, snapshot) {
-                          return !snapshot.hasData
-                              ? Center(child: CircularProgressIndicator())
-                              : Container(
-                                  margin: EdgeInsets.only(
-                                    top: 5.0,
-                                    bottom: 5.0,
-                                    right: 20.0,
-                                  ),
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 10.0,
-                                    horizontal: 20.0,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Constants.midBlue,
-                                    borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(20),
-                                      bottomRight: Radius.circular(20),
+                if (widget.userModel.department != null)
+                  FutureBuilder<bool>(
+                    future: MessageGroupController()
+                        .getMessageCountChange(widget.userModel.department),
+                    builder: (context, snapshot) {
+                      return !snapshot.hasData
+                          ? const Center(child: CircularProgressIndicator())
+                          : Container(
+                              margin: const EdgeInsets.only(
+                                top: 5.0,
+                                bottom: 5.0,
+                                right: 20.0,
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 10.0,
+                                horizontal: 20.0,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Constants.midBlue,
+                                borderRadius: const BorderRadius.only(
+                                  topRight: Radius.circular(20),
+                                  bottomRight: Radius.circular(20),
+                                ),
+                              ),
+                              child: ListTile(
+                                leading: FutureBuilder<bool>(
+                                    future: MessageGroupController()
+                                        .getMessageCountChange(
+                                            widget.userModel.department),
+                                    builder: (context, snapshot) {
+                                      return !snapshot.hasData
+                                          ? Center(child: Container())
+                                          : Badge(
+                                              showBadge: snapshot.data,
+                                              badgeContent: const Text(''),
+                                              badgeColor: Constants.yellow,
+                                              child: SizedBox(
+                                                height: 28,
+                                                width: 28,
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          34.0),
+                                                  child: Image.asset(
+                                                      'assets/images/enactus.png'),
+                                                ),
+                                              ),
+                                            );
+                                    }),
+                                title: Text(widget.userModel.department),
+                                subtitle: Text(
+                                    '${departmentData['lastMessage']}',
+                                    maxLines: 1),
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Messages(
+                                      group: true,
+                                      userId: widget.userModel.department,
+                                      groupName: widget.userModel.department,
                                     ),
                                   ),
-                                  child: ListTile(
-                                    leading: FutureBuilder<bool>(
-                                        future: MessageGroupController()
-                                            .getMessageCountChange(widget.userModel.department),
-                                        builder: (context, snapshot) {
-                                          return !snapshot.hasData
-                                              ? Center(child: Container())
-                                              : Badge(
-                                                  showBadge: snapshot.data,
-                                                  badgeContent: Text(''),
-                                                  badgeColor: Constants.yellow,
-                                                  child: Container(
-                                                    height: 28,
-                                                    width: 28,
-                                                    child: ClipRRect(
-                                                      borderRadius: BorderRadius.circular(34.0),
-                                                      child:
-                                                          Image.asset('assets/images/enactus.png'),
-                                                    ),
-                                                  ),
-                                                );
-                                        }),
-                                    title: Text(widget.userModel.department),
-                                    subtitle: Text('${departmentData['lastMessage']}', maxLines: 1),
-                                    onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => Messages(
-                                          group: true,
-                                          userId: widget.userModel.department,
-                                          groupName: widget.userModel.department,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                        },
-                      )
-                    : Container(),
+                                ),
+                              ),
+                            );
+                    },
+                  )
+                else
+                  Container(),
               ],
             ),
           );

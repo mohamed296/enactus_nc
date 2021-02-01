@@ -40,7 +40,8 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
   }
 
   Future getImage() async {
-    final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
+    final pickedFile =
+        await ImagePicker().getImage(source: ImageSource.gallery);
     setState(() {
       _imgURL = pickedFile.hashCode.toString();
       _image = File(pickedFile.path);
@@ -183,11 +184,13 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
                                 width: 40,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  border: Border.all(width: 2, color: Colors.white),
+                                  border:
+                                      Border.all(width: 2, color: Colors.white),
                                   color: Theme.of(context).accentColor,
                                 ),
                                 child: IconButton(
-                                  icon: const Icon(Icons.edit, color: Colors.white),
+                                  icon: const Icon(Icons.edit,
+                                      color: Colors.white),
                                   onPressed: getImage,
                                 ),
                               )),
@@ -198,12 +201,13 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 35.0),
                       child: TextField(
-                        onChanged: (String val) => setState(() => firstName = val),
+                        onChanged: (String val) =>
+                            setState(() => firstName = val),
                         decoration: InputDecoration(
                           contentPadding: const EdgeInsets.only(bottom: 3),
                           labelText: 'FirstName',
                           floatingLabelBehavior: FloatingLabelBehavior.always,
-                          hintText: "${widget.userModel.firstName}",
+                          hintText: widget.userModel.firstName,
                           hintStyle: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
@@ -215,12 +219,13 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 35.0),
                       child: TextField(
-                        onChanged: (String val) => setState(() => lastName = val),
+                        onChanged: (String val) =>
+                            setState(() => lastName = val),
                         decoration: InputDecoration(
                           contentPadding: const EdgeInsets.only(bottom: 3),
                           labelText: 'lastName',
                           floatingLabelBehavior: FloatingLabelBehavior.always,
-                          hintText: "${widget.userModel.lastName}",
+                          hintText: widget.userModel.lastName,
                           hintStyle: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
@@ -237,7 +242,7 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
                           contentPadding: const EdgeInsets.only(bottom: 3),
                           labelText: 'E-mail',
                           floatingLabelBehavior: FloatingLabelBehavior.always,
-                          hintText: "${widget.userModel.email}",
+                          hintText: widget.userModel.email,
                           hintStyle: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
@@ -281,7 +286,8 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
                         ),
                         Builder(
                           builder: (context) => RaisedButton(
-                            padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 50.0),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
                             ),
@@ -318,9 +324,11 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
 
   Future uploadImage(BuildContext context) async {
     try {
-      final StorageReference ref = FirebaseStorage.instance.ref().child(_imgURL);
+      final StorageReference ref =
+          FirebaseStorage.instance.ref().child(_imgURL);
       final StorageUploadTask storageUploadTask = ref.putFile(_image);
-      final StorageTaskSnapshot taskSnapshot = await storageUploadTask.onComplete;
+      final StorageTaskSnapshot taskSnapshot =
+          await storageUploadTask.onComplete;
       // Scaffold.of(context).showSnackBar(
       //   SnackBar(content: Text("Success")),
       // );
@@ -329,6 +337,8 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
         _imgURL = url;
       });
       return url;
-    } catch (ex) {}
+    } catch (ex) {
+      return;
+    }
   }
 }

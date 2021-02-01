@@ -12,16 +12,18 @@ class EventDetails extends StatelessWidget {
     return ListView.builder(
       itemCount: event.length,
       itemBuilder: (context, index) {
-        String state = event[index]['status'] == true ? 'Active' : 'Finished';
+        final String state =
+            event[index]['status'] == true ? 'Active' : 'Finished';
         return Container(
           decoration: BoxDecoration(
             border: Border.all(color: Colors.blueGrey, width: 0.5),
             borderRadius: BorderRadius.circular(18.0),
-            color: Color(0xff17335B),
+            color: const Color(0xff17335B),
           ),
           margin: const EdgeInsets.all(6.0),
           child: ListTile(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18.0)),
             tileColor: Colors.transparent,
             trailing: RaisedButton(
               onPressed: () async {
@@ -33,8 +35,9 @@ class EventDetails extends StatelessWidget {
                 }
               },
               elevation: 1.0,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
-              child: Text('More Info'),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0)),
+              child: const Text('More Info'),
             ),
             title: Text(
               '${event[index]['title']} ($state)',

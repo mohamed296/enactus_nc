@@ -3,6 +3,7 @@ import 'package:enactusnca/helpers/helperfunction.dart';
 import 'package:enactusnca/models/user_model.dart';
 import 'package:enactusnca/services/auth.dart';
 import 'package:enactusnca/services/database_methods.dart';
+import 'package:enactusnca/services/user_services.dart';
 import 'package:enactusnca/widgets/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -80,7 +81,7 @@ class _ProfileState extends State<Profile> {
         stream: FirebaseFirestore.instance
             .collection("Users")
             .doc(widget.userId ?? user.uid)
-            .snapshots(includeMetadataChanges: false)
+            .snapshots()
             .map(UserServices().userData),
         builder: (context, snapshot) {
           return !snapshot.hasData
@@ -92,7 +93,8 @@ class _ProfileState extends State<Profile> {
                       CircleAvatar(
                         radius: kSpacingUnit.w * 5 as double,
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(kSpacingUnit.w * 5 as double),
+                          borderRadius: BorderRadius.circular(
+                              kSpacingUnit.w * 5 as double),
                           child: (snapshot?.data?.photoUrl != null)
                               ? Image.network(snapshot.data.photoUrl)
                               : Image.asset('assets/images/enactus.png'),
@@ -127,7 +129,8 @@ class _ProfileState extends State<Profile> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => EditProfilScreen(userModel: userModel),
+                                builder: (context) =>
+                                    EditProfilScreen(userModel: userModel),
                               ),
                             );
                           } else {
@@ -135,11 +138,16 @@ class _ProfileState extends State<Profile> {
                               snapshot.data.email.toLowerCase(),
                               user.email.toLowerCase(),
                             );
-                            DatabaseMethods().getChatRooByRoomId(roomId: roomId).then(
+                            DatabaseMethods()
+                                .getChatRooByRoomId(roomId: roomId)
+                                .then(
                               (value) {
                                 final QuerySnapshot roomSnapShoot = value;
                                 if (roomSnapShoot.docs.isEmpty) {
-                                  final List<String> ids = [snapshot.data.id, user.uid];
+                                  final List<String> ids = [
+                                    snapshot.data.id,
+                                    user.uid
+                                  ];
                                   final List<String> users = [
                                     '${snapshot.data.firstName} ${snapshot.data.lastName}',
                                     user.displayName
@@ -157,7 +165,9 @@ class _ProfileState extends State<Profile> {
                                     "lastTime": null,
                                     "chatroomid": roomId,
                                   };
-                                  DatabaseMethods().createChatRoom(roomId, chatRoomMap).then((val) {
+                                  DatabaseMethods()
+                                      .createChatRoom(roomId, chatRoomMap)
+                                      .then((val) {
                                     navigateToMessagesScreen(
                                         context: context,
                                         roomId: roomId,
@@ -180,7 +190,8 @@ class _ProfileState extends State<Profile> {
                           height: kSpacingUnit.w * 4 as double,
                           width: kSpacingUnit.w * 20 as double,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(kSpacingUnit.w * 3 as double),
+                            borderRadius: BorderRadius.circular(
+                                kSpacingUnit.w * 3 as double),
                             color: Theme.of(context).accentColor,
                           ),
                           child: Center(
@@ -210,7 +221,8 @@ class _ProfileState extends State<Profile> {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => HelpSupport()),
+                            MaterialPageRoute(
+                                builder: (context) => HelpSupport()),
                           );
                         },
                         child: const ProfileListItem(
@@ -265,8 +277,8 @@ void navigateToMessagesScreen({
 
 String createChatRoomId(String a, String b) {
   if (a.length > b.length) {
-    return '$b\_$a';
+    return '$b _ $a';
   } else {
-    return "$a\_$b";
+    return "$a _ $b";
   }
 }
