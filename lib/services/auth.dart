@@ -1,5 +1,5 @@
-import 'package:enactusnca/Helpers/helperfunction.dart';
-import 'package:enactusnca/Models/user_model.dart';
+import 'package:enactusnca/constant/helperfunction.dart' as helper_functions;
+import 'package:enactusnca/model/user_model.dart';
 import 'package:enactusnca/services/message_group_services.dart';
 import 'package:enactusnca/services/notification_manager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,8 +12,8 @@ class Auth {
 
   Future<String> signInWithEmail({String email, String password}) async {
     try {
-      final UserCredential result = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
+      final UserCredential result =
+          await _auth.signInWithEmailAndPassword(email: email, password: password);
       final User user = result.user;
       final String id = user.uid;
       NotificationManager().getAndSaveToken(id);
@@ -25,8 +25,7 @@ class Auth {
 
   Future signInWithPhoneNumber({String phoneNumber}) async {
     try {
-      final ConfirmationResult result =
-          await _auth.signInWithPhoneNumber(phoneNumber);
+      final ConfirmationResult result = await _auth.signInWithPhoneNumber(phoneNumber);
       final user = result;
       return user;
     } catch (ex) {
@@ -62,17 +61,14 @@ class Auth {
       await DatabaseMethods()
           .uploadUserInfo(userModel: authUser, uid: firebaseUser.uid)
           .then((value) {
-        MessageGroupServices()
-            .createGroupChatOrAddNewMember(authUser.community, authUser);
+        MessageGroupServices().createGroupChatOrAddNewMember(authUser.community, authUser);
         if (userModel.department != null) {
-          MessageGroupServices()
-              .createGroupChatOrAddNewMember(authUser.department, authUser);
+          MessageGroupServices().createGroupChatOrAddNewMember(authUser.department, authUser);
         }
-        MessageGroupServices()
-            .createGroupChatOrAddNewMember('Enactus NC', authUser);
+        MessageGroupServices().createGroupChatOrAddNewMember('Enactus NC', authUser);
       });
-      HelperFunction.setUserEmail(authUser.email);
-      HelperFunction.setUsername('${authUser.firstName} ${authUser.lastName}');
+      helper_functions.setUserEmail(authUser.email);
+      helper_functions.setUsername('${authUser.firstName} ${authUser.lastName}');
       NotificationManager().getAndSaveToken(firebaseUser.uid);
 
       return 'success';
@@ -91,12 +87,9 @@ class Auth {
   }
 
   Future signOut() async {
-    final SharedPreferences sharedPreferences =
-        await SharedPreferences.getInstance();
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     try {
-      return await _auth
-          .signOut()
-          .whenComplete(() => sharedPreferences.remove('user'));
+      return await _auth.signOut().whenComplete(() => sharedPreferences.remove('user'));
     } catch (ex) {
       // ignore: avoid_print
       print("Signing out issue ${ex.toString()}");

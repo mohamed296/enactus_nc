@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:enactusnca/Models/list_of_groups.dart';
-import 'package:enactusnca/Models/messages_model.dart';
-import 'package:enactusnca/Models/notification_model.dart';
-import 'package:enactusnca/Models/user_model.dart';
+import 'package:enactusnca/model/list_of_groups.dart';
+import 'package:enactusnca/model/messages_model.dart';
+import 'package:enactusnca/model/notification_model.dart';
+import 'package:enactusnca/model/user_model.dart';
+
 import 'package:enactusnca/services/notification_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:enactusnca/Models/messages_model.dart';
+import 'package:enactusnca/model/messages_model.dart';
 import 'package:enactusnca/services/notification_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

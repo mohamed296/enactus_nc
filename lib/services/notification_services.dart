@@ -1,16 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
-import 'package:enactusnca/Models/event_model.dart';
-import 'package:enactusnca/Models/messages_model.dart';
-import 'package:enactusnca/Models/notification_model.dart';
-import 'package:enactusnca/Models/post.dart';
+import 'package:enactusnca/model/event_model.dart';
+import 'package:enactusnca/model/messages_model.dart';
+import 'package:enactusnca/model/notification_model.dart';
+import 'package:enactusnca/model/post.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart ' as http;
 
 class NotificationServices {
-  String url =
-      'http://www.enactusnewcairo.org/api/ncaapp/notifications/group/?';
+  String url = 'http://www.enactusnewcairo.org/api/ncaapp/notifications/group/?';
   final user = FirebaseAuth.instance.currentUser;
 
   String notificationMsg({NotificationModel notificationModel, bool like}) {
@@ -30,12 +29,10 @@ class NotificationServices {
     return notificationMsg;
   }
 
-  Future sendNotification(
-      {NotificationModel notificationModel, bool like}) async {
-    final String notificationMessage =
-        notificationModel.notificationPost != null
-            ? notificationMsg(notificationModel: notificationModel, like: like)
-            : notificationModel.notificationMsg;
+  Future sendNotification({NotificationModel notificationModel, bool like}) async {
+    final String notificationMessage = notificationModel.notificationPost != null
+        ? notificationMsg(notificationModel: notificationModel, like: like)
+        : notificationModel.notificationMsg;
     final String notificationTime = formatDate(
       DateTime.now(),
       [yyyy, '-', mm, '-', dd, ' ', HH, ':', nn],

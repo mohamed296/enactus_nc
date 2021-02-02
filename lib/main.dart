@@ -1,9 +1,10 @@
-import 'package:enactusnca/Screens/authentication/sign_in.dart';
-import 'package:enactusnca/utilts/app_theme.dart';
 import 'package:enactusnca/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'constant/app_theme.dart';
+import 'screen/authentication/sign_in.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,16 +32,14 @@ class _MyAppState extends State<MyApp> {
         future: _initialization,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Scaffold(
-                body: Center(child: Text(snapshot.error.toString())));
+            return Scaffold(body: Center(child: Text(snapshot.error.toString())));
           }
 
           if (snapshot.connectionState == ConnectionState.done) {
             return widget.user != null ? Wrapper() : SignIn();
           }
 
-          return const Scaffold(
-              body: Center(child: CircularProgressIndicator()));
+          return const Scaffold(body: Center(child: CircularProgressIndicator()));
         },
       ),
     );
