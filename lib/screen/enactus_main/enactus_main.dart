@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:enactusnca/screen/enactus_main/posts_list.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -8,17 +9,16 @@ import 'package:enactusnca/model/user_model.dart';
 import 'package:enactusnca/screen/add_new_post/add_new_post.dart';
 import 'package:enactusnca/screen/authentication/sign_in.dart';
 import 'package:enactusnca/screen/events/events.dart';
-import 'package:enactusnca/screen/home/posts_list.dart';
 import 'package:enactusnca/screen/profile/help_support.dart';
 import 'package:enactusnca/services/auth.dart';
 import 'package:enactusnca/services/user_services.dart';
 
-class Home extends StatefulWidget {
+class EnactusMain extends StatefulWidget {
   @override
-  _HomeState createState() => _HomeState();
+  _EnactusMainState createState() => _EnactusMainState();
 }
 
-class _HomeState extends State<Home> {
+class _EnactusMainState extends State<EnactusMain> {
   ScrollController scrollController = ScrollController();
   final user = FirebaseAuth.instance.currentUser;
   ScrollController controller = ScrollController();

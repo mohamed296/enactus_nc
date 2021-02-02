@@ -1,12 +1,11 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:enactusnca/screen/Profile/profile.dart';
-
 import 'package:flutter/material.dart';
 
 import 'components/constants.dart';
-import 'screen/Home/Home.dart';
 import 'screen/Notifications/notifications.dart';
 import 'screen/chat/chat.dart';
+import 'screen/enactus_main/enactus_main.dart';
 
 class Wrapper extends StatefulWidget {
   @override
@@ -18,7 +17,7 @@ class _WrapperState extends State<Wrapper> {
   int _currentIndex = 0;
 
   final List<Widget> _widgetOptions = <Widget>[
-    Home(),
+    EnactusMain(),
     Notifications(),
     const Profile(),
     Chat(),

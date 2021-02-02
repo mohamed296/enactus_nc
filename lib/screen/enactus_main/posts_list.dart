@@ -1,6 +1,6 @@
 import 'package:enactusnca/components/constants.dart';
 import 'package:enactusnca/model/post.dart';
-import 'package:enactusnca/screen/Home/post_tile.dart';
+import 'package:enactusnca/screen/enactus_main/post_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
