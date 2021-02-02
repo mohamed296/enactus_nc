@@ -19,7 +19,7 @@ class _WrapperState extends State<Wrapper> {
   final List<Widget> _widgetOptions = <Widget>[
     EnactusMain(),
     Notifications(),
-    const Profile(),
+    const Profile(isAppBarEnabled: false),
     Chat(),
   ];
 

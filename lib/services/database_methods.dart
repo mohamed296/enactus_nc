@@ -93,8 +93,4 @@ class DatabaseMethods {
         .orderBy('lastTime', descending: true)
         .get();
   }
-
-  Future<Stream<QuerySnapshot>> getUsers() async {
-    return FirebaseFirestore.instance.collection("Users").snapshots();
-  }
 }

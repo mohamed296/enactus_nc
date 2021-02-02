@@ -1,6 +1,7 @@
 import 'package:enactusnca/model/user_model.dart';
 import 'package:enactusnca/screen/profile/profile.dart';
 import 'package:enactusnca/services/database_methods.dart';
+import 'package:enactusnca/services/user_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -10,29 +11,23 @@ class Members extends StatefulWidget {
 }
 
 class _MembersState extends State<Members> {
-  Stream<List<UserModel>> contactsStream;
-  bool isLoadingOver = false;
   DatabaseMethods databaseMethods = DatabaseMethods();
 
   @override
   void initState() {
     super.initState();
-    getUserInfo();
-  }
-
-  Future getUserInfo() async {
-    databaseMethods.getUsers().then((val) {
-      setState(() => contactsStream = val as Stream<List<UserModel>>);
-    });
-    setState(() => isLoadingOver = true);
   }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<UserModel>>(
-      stream: contactsStream,
+      stream: UserServices().getUsers(),
       builder: (context, snapshot) {
-        return snapshot.hasData ? buildList(snapshot) : const CircularProgressIndicator();
+        if (snapshot.hasData) {
+          return buildList(snapshot);
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
       },
     );
   }
