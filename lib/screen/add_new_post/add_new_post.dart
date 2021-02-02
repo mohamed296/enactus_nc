@@ -46,19 +46,19 @@ class _AddNewPostState extends State<AddNewPost> {
 
   Future handleTakePhoto() async {
     Navigator.pop(context);
-    final File file =
-        await ImagePicker.pickImage(source: ImageSource.camera, maxHeight: 675, maxWidth: 960);
+    final PickedFile file = await ImagePicker()
+        .getImage(source: ImageSource.camera, maxHeight: 675, maxWidth: 960);
     setState(() {
-      this.file = file;
+      this.file = file as File;
     });
   }
 
   Future handleChoosePhoto() async {
     Navigator.pop(context);
-    final File file =
-        await ImagePicker.pickImage(source: ImageSource.gallery, maxHeight: 675, maxWidth: 960);
+    final PickedFile file = await ImagePicker()
+        .getImage(source: ImageSource.gallery, maxHeight: 675, maxWidth: 960);
     setState(() {
-      this.file = file;
+      this.file = file as File;
     });
   }
 
@@ -138,7 +138,9 @@ class _AddNewPostState extends State<AddNewPost> {
             setState(() => showLoadingPost = true);
             if (imageUrl != null) {
               await uploadImage().then((onComplet) async {
-                await post.addNewPost(description: newPost, mediaUrl: imageUrl).then((onComplete) {
+                await post
+                    .addNewPost(description: newPost, mediaUrl: imageUrl)
+                    .then((onComplete) {
                   setState(() => showLoadingPost = false);
                   Fluttertoast.showToast(msg: 'Post add Successfuly.');
                 });
@@ -159,7 +161,7 @@ class _AddNewPostState extends State<AddNewPost> {
         },
         child: showLoadingPost == false
             ? const Icon(Icons.add, color: kMainColor)
-            : SpinKitFoldingCube(color: kMainColor, size: 12.0),
+            : const SpinKitFoldingCube(color: kMainColor, size: 12.0),
       ),
     );
   }
@@ -193,7 +195,8 @@ class _AddNewPostState extends State<AddNewPost> {
                             const SizedBox(width: 4.0),
                             Text(
                               'Add Photo',
-                              style: TextStyle(color: Theme.of(context).accentColor),
+                              style: TextStyle(
+                                  color: Theme.of(context).accentColor),
                             ),
                           ],
                         ),
@@ -220,7 +223,8 @@ class _AddNewPostState extends State<AddNewPost> {
 
   Future uploadImage() async {
     final String fileName = imageUrl;
-    final StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
+    final StorageReference reference =
+        FirebaseStorage.instance.ref().child(fileName);
     final StorageUploadTask uploadTask = reference.putFile(_image);
     final StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
     final dynamic url = await taskSnapshot.ref.getDownloadURL();
