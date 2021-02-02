@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:enactusnca/Models/user_model.dart';
+import 'package:enactusnca/model/user_model.dart';
 import 'package:enactusnca/services/message_group_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -45,4 +45,30 @@ class UserServices {
         isHead: snapshot.data()['isHead'] as bool,
         isAdmin: snapshot.data()['isAdmin'] as bool,
       );
+
+  List<UserModel> getListOfUsers(QuerySnapshot snapshot) {
+    return snapshot.docs.map((user) {
+      return UserModel(
+        id: user.id,
+        firstName: user.data()['firstName'] as String,
+        lastName: user.data()['lastName'] as String,
+        username: user.data()['userName'] as String,
+        email: user.data()['email'] as String,
+        photoUrl: user.data()['photoUrl'] as String,
+        joiningDate: user.data()['joiningDate'] as Timestamp,
+        community: user.data()['community'] as String,
+        department: user.data()['department'] as String,
+        isActive: user.data()['isActive'] as bool,
+        isHead: user.data()['isHead'] as bool,
+        isAdmin: user.data()['isAdmin'] as bool,
+      );
+    }).toList();
+  }
+
+  Stream<List<UserModel>> getUsers() {
+    return FirebaseFirestore.instance
+        .collection("Users")
+        .snapshots()
+        .map(UserServices().getListOfUsers);
+  }
 }
