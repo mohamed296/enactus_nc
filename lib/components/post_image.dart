@@ -18,12 +18,11 @@ class PostImage extends StatelessWidget {
         child: Image.network(
           imageUrl,
           fit: BoxFit.cover,
-          loadingBuilder: (BuildContext context, Widget child,
-              ImageChunkEvent loadingProgress) {
+          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
             if (loadingProgress == null) {
               return child;
             } else {
-              return const Center(
+              return Center(
                 child: SpinKitFoldingCube(
                   color: kSacandColor,
                   size: 18.0,

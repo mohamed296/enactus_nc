@@ -22,7 +22,7 @@ class _PostsListState extends State<PostsList> {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         return Container(
           child: !snapshot.hasData
-              ? const Center(child: SpinKitFoldingCube(color: kSacandColor, size: 24.0))
+              ? Center(child: SpinKitFoldingCube(color: kSacandColor, size: 24.0))
               : ListView.builder(
                   physics: const BouncingScrollPhysics(),
                   controller: widget.controller,

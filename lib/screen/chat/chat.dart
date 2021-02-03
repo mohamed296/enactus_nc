@@ -1,11 +1,11 @@
 import 'package:enactusnca/components/constants.dart';
+import 'package:enactusnca/screen/chat/recent_chat/recent_chats.dart';
 import 'package:enactusnca/screen/search/search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'groups/group_chat.dart';
-import 'members/members.dart' as contacts_screen;
-import 'messages/recent_chats.dart';
+import 'members/members.dart';
 
 class Chat extends StatefulWidget {
   static String id = 'chat';
@@ -69,7 +69,7 @@ class _ChatState extends State<Chat> with SingleTickerProviderStateMixin {
             children: [
               RecentChat(),
               GroupChat(),
-              contacts_screen.Members(),
+              Members(),
             ],
           ),
         ),
