@@ -19,12 +19,13 @@ class GroupTile extends StatelessWidget {
     return FutureBuilder<Object>(
       future: MessageGroupController().getMessageCountChange(groupName),
       builder: (context, snapshot) {
+        final bool showBadge = snapshot.data as bool;
         return snapshot.hasData
             ? Container(
                 margin: const EdgeInsets.only(right: 34.0),
                 padding: const EdgeInsets.all(12.0),
                 decoration: BoxDecoration(
-                  color: constants.midBlue,
+                  color: constants.darkBlue,
                   borderRadius: const BorderRadius.only(
                     topRight: Radius.circular(20),
                     bottomRight: Radius.circular(20),
@@ -34,26 +35,29 @@ class GroupTile extends StatelessWidget {
                   onTap: onTap,
                   child: Row(
                     children: [
-                      Badge(
-                        showBadge: snapshot.data as bool,
-                        badgeContent: const Text(''),
-                        badgeColor: constants.yellow,
-                        elevation: 16,
-                        position: BadgePosition.topStart(start: 6.0),
-                        child: Container(
-                          height: 30,
-                          width: 30,
-                          margin: const EdgeInsets.all(12.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(34.0),
-                            child: Image.asset('assets/images/enactus.png'),
-                          ),
+                      Container(
+                        height: 30,
+                        width: 30,
+                        margin: const EdgeInsets.all(12.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(34.0),
+                          child: Image.asset('assets/images/enactus.png'),
                         ),
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(groupName),
+                          Badge(
+                              showBadge: showBadge,
+                              badgeContent: const Icon(
+                                Icons.email_outlined,
+                                color: Colors.yellow,
+                              ),
+                              alignment: Alignment.centerLeft,
+                              position: BadgePosition.topEnd(end: -44.0),
+                              badgeColor: constants.lightBlue,
+                              elevation: 16,
+                              child: Text(groupName)),
                           const SizedBox(height: 6.0),
                           Text(
                             lastMessage,

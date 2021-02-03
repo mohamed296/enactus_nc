@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:enactusnca/model/chat_details.dart';
 import 'package:enactusnca/model/messages_model.dart';
 import 'package:enactusnca/services/notification_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -78,30 +77,4 @@ class MessageServices {
         ),
       )
       .toList();
-
-  List<ChatDetails> mapListOfChatDetails(QuerySnapshot snapshot) {
-    return snapshot.docs
-        .map(
-          (chatDetails) => ChatDetails(
-            chatroomid: chatDetails.data()['chatroomid'] as String,
-            emails: chatDetails.data()['emails'] as List<dynamic>,
-            ids: chatDetails.data()['ids'] as List<String>,
-            isRead: chatDetails.data()['isRead'] as bool,
-            users: chatDetails.data()['users'] as List<String>,
-            lastTime: chatDetails.data()['lastTime'] as String,
-            lastMessage: chatDetails.data()['lastMessage'] as String,
-            lastSender: chatDetails.data()['lastSender'] as String,
-          ),
-        )
-        .toList();
-  }
-
-  Stream<List<ChatDetails>> getChatRooms({String email}) {
-    return FirebaseFirestore.instance
-        .collection("chatRoom")
-        // .where("emails", arrayContains: email)
-        // .orderBy('lastTime', descending: true)
-        .snapshots()
-        .map(mapListOfChatDetails);
-  }
 }

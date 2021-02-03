@@ -57,6 +57,8 @@ class _ChatTileState extends State<ChatTile> {
           .snapshots()
           .map(UserServices().userData),
       builder: (context, firindDataSnapshot) {
+        final bool showBadge =
+            widget.snapshot.data.documents[widget.index].data()["isRead"] as bool;
         return firindDataSnapshot.hasData
             ? InkWell(
                 onTap: () {
@@ -82,7 +84,7 @@ class _ChatTileState extends State<ChatTile> {
                   margin: const EdgeInsets.only(bottom: 6.0, right: 20.0),
                   padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
                   decoration: BoxDecoration(
-                    color: constants.midBlue,
+                    color: constants.darkBlue,
                     borderRadius: const BorderRadius.only(
                       topRight: Radius.circular(20),
                       bottomRight: Radius.circular(20),
@@ -91,28 +93,33 @@ class _ChatTileState extends State<ChatTile> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Badge(
-                        badgeColor: constants.yellow,
-                        showBadge:
-                            widget.snapshot.data.documents[widget.index].data()["isRead"] as bool,
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          backgroundImage: firindDataSnapshot.data.photoUrl == null
-                              ? const AssetImage('assets/images/person.png') as ImageProvider
-                              : NetworkImage(firindDataSnapshot.data.photoUrl),
-                          radius: 28.0,
-                        ),
+                      CircleAvatar(
+                        backgroundColor: Colors.white,
+                        backgroundImage: firindDataSnapshot.data.photoUrl == null
+                            ? const AssetImage('assets/images/person.png') as ImageProvider
+                            : NetworkImage(firindDataSnapshot.data.photoUrl),
+                        radius: 28.0,
                       ),
                       const SizedBox(width: 12.0),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(
-                            frindName,
-                            style: TextStyle(
-                              color: Colors.grey.shade200,
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.bold,
+                          Badge(
+                            badgeContent: const Icon(
+                              Icons.email_outlined,
+                              color: Colors.yellow,
+                            ),
+                            alignment: Alignment.centerLeft,
+                            position: BadgePosition.topEnd(end: -44.0),
+                            badgeColor: constants.lightBlue,
+                            showBadge: !showBadge,
+                            child: Text(
+                              frindName,
+                              style: TextStyle(
+                                color: Colors.grey.shade200,
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                           SizedBox(
