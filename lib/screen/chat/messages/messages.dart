@@ -167,7 +167,6 @@ class _MessagesState extends State<Messages> {
                       .snapshots()
                       .map(MessageServices().listOfMessages),
                   builder: (context, snapShot) {
-                    lastMessageTime = snapShot.data.last.timestamp;
                     return snapShot.hasData
                         ? ListView.builder(
                             reverse: true,
