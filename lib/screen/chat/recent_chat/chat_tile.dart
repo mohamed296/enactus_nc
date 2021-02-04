@@ -57,8 +57,12 @@ class _ChatTileState extends State<ChatTile> {
           .snapshots()
           .map(UserServices().userData),
       builder: (context, firindDataSnapshot) {
-        final bool showBadge =
-            widget.snapshot.data.documents[widget.index].data()["isRead"] as bool;
+        bool showBadge;
+        if (user.displayName == widget.snapshot.data.documents[widget.index].data()['lastSender']) {
+          showBadge = true;
+        } else {
+          showBadge = widget.snapshot.data.documents[widget.index].data()["isRead"] as bool;
+        }
         return firindDataSnapshot.hasData
             ? InkWell(
                 onTap: () {

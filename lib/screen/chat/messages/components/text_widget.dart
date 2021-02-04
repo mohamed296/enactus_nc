@@ -80,7 +80,7 @@ class _MessageWidgetState extends State<MessageWidget> {
           child: Row(
             children: [
               Container(
-                constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.80),
+                constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.7),
                 decoration: BoxDecoration(
                   color:
                       user.uid != widget.message.senderId ? constants.lightBlue : constants.midBlue,

@@ -28,17 +28,17 @@ class _PlayerState extends State<Player> {
   StreamSubscription _playerStateSubscription;
 
   bool get _isPlaying => _playerState == PlayerState.playing;
-  // get _isPaused => _playerState == PlayerState.paused;
+  // bool get _isPaused => _playerState == PlayerState.paused;
   String get _durationText => _duration?.toString()?.split('.')?.first ?? '';
-  // String get _positionText {
-  //   if (_position != null) {
-  //     // _position.toString().split('.').first;
-  //     // _position.toString().split(':');
-  //     return '${_position.inMinutes.toString().padLeft(1, '0')}:${_position.inSeconds.toString().padLeft(2, '0')}';
-  //   } else {
-  //     return '00:00';
-  //   }
-  // }
+  String get positionText {
+    if (_position != null) {
+      // _position.toString().split('.').first;
+      // _position.toString().split(':');
+      return '${_position.inMinutes.toString().padLeft(1, '0')}:${_position.inSeconds.toString().padLeft(2, '0')}';
+    } else {
+      return '00:00';
+    }
+  }
 
   @override
   void initState() {
@@ -158,7 +158,7 @@ class _PlayerState extends State<Player> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        if (_isPlaying != null)
+        if (_isPlaying == true)
           IconButton(
             icon: Icon(Icons.pause_circle_filled_rounded, color: Theme.of(context).iconTheme.color),
             iconSize: 30.0,
@@ -186,7 +186,11 @@ class _PlayerState extends State<Player> {
           ),
         ),
         Text(
-          _durationText ?? '0.00',
+          _position != null
+              ? positionText
+              : _duration != null
+                  ? _durationText
+                  : '0.00',
           style: TextStyle(fontSize: 12.0, color: Theme.of(context).iconTheme.color),
         ),
       ],
